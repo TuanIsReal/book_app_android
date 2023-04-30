@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray03"
+    tools:context=".activity.ViewBookActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbarRl"
+        android:layout_width="match_parent"
+        android:layout_height="210dp"
+        android:background="@drawable/shape_toolbar03">
+
+
+        <ImageView
+            android:id="@+id/backgroundImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@color/blue" />
+
+        <ImageButton
+            android:id="@+id/returnBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_back_white"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:padding="10dp"
+            android:background="@android:color/transparent"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/bookCv"
+            android:layout_marginTop="55dp"
+            android:layout_marginLeft="30dp"
+            app:cardCornerRadius="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:src="@drawable/logo"
+                android:scaleType="centerCrop"
+                android:background="@color/gray01"
+                android:layout_width="95dp"
+                android:layout_height="140dp"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/categoriesTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/bookCv"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="Loại sách"
+            android:layout_marginTop="45dp" />
+
+        <TextView
+            android:id="@+id/bookNameTv"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_toEndOf="@id/bookCv"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:maxLines="2"
+            android:layout_below="@id/categoriesTv"
+            android:layout_marginLeft="20dp"
+            android:text="Tên sách" />
+
+        <TextView
+            android:id="@+id/authorTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/bookCv"
+            android:textColor="@color/white"
+            android:layout_below="@id/bookNameTv"
+            android:layout_marginLeft="15dp"
+            android:text="Tác giả" />
+
+        <TextView
+            android:id="@+id/starTv"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:text="5.0"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:drawableEnd="@drawable/ic_star_yellow"
+            android:layout_marginLeft="15dp"
+            android:layout_toEndOf="@id/bookCv"
+            android:textAlignment="textEnd"
+            android:layout_below="@id/authorTv"
+            android:maxLines="1"/>
+
+        <Button
+            android:id="@+id/readBookBtn"
+            android:layout_width="wrap_content"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:textSize="12sp"
+            android:layout_height="30dp"
+            android:layout_below="@id/starTv"
+            android:layout_toEndOf="@id/bookCv"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:text="Đọc truyện"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_button4"/>
+
+        <Button
+            android:id="@+id/buyBookBtn"
+            android:layout_width="wrap_content"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:textSize="12sp"
+            android:layout_height="30dp"
+            android:layout_below="@id/starTv"
+            android:layout_toEndOf="@id/bookCv"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:text="Mua truyện"
+            android:textColor="@color/black"
+            android:background="@drawable/shape_button5"/>
+
+        <TextView
+            android:id="@+id/priceTv"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:text="100"
+            android:textAlignment="textEnd"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:drawableEnd="@drawable/ic_point_gold"
+            android:layout_below="@id/starTv"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/buyBookBtn"
+            android:maxLines="1"/>
+
+
+    </RelativeLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab"
+        android:layout_below="@id/toolbarRl"
+        app:tabIndicatorColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tab">
+    </androidx.viewpager.widget.ViewPager>
+
+
+
+</RelativeLayout>

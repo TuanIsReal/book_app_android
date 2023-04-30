@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.ViewBookInfoFragment">
+
+    <ScrollView
+        android:id="@+id/contentSv"
+        android:layout_width="wrap_content"
+        android:background="@color/white"
+        android:scrollbars="none"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/contentRl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="40dp">
+
+            <TextView
+                android:id="@+id/introductionTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textSize="18sp"
+                android:text="Nội dung"
+                android:textColor="@color/black"/>
+
+            <RelativeLayout
+                android:id="@+id/sameAuthorRl"
+                android:layout_width="match_parent"
+                android:layout_height="550dp"
+                android:layout_marginTop="40dp"
+                android:background="@color/gray03"
+                android:layout_below="@id/introductionTv">
+
+                <TextView
+                    android:id="@+id/sameAuthorTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/rightBtn"
+                    android:layout_marginTop="15dp"
+                    android:text="Cùng đăng bởi"
+                    android:textSize="22sp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/black"/>
+
+                <ImageButton
+                    android:id="@+id/rightBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="20dp"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_right_black"
+                    android:background="@android:color/transparent"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/booksRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp"
+                    android:layout_below="@id/sameAuthorTv"
+                    android:layout_marginTop="5dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="20dp"
+                    tools:listitem="@layout/column_same_author_book"/>
+
+                <TextView
+                    android:id="@+id/errorReportTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="50dp"
+                    android:drawableStart="@drawable/ic_flag_gray"
+                    android:text="Báo lỗi"
+                    android:textColor="@color/gray01"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+</RelativeLayout>

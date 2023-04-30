@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.SettingActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbatRl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gray04">
+
+        <TextView
+            android:id="@+id/settingTv"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Cài đặt"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center" />
+
+        <ImageButton
+            android:id="@+id/backBtn"
+            android:background="@color/gray04"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_left_black"
+            android:padding="10dp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/changeNameTv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Đổi tên"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_below="@id/line0"
+        android:gravity="left|center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:drawableRight="@drawable/ic_right_black"/>
+
+    <TextView
+        android:id="@+id/changePasswordTv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Đổi mật khẩu"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_below="@id/line1"
+        android:gravity="left|center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:drawableRight="@drawable/ic_right_black"/>
+
+    <View
+        android:id="@+id/line2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/changePasswordTv"/>
+
+    <View
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/changeNameTv" />
+
+    <View
+        android:id="@+id/line0"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/toolbatRl"
+        android:layout_marginTop="20dp"/>
+
+</RelativeLayout>

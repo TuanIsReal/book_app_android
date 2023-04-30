@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/gray04">
+
+        <TextView
+            android:id="@+id/sttTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="18dp"
+            android:theme="@style/TextColor"
+            android:text="1  "
+            android:maxLines="1"/>
+
+        <TextView
+            android:id="@+id/chapterNameTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/sttTv"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="18dp"
+            android:theme="@style/TextColor"
+            android:text="Chương 1: Trò chơi kỳ quái"
+            android:maxLines="1"/>
+
+
+</RelativeLayout>

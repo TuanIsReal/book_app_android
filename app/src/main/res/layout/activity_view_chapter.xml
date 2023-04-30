@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ViewChapterActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbarChapterRl"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+
+        <ImageButton
+            android:id="@+id/returnBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_left_black"
+            android:layout_alignParentStart="true"
+            android:padding="8dp"
+            android:background="@android:color/transparent"/>
+
+        <TextView
+            android:id="@+id/charterTv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/returnBtn"
+            android:text=""
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="5dp"
+            android:padding="5dp"/>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbarChapterRl"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:id="@+id/bodyRl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp">
+
+            <TextView
+                android:id="@+id/contentTv"
+                android:layout_width="match_parent"
+                android:textSize="22sp"
+                android:layout_height="match_parent"
+                android:textIsSelectable="false"/>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="500dp" />
+        </RelativeLayout>
+    </ScrollView>
+
+
+    <RelativeLayout
+        android:id="@+id/bottomToolbarRl"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/lightThemeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="40dp"
+            android:padding="5dp"
+            android:drawableTop="@drawable/ic_sun_gray"
+            android:text="Sáng"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/darkThemeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="47dp"
+            android:padding="5dp"
+            android:drawableTop="@drawable/ic_moon_gray"
+            android:text="Tối"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/beforeChapterTv"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="110dp"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:drawableTop="@drawable/ic_before_gray"
+            android:text="Chương trước"
+            android:textColor="@color/black"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/listChapterTv"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_toEndOf="@id/beforeChapterTv"
+            android:layout_marginLeft="20dp"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:drawableTop="@drawable/ic_list_gray"
+            android:text="D.S Chương"
+            android:textColor="@color/black"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/afterChapterTv"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_toEndOf="@id/listChapterTv"
+            android:layout_marginLeft="20dp"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:drawableTop="@drawable/ic_after_gray"
+            android:text="Chương sau"
+            android:textColor="@color/black"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/commentTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="130dp"
+            android:layout_marginLeft="20dp"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:drawableStart="@drawable/ic_comment_gray"
+            android:drawablePadding="15dp"
+            android:text="Bình luận"
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/bookInfoTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="190dp"
+            android:layout_marginLeft="20dp"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:drawableStart="@drawable/baseline_book_info_gray"
+            android:drawablePadding="15dp"
+            android:text="Thông tin sách"
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
+
+
+        <TextView
+            android:id="@+id/errorReportTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="250dp"
+            android:layout_marginLeft="20dp"
+            android:padding="5dp"
+            android:drawableStart="@drawable/ic_flag_gray"
+            android:drawablePadding="15dp"
+            android:text="Báo lỗi"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

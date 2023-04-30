@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back01"
+    tools:context=".activity.ConfirmBuyBookActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbarRl"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/blue">
+
+        <TextView
+            android:id="@+id/toolbarTv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Xác nhận mua truyện"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textSize="20dp"
+            android:gravity="center|center"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@id/toolbarRl">
+
+        <TextView
+            android:id="@+id/balanceText"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textSize="20dp"
+            android:text="Số dư tài khoản: " />
+
+        <TextView
+            android:id="@+id/balanceNum"
+            android:layout_width="85dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_toEndOf="@id/balanceText"
+            android:text=""
+            android:textColor="@color/black"
+            android:drawableEnd="@drawable/ic_point_gold"/>
+
+        <TextView
+            android:id="@+id/bookNameText"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/balanceText"
+            android:layout_marginTop="15dp"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textSize="20dp"
+            android:text="Tên truyện: "
+            android:maxLines="2"/>
+
+
+
+        <TextView
+            android:id="@+id/bookName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_below="@id/balanceText"
+            android:layout_toEndOf="@id/bookNameText"
+            android:text=""
+            android:maxLines="2"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/authorText"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bookNameText"
+            android:layout_marginTop="15dp"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textSize="20dp"
+            android:text="Tác giả: "
+            android:maxLines="2"/>
+
+
+
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_below="@id/bookNameText"
+            android:layout_toEndOf="@id/authorText"
+            android:text=""
+            android:maxLines="1"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/priceText"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/authorText"
+            android:layout_marginTop="15dp"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textSize="20dp"
+            android:text="Giá sách: "
+            android:maxLines="2"/>
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="85dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_below="@id/authorText"
+            android:layout_toEndOf="@id/priceText"
+            android:text=""
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:drawableEnd="@drawable/ic_point_gold"/>
+
+        <TextView
+            android:id="@+id/confirmTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/priceText"
+            android:layout_marginTop="40dp"
+            android:textColor="@color/black"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textSize="22dp"
+            android:text="Bạn có đồng ý xác nhận mua quyển truyện trên không?"
+            android:maxLines="2"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/content"
+        android:layout_marginTop="60dp">
+
+        <Button
+            android:id="@+id/cancelBtn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_button2"
+            android:text="Hủy"
+            android:layout_marginLeft="40dp"/>
+
+        <Button
+            android:id="@+id/confirmBtn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_button5"
+            android:layout_alignParentRight="true"
+            android:text="Xác nhận"
+            android:layout_marginRight="40dp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.UserUploadBookFragment">
+    
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="65dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/successUploadRl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/successUploadTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="Đã đăng"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:gravity="left|center"
+                    android:drawableRight="@drawable/ic_right_black"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/successBooksRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/successUploadTv"
+                    android:layout_marginTop="5dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/row_success_upload_book">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/requestUploadRl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/successUploadRl"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/requestUploadTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="Đang chờ phê duyệt"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:gravity="left|center"
+                    android:drawableRight="@drawable/ic_right_black"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/requestBooksRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/requestUploadTv"
+                    android:layout_marginTop="5dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/row_request_upload_book">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rejectUploadRl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/requestUploadRl"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/rejectUploadTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="Bị từ chối"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:gravity="left|center"
+                    android:drawableRight="@drawable/ic_right_black"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rejectBooksRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rejectUploadTv"
+                    android:layout_marginTop="5dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/row_request_upload_book">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/addBookBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tải lên truyện của bạn"
+        android:textSize="18dp"
+        android:layout_weight="1"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/shape_button1"
+        android:minHeight="50dp"
+        android:textAllCaps="false"
+        android:textColor="@color/white"/>
+
+
+</RelativeLayout>

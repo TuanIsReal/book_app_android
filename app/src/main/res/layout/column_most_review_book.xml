@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="105dp"
+    android:layout_height="185dp"
+    app:cardBackgroundColor="@color/gray01"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="100dp"
+        android:layout_height="185dp"
+        android:layout_gravity="center">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/bookCv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="15dp"
+            android:layout_gravity="center">
+
+            <ImageView
+
+                android:id="@+id/bookImage"
+                android:layout_width="100dp"
+                android:layout_height="130dp"
+                android:src="@drawable/ic_launcher_background"
+                android:scaleType="centerCrop"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:maxLines="2"
+            android:id="@+id/bookName"
+            android:layout_width="85dp"
+            android:layout_height="38dp"
+            android:layout_below="@+id/bookCv"
+            android:textColor="@color/black"
+            android:text=""/>
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_below="@id/bookName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:theme="@style/RatingBar"
+            android:isIndicator="true" />
+
+        <TextView
+            android:id="@+id/ratingPoint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="12dp"
+            android:layout_below="@id/bookName"
+            android:layout_toRightOf="@+id/ratingBar"
+
+            />
+
+    </RelativeLayout>
+
+
+
+</androidx.cardview.widget.CardView>

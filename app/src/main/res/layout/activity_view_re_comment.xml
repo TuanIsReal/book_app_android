@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ViewReCommentActivity">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="55dp">
+
+
+            <TextView
+                android:id="@+id/reCmtTv"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="Chi tiết bình luận"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center" />
+
+            <ImageButton
+                android:id="@+id/backBtn"
+                android:background="@color/white"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_left_black"
+                android:padding="10dp" />
+
+            <RelativeLayout
+                android:id="@+id/cmtMainRl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/reCmtTv"
+                android:background="@color/gray01">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_launcher_background"
+                    app:civ_border_width="0dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    />
+
+                <TextView
+                    android:maxLines="1"
+                    android:id="@+id/nameTv"
+                    android:layout_toRightOf="@id/avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:text="Username"/>
+
+                <TextView
+                    android:id="@+id/bodyMainCmt"
+                    android:layout_toRightOf="@id/avatar"
+                    android:layout_below="@+id/avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:text="qawdsadfdfasfdfdsffdsfdsfsfdaffdafsfdasfasfdasfsafdafdasfda"/>
+
+                <TextView
+                    android:id="@+id/timeMainCmt"
+                    android:layout_toRightOf="@id/avatar"
+                    android:layout_below="@+id/bodyMainCmt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:textSize="10dp"
+                    android:text="thời gian trước"
+                    android:layout_marginTop="5dp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_below="@id/cmtMainRl">
+
+
+                <TextView
+                    android:id="@+id/blankTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="200dp"
+                    android:drawablePadding="10dp"
+                    android:drawableTop="@drawable/ic_blank_cmt"
+                    android:text="Chưa có bình luận"
+                    android:textSize="20dp" />
+
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/reCmtList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_below="@id/cmtMainRl"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/row_re_comment"/>
+
+
+        </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/footToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray04">
+
+        <RelativeLayout
+            android:id="@+id/cmtIcRl"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_cmt" />
+
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/cmtContent"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_toEndOf="@id/cmtIcRl"
+            android:layout_toStartOf="@id/sendCmtIcRl"
+            android:textSize="16dp"
+            android:hint="Thêm trả lời"
+            android:layout_centerVertical="true"/>
+
+        <RelativeLayout
+            android:id="@+id/sendCmtIcRl"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:id="@+id/sendCmtIc"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_send_gray" />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

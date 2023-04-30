@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Rl"
+        app:cardCornerRadius="15dp">
+
+        <ImageView
+            android:id="@+id/recommendImageIv"
+            android:scaleType="centerCrop"
+            android:layout_width="115dp"
+            android:layout_height="150dp"
+            android:src="@drawable/ic_launcher_background"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:maxLines="2"
+        android:id="@+id/recommendNameTv"
+        android:layout_width="115dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="3dp"
+        android:layout_below="@id/Rl"
+        android:textColor="@color/black"
+        android:text=""/>
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:maxLines="1"
+        android:id="@+id/recommendCategoryTv"
+        android:text=""
+        android:textSize="13dp"
+        android:layout_below="@id/recommendNameTv"
+        android:layout_width="110dp"
+        android:layout_height="19dp"/>
+
+</RelativeLayout>

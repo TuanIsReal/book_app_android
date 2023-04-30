@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ViewCommentActivity">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="55dp">
+
+
+            <TextView
+                android:id="@+id/cmtTv"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:text="Bình luận"
+                android:background="@color/gray04"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:gravity="center" />
+
+            <ImageButton
+                android:id="@+id/backBtn"
+                android:background="@color/gray04"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_left_black"
+                android:padding="15dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:background="@color/white"
+                android:id="@+id/cmtList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cmtTv"
+                android:layout_marginTop="10dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/row_comment" />
+
+
+        </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/footToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray04">
+
+        <RelativeLayout
+            android:id="@+id/cmtIcRl"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_cmt" />
+
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/cmtContent"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_toEndOf="@id/cmtIcRl"
+            android:layout_toStartOf="@id/sendCmtIcRl"
+            android:textSize="16dp"
+            android:hint="Thêm bình luận"
+            android:layout_centerVertical="true"/>
+
+        <RelativeLayout
+            android:id="@+id/sendCmtIcRl"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:id="@+id/sendCmtIc"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_send_gray" />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

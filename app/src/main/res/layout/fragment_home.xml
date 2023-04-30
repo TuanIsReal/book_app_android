@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.HomeFragment">
+
+    <RelativeLayout
+        android:id="@+id/toolbarRl"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Truyện AT"
+            android:layout_centerVertical="true"
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
+            android:drawableStart="@drawable/ic_book_blue"
+            android:drawablePadding="5dp"/>
+
+        <ImageButton
+            android:id="@+id/searchBookBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_search_gray"
+            android:layout_toStartOf="@id/filterBookBtn"
+            android:layout_marginEnd="10dp"
+            android:padding="10dp"
+            android:background="@android:color/transparent"/>
+
+        <ImageButton
+            android:id="@+id/filterBookBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_filter_gray"
+            android:layout_alignParentEnd= "true"
+            android:layout_marginEnd="5dp"
+            android:padding="10dp"
+            android:background="@android:color/transparent"/>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:layout_below="@id/toolbarRl">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/newBookRl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/newBookTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="Mới nhất"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:gravity="left|center"
+                    android:background="@color/white"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="10dp"
+                    android:drawableRight="@drawable/ic_right_black"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/newBookRv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/column_new_book"
+                    android:layout_below="@id/newBookTv"
+                    android:layout_marginLeft="10dp"/>
+
+                <TextView
+                    android:maxLines="1"
+                    android:id="@+id/categoryNewTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/newBookRv"
+                    android:textSize="14dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="180dp"
+                    android:layout_marginTop="5dp"/>
+
+                <TextView
+                    android:id="@+id/nameNewTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@id/categoryNewTv"
+                    android:layout_marginLeft="15dp"
+                    style="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="180dp"
+                    android:textSize="16dp"
+                    android:maxLines="2"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:maxLines="3"
+                    android:id="@+id/introductionNewTv"
+                    android:layout_below="@id/nameNewTv"
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="180dp"
+                    android:layout_height="58dp"
+                    android:layout_marginLeft="15dp" />
+
+                <RatingBar
+                    android:id="@+id/ratingBarNew"
+                    android:layout_below="@id/introductionNewTv"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:theme="@style/RatingBar"
+                    android:isIndicator="true" />
+
+                <TextView
+                    android:id="@+id/ratingPointNew"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textSize="12dp"
+                    android:layout_below="@id/introductionNewTv"
+                    android:layout_toRightOf="@+id/ratingBarNew"
+                    android:layout_marginLeft="10dp"
+                    />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/newBookCv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="20dp"
+                    android:layout_gravity="center"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/newBookRv"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/imageBookNew"
+                        android:layout_width="150dp"
+                        android:layout_height="190dp"
+                        android:src="@drawable/ic_launcher_background"
+                        android:scaleType="centerCrop"
+                        android:background="@color/gray01" />
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="15dp"
+                    android:layout_below="@id/ratingBarNew"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="15dp">
+
+                    <TextView
+                        android:id="@+id/newBookBt"
+                        android:layout_width="80dp"
+                        android:layout_height="30dp"
+                        android:textColor="@color/white"
+                        android:background="@color/blue"
+                        android:text="Đọc"
+                        android:textSize="15dp"
+                        android:gravity="center"/>
+
+                </androidx.cardview.widget.CardView>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recommendRl"
+                android:layout_below="@id/newBookRl"
+                android:layout_marginTop="20dp"
+                android:background="@color/gray01">
+
+                <TextView
+                    android:id="@+id/recommendTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="Đề cử"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:gravity="left|center"
+                    android:background="@color/gray01"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="10dp"
+                    android:drawableRight="@drawable/ic_right_black"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recommendBooksRv"
+                    android:layout_below="@id/recommendTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="460dp"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="3"
+                    tools:listitem="@layout/column_recommend_book"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/mostBuyRl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/recommendRl"
+                android:background="@color/white">
+
+                <TextView
+                    android:id="@+id/mostBuyTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="Mua nhiều"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:gravity="left|center"
+                    android:background="@color/white"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="10dp"
+                    android:drawableRight="@drawable/ic_right_black"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/mostBuyRv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/column_most_buy_book"
+                    android:layout_below="@id/mostBuyTv"
+                    android:layout_marginLeft="10dp"
+                    android:background="@color/gray01"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/mostReviewRl"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_below="@+id/mostBuyRl"
+                android:background="@color/gray01"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/mostReviewTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="Nhiều đánh giá"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:gravity="left|center"
+                    android:background="@color/gray01"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="10dp"
+                    android:drawableRight="@drawable/ic_right_black"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/mostReviewRv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/column_most_review_book"
+                    android:layout_below="@id/mostReviewTv"
+                    android:layout_marginLeft="10dp"
+                    android:background="@color/gray01"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

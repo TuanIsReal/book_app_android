@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ListBookFilterActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbarRl"
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/bookFilterTv"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@color/gray03"
+            android:text="Danh sách truyện"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:gravity="center" />
+
+        <ImageButton
+            android:id="@+id/backBtn"
+            android:background="@color/gray03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_left_black"
+            android:padding="15dp" />
+
+        <ImageButton
+            android:id="@+id/optionBtn"
+            android:background="@color/gray03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_setting_black"
+            android:padding="15dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:background="@color/gray03"
+            android:id="@+id/booksRv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bookFilterTv"
+            tools:listitem="@layout/row_book_filter" />
+
+    </RelativeLayout>
+
+
+
+    <ScrollView
+        android:id="@+id/optionSv"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_alignParentBottom="true"
+        android:scrollbars="none"
+        android:background="@color/white">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
+
+            <ImageButton
+                android:id="@+id/closeOptionBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_down_black"
+                android:layout_alignParentRight="true"
+                android:background="@color/white"
+                android:padding="10dp"/>
+
+            <RelativeLayout
+                android:id="@+id/sortTypeRl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/closeOptionBtn">
+
+                <TextView
+                    android:id="@+id/sortTypeTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sắp xếp"
+                    android:textSize="24dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/timeDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/sortTypeTv"
+                    android:textSize="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:text="Mới đăng"/>
+
+                <TextView
+                    android:id="@+id/timeAsc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/sortTypeTv"
+                    android:textSize="20dp"
+                    android:textColor="@color/gray02"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toEndOf="@id/timeDesc"
+                    android:text="Đăng lâu"/>
+
+                <TextView
+                    android:id="@+id/purchasedDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/sortTypeTv"
+                    android:textSize="20dp"
+                    android:textColor="@color/gray02"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toEndOf="@id/timeAsc"
+                    android:text="Lượt mua"/>
+
+                <TextView
+                    android:id="@+id/starDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/timeDesc"
+                    android:textSize="20dp"
+                    android:textColor="@color/gray02"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:text="Điểm đánh giá"/>
+
+                <TextView
+                    android:id="@+id/reviewDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/timeDesc"
+                    android:textSize="20dp"
+                    android:textColor="@color/gray02"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toEndOf="@id/starDesc"
+                    android:text="Lượt đánh giá"/>
+
+                <TextView
+                    android:id="@+id/chapterDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/starDesc"
+                    android:textSize="20dp"
+                    android:textColor="@color/gray02"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:text="Số chương"/>
+
+                <TextView
+                    android:id="@+id/priceDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/starDesc"
+                    android:textSize="20dp"
+                    android:textColor="@color/gray02"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toEndOf="@id/chapterDesc"
+                    android:text="Giá cao"/>
+
+                <TextView
+                    android:id="@+id/priceAsc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/starDesc"
+                    android:textSize="20dp"
+                    android:textColor="@color/gray02"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toEndOf="@id/priceDesc"
+                    android:text="Giá thấp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/statusRl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/sortTypeRl">
+
+                <TextView
+                    android:id="@+id/statusTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tình trạng"
+                    android:textSize="24dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/allStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/statusTv"
+                    android:textSize="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:text="Tất cả"/>
+
+                <TextView
+                    android:id="@+id/writingStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/statusTv"
+                    android:textSize="20dp"
+                    android:textColor="@color/gray02"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toEndOf="@id/allStatus"
+                    android:text="Đang ra"/>
+
+                <TextView
+                    android:id="@+id/completeStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/statusTv"
+                    android:textSize="20dp"
+                    android:textColor="@color/gray02"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toEndOf="@id/writingStatus"
+                    android:text="Hoàn thành"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/postRl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/statusRl">
+
+                <TextView
+                    android:id="@+id/postTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loại đăng"
+                    android:textSize="24dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/allPost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/postTv"
+                    android:textSize="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:text="Tất cả"/>
+
+                <TextView
+                    android:id="@+id/userPost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/postTv"
+                    android:textSize="20dp"
+                    android:textColor="@color/gray02"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toEndOf="@id/allPost"
+                    android:text="Sáng tác"/>
+
+                <TextView
+                    android:id="@+id/adminPost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/postTv"
+                    android:textSize="20dp"
+                    android:textColor="@color/gray02"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toEndOf="@id/userPost"
+                    android:text="Truyện hệ thống"/>
+
+            </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/categoryRl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="40dp"
+            android:layout_below="@id/postRl">
+
+            <TextView
+                android:id="@+id/categoryTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thể loại"
+                android:textSize="24dp"
+                android:textColor="@color/black"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/categoryRv"
+                android:layout_below="@id/categoryTv"
+                android:layout_width="match_parent"
+                android:layout_height="460dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="3"
+                tools:listitem="@layout/row_category_option"/>
+
+        </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/filterBookBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tìm truyện"
+        android:textSize="18dp"
+        android:layout_weight="1"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/shape_button1"
+        android:minHeight="50dp"
+        android:textAllCaps="false"
+        android:textColor="@color/white"/>
+
+</RelativeLayout>

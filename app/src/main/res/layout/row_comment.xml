@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatar"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_launcher_background"
+            app:civ_border_width="0dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            />
+
+        <TextView
+            android:maxLines="1"
+            android:id="@+id/nameTv"
+            android:layout_toRightOf="@id/avatar"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="15dp"
+            android:textColor="@color/black"
+            android:text="Username"/>
+
+        <TextView
+            android:id="@+id/bodyCmt"
+            android:layout_toRightOf="@id/avatar"
+            android:layout_below="@+id/avatar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="15dp"
+            android:textColor="@color/black"
+            android:text="qawdsadfdfasfdfdsffdsfdsfsfdaffdafsfdasfasfdasfsafdafdasfda"/>
+
+        <TextView
+            android:id="@+id/timeCmt"
+            android:layout_toRightOf="@id/avatar"
+            android:layout_below="@+id/bodyCmt"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="10dp"
+            android:text="thời gian trước"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:maxLines="1"
+            android:id="@+id/numberReCmt"
+            android:layout_below="@+id/bodyCmt"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="10dp"
+            android:drawablePadding="1dp"
+            android:textSize="15dp"
+            android:textColor="@color/black"
+            android:text="123"
+            android:drawableLeft="@drawable/ic_cmt"/>
+
+    </RelativeLayout>
+
+
+
+</androidx.cardview.widget.CardView>

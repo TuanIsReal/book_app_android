@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".activity.NewBookReviewActivity">
+
+    <ImageView
+        android:id="@+id/backBt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_left_black"
+        android:padding="8dp"/>
+
+    <TextView
+        android:id="@+id/newRatingTv"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="Viết đánh giá"
+        android:textColor="@color/black"
+        android:textSize="25dp" />
+
+    <TextView
+        android:id="@+id/ratingBarTv"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:text="Điểm đánh giá:"
+        android:textSize="18dp"
+        android:layout_marginLeft="15dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:layout_below="@+id/newRatingTv"/>
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_below="@id/newRatingTv"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/RatingBar"
+        android:layout_toRightOf="@+id/ratingBarTv"
+        android:isIndicator="false" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/reviewBodyTil"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:background="@color/gray04"
+        android:layout_below="@id/ratingBar"
+        app:hintEnabled="false">
+
+        <EditText
+            android:id="@+id/reviewBodyEt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawablePadding="10dp"
+            android:gravity="top"
+            android:hint="Nội dung (Bắt buộc)"
+            android:scrollHorizontally="true"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray02"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center">
+
+        <androidx.cardview.widget.CardView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="25dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:id="@+id/confirmTv"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:textColor="@color/white"
+                android:background="@color/purple_500"
+                android:text="Đăng"
+                android:textSize="26dp"
+                android:gravity="center"/>
+
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+
+</RelativeLayout>
