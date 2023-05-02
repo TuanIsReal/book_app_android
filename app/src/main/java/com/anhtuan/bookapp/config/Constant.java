@@ -1,7 +1,7 @@
 package com.anhtuan.bookapp.config;
 
 public class Constant {
-    public static final String IP_SERVER = "http://192.168.1.11:8080/";
+    public static final String IP_SERVER = "http://192.168.1.19:8080/";
 
     //ip Hai
 //    public static final String IP_SERVER = "http://192.168.43.143:8080/";

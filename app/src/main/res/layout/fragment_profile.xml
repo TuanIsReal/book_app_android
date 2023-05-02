@@ -30,6 +30,19 @@
         android:textColor="@color/black"
         android:text="Tên người dùng"/>
 
+    <ImageButton
+        android:id="@+id/reloadBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_reload_gray"
+        android:layout_below="@id/fileProfile"
+        android:layout_marginTop="25dp"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"
+        android:layout_marginRight="15dp"
+        android:padding="10dp"/>
+
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar"
         android:layout_width="100dp"
@@ -59,6 +72,17 @@
         android:textSize="30dp"
         android:text="0"
         />
+
+    <Button
+        android:id="@+id/buyPointBtn"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pointTv"
+        android:layout_toRightOf="@id/avatar"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/shape_button5"
+        android:text="Mua Point"/>
 
     <TextView
         android:id="@+id/settingTv"

@@ -11,9 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.anhtuan.bookapp.R;
+import com.anhtuan.bookapp.activity.AddPointActivity;
 import com.anhtuan.bookapp.activity.MainActivity;
 import com.anhtuan.bookapp.activity.SettingActivity;
 import com.anhtuan.bookapp.domain.User;
@@ -31,9 +34,12 @@ import retrofit2.Response;
 public class ProfileFragment extends Fragment {
 
     String userId;
+    ImageButton reloadBtn;
+    Button buyPointBtn;
     TextView nameTv, pointTv, logoutTv, settingTv;
     CircleImageView avatar;
     public SharedPreferences sharedPreferences;
+    View view;
     public ProfileFragment() {
     }
 
@@ -42,14 +48,13 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        nameTv = view.findViewById(R.id.nameTv);
-        pointTv = view.findViewById(R.id.pointTv);
-        avatar = view.findViewById(R.id.avatar);
-        logoutTv = view.findViewById(R.id.logoutTv);
-        settingTv = view.findViewById(R.id.settingTv);
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
+        initView();
         sharedPreferences = view.getContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         userId = sharedPreferences.getString("userId","");
+
+        loadUser();
+
         logoutTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,6 +62,63 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        reloadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadUser();
+            }
+        });
+
+        buyPointBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(view.getContext(), AddPointActivity.class);
+                intent.putExtra("userId",userId);
+                view.getContext().startActivity(intent);
+            }
+        });
+
+        settingTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(view.getContext(), SettingActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
+
+        return view;
+    }
+
+    private void initView() {
+        nameTv = view.findViewById(R.id.nameTv);
+        pointTv = view.findViewById(R.id.pointTv);
+        avatar = view.findViewById(R.id.avatar);
+        logoutTv = view.findViewById(R.id.logoutTv);
+        settingTv = view.findViewById(R.id.settingTv);
+        reloadBtn = view.findViewById(R.id.reloadBtn);
+        buyPointBtn = view.findViewById(R.id.buyPointBtn);
+    }
+
+    private void logout(Context context, String userId){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("userId", "");
+        editor.putString("role", "");
+        editor.apply();
+
+        userApi.logout(userId).enqueue(new Callback<NoDataResponse>() {
+            @Override
+            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
+                startActivity(new Intent(context, MainActivity.class));
+            }
+
+            @Override
+            public void onFailure(Call<NoDataResponse> call, Throwable t) {
+                Toast.makeText(context, ""+ t, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void loadUser(){
         userApi.getUserInfo(userId).enqueue(new Callback<GetUserInfoResponse>() {
             @Override
             public void onResponse(Call<GetUserInfoResponse> call, Response<GetUserInfoResponse> response) {
@@ -95,35 +157,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onFailure(Call<GetUserInfoResponse> call, Throwable t) {
 
-            }
-        });
-
-        settingTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(view.getContext(), SettingActivity.class);
-                view.getContext().startActivity(intent);
-            }
-        });
-
-        return view;
-    }
-
-    private void logout(Context context, String userId){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("userId", "");
-        editor.putString("role", "");
-        editor.apply();
-
-        userApi.logout(userId).enqueue(new Callback<NoDataResponse>() {
-            @Override
-            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                startActivity(new Intent(context, MainActivity.class));
-            }
-
-            @Override
-            public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                Toast.makeText(context, ""+ t, Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -22,6 +22,7 @@ import com.anhtuan.bookapp.domain.Notification;
 import com.anhtuan.bookapp.response.NoDataResponse;
 
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,24 +62,28 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                notificationApi.clickNotification(notification.getId()).enqueue(new Callback<NoDataResponse>() {
-                    @Override
-                    public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                        if (response.body() != null && response.body().getCode() == 100){
-                            holder.contentRl.setBackgroundColor(context.getResources().getColor(R.color.white));
-                            notification.setClick(true);
-                            Intent intent = new Intent(context, ViewBookActivity.class);
-                            intent.putExtra("bookId", bookId);
-                            context.startActivity(intent);
+                if (!isClick){
+                    notificationApi.clickNotification(notification.getId()).enqueue(new Callback<NoDataResponse>() {
+                        @Override
+                        public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
+                            if (response.body() != null && response.body().getCode() == 100){
+                                holder.contentRl.setBackgroundColor(context.getResources().getColor(R.color.white));
+                                notification.setClick(true);
+                                if (!Objects.isNull(bookId) && !bookId.isBlank()){
+                                    Intent intent = new Intent(context, ViewBookActivity.class);
+                                    intent.putExtra("bookId", bookId);
+                                    context.startActivity(intent);
+                                }
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<NoDataResponse> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<NoDataResponse> call, Throwable t) {
 
-                    }
-                });
+                        }
+                    });
+                }
+
             }
         });
     }
