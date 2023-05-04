@@ -24,6 +24,8 @@ import com.anhtuan.bookapp.response.GetUserInfoResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.bumptech.glide.Glide;
 import java.io.IOException;
+import java.util.Objects;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -128,8 +130,17 @@ public class ProfileFragment extends Fragment {
                     nameTv.setText(user.getName());
                     pointTv.setText(""+user.getPoint());
                     String imageName = user.getAvatarImage();
+                    Boolean isLoginGoogle = user.getGoogleLogin();
 
-                    if (imageName != null){
+                    if (!Objects.isNull(isLoginGoogle) && isLoginGoogle){
+
+                        Glide.with(view.getContext())
+                                .load(imageName)
+                                .into(avatar);
+
+                    }
+
+                    if (imageName != null && Objects.isNull(isLoginGoogle)){
                         userApi.getAvatarImage(imageName).enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

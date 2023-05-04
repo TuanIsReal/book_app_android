@@ -194,6 +194,7 @@ public class ListBookFilterActivity extends AppCompatActivity implements Adapter
             case 8:
                 request.setSort(Constant.FILTER_SORT.SORT_BY_PRICE);
                 request.setOrder(1);
+                break;
             default:
                 request.setSort(Constant.FILTER_SORT.SORT_BY_TIME);
                 request.setOrder(-1);

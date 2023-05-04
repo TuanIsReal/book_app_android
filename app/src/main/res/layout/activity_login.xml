@@ -124,18 +124,29 @@
                 android:text="Đăng nhập"
                 android:textColor="@color/white"/>
 
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Đăng nhập bằng"
+                android:layout_below="@id/loginBtn"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/gray02"
+                android:textSize="16dp"/>
+
+
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/loginGoogle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/loginBtn"
-                android:layout_marginTop="20dp"
+                android:layout_below="@id/text"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/google"
                 android:layout_centerHorizontal="true"
-                android:background="@color/white"
+                android:background="@android:color/transparent"
                 android:text="Đăng nhập"
-                android:textColor="@color/white"
-                />
+                android:textColor="@color/white" />
         </RelativeLayout>
 
     </ScrollView>

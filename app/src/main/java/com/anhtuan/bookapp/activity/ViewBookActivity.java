@@ -198,6 +198,7 @@ public class ViewBookActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK){
             isPurchased = true;
             setVisiButton();
+            getBookInfo();
         }
     }
 

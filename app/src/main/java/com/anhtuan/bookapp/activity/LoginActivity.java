@@ -4,7 +4,6 @@ import static com.anhtuan.bookapp.api.DeviceApi.deviceApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.anhtuan.bookapp.R;
-import com.anhtuan.bookapp.api.UserApi;
 import com.anhtuan.bookapp.common.ApiAddress;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityLoginBinding;
@@ -25,8 +23,8 @@ import com.anhtuan.bookapp.request.GoogleLoginRequest;
 import com.anhtuan.bookapp.response.LoginData;
 import com.anhtuan.bookapp.response.LoginResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
+import com.anhtuan.bookapp.response.RegisterData;
 import com.anhtuan.bookapp.response.RegisterResponse;
-import com.anhtuan.bookapp.retrofit.RetrofitService;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -50,7 +48,6 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public static final int REQUEST_CODE = 100008;
     private ActivityLoginBinding binding;
 
     private ProgressDialog progressDialog;
@@ -251,9 +248,18 @@ public class LoginActivity extends AppCompatActivity {
                         userApi.loginGoogle(request).enqueue(new Callback<>() {
                             @Override
                             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-                                    RegisterResponse registerResponse=response.body();
-                                    if(registerResponse.getCode()==100){
-                                        startActivity(new Intent(LoginActivity.this, DashboardUserActivity.class));
+
+                                    if (response.body() != null && response.body().getCode() == 100) {
+                                        RegisterData registerData = response.body().getData();
+                                        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString("userId", registerData.getUserId());
+                                        editor.putString("userRole", registerData.getRole());
+                                        editor.putString("theme", "light");
+                                        editor.apply();
+                                        String role = registerData.getRole();
+                                        mGoogleSignInClient.signOut();
+                                        sendDeviceToken(registerData.getUserId(), role);
                                     }
                             }
 
@@ -283,10 +289,10 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Email không tồn tại trên hệ thống", Toast.LENGTH_SHORT).show();
                     }
                     if (response.body().getCode() == 100){
-                        Intent intent = new Intent(LoginActivity.this, AuthenVerifyCodeActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, CreateNewPasswordActivity.class);
                         intent.putExtra("authenType", Constant.VERIFY_CODE_TYPE.FORGOT_PASS);
                         intent.putExtra("email", email);
-                        startActivityForResult(intent, REQUEST_CODE);
+                        startActivity(intent);
                     }
                 }
             }
@@ -298,14 +304,4 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && !Objects.isNull(data)){
-            String userId = data.getStringExtra("userId");
-            Intent intent = new Intent(LoginActivity.this, CreateNewPasswordActivity.class);
-            intent.putExtra("userId", userId);
-            startActivity(intent);
-        }
-    }
 }
