@@ -1,6 +1,7 @@
 package com.anhtuan.bookapp.api;
 
 import com.anhtuan.bookapp.config.Constant;
+import com.anhtuan.bookapp.request.GoogleLoginRequest;
 import com.anhtuan.bookapp.request.AuthenVerifyCodeRequest;
 import com.anhtuan.bookapp.request.RegisterRequest;
 import com.anhtuan.bookapp.response.AuthenVerifyCodeResponse;
@@ -43,6 +44,10 @@ public interface UserApi {
 
     @POST("register")
     Call<RegisterResponse> register(@Body RegisterRequest registerRequest);
+
+
+    @POST("google-login")
+    Call<RegisterResponse> loginGoogle(@Body GoogleLoginRequest googleLoginRequest);
 
     @Multipart
     @POST("updateAvatarImage")
