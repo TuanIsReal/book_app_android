@@ -63,39 +63,12 @@
             android:text="VN PAY"
             android:textColor="@color/black" />
 
-        <TextView
-            android:id="@+id/bankText"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/payTypeText"
-            android:layout_marginTop="15dp"
-            style="@style/TextAppearance.MaterialComponents.Caption"
-            android:textSize="20dp"
-            android:text="Ngân hàng: "
-            android:maxLines="2"/>
-
-
-
-        <TextView
-            android:id="@+id/bankName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            android:layout_marginLeft="10dp"
-            android:layout_below="@id/payTypeText"
-            android:layout_toEndOf="@id/bankText"
-            android:text="NCB"
-            android:maxLines="2"
-            android:textColor="@color/black" />
-
 
         <TextView
             android:id="@+id/confirmTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/bankName"
+            android:layout_below="@id/payTypeText"
             android:layout_marginTop="40dp"
             android:textColor="@color/black"
             style="@style/TextAppearance.MaterialComponents.Caption"

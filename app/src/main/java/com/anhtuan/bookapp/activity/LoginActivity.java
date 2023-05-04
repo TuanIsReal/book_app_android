@@ -4,6 +4,7 @@ import static com.anhtuan.bookapp.api.DeviceApi.deviceApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.anhtuan.bookapp.api.UserApi;
 import com.anhtuan.bookapp.common.ApiAddress;
+import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityLoginBinding;
 import com.anhtuan.bookapp.response.LoginData;
 import com.anhtuan.bookapp.response.LoginResponse;
@@ -26,6 +28,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,6 +37,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
+    public static final int REQUEST_CODE = 100008;
     private ActivityLoginBinding binding;
 
     private ProgressDialog progressDialog;
@@ -60,6 +65,13 @@ public class LoginActivity extends AppCompatActivity {
                 validateData();
             }
         });
+
+        binding.forgotTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validateEmail();
+            }
+        });
     }
 
     private String email, password;
@@ -74,6 +86,18 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Email chưa đúng định dạng", Toast.LENGTH_SHORT).show();
         } else {
             loginUser();
+        }
+    }
+
+    private void validateEmail(){
+        email = binding.emailEt.getText().toString().trim();
+
+        if (email.isBlank()){
+            Toast.makeText(this, "Chưa nhập email", Toast.LENGTH_SHORT).show();
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Email chưa đúng định dạng", Toast.LENGTH_SHORT).show();
+        } else {
+            actionForgotPassword();
         }
     }
 
@@ -155,4 +179,41 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void actionForgotPassword(){
+        progressDialog.setMessage("Đang kiểm tra...");
+        progressDialog.show();
+        userApi.forgotPassword(email).enqueue(new Callback<NoDataResponse>() {
+            @Override
+            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
+                progressDialog.dismiss();
+                if (!Objects.isNull(response.body())){
+                    if (response.body().getCode() == 106){
+                        Toast.makeText(LoginActivity.this, "Email không tồn tại trên hệ thống", Toast.LENGTH_SHORT).show();
+                    }
+                    if (response.body().getCode() == 100){
+                        Intent intent = new Intent(LoginActivity.this, AuthenVerifyCodeActivity.class);
+                        intent.putExtra("authenType", Constant.VERIFY_CODE_TYPE.FORGOT_PASS);
+                        intent.putExtra("email", email);
+                        startActivityForResult(intent, REQUEST_CODE);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NoDataResponse> call, Throwable t) {
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && !Objects.isNull(data)){
+            String userId = data.getStringExtra("userId");
+            Intent intent = new Intent(LoginActivity.this, CreateNewPasswordActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+        }
+    }
 }

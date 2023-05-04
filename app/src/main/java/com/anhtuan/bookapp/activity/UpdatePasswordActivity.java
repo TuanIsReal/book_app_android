@@ -29,7 +29,7 @@ public class UpdatePasswordActivity extends AppCompatActivity {
         binding = ActivityUpdatePasswordBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId","");
+        userId = sharedPreferences.getString("userId","");
 
         binding.confirmBt.setOnClickListener(new View.OnClickListener() {
             @Override

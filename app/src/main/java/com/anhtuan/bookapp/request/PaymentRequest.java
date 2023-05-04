@@ -4,7 +4,6 @@ public class PaymentRequest {
     String userId;
     int point;
     String description;
-    String bankCode;
 
     public PaymentRequest() {
     }
@@ -31,13 +30,5 @@ public class PaymentRequest {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getBankCode() {
-        return bankCode;
-    }
-
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
     }
 }

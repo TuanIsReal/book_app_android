@@ -39,7 +39,6 @@ public class AddPointActivity extends AppCompatActivity {
 
         request = new PaymentRequest();
         request.setUserId(userId);
-        request.setBankCode("NCB");
         request.setDescription("addPoint");
 
         buyIntent = new Intent(this, TransactionWebViewActivity.class);

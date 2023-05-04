@@ -1,7 +1,9 @@
 package com.anhtuan.bookapp.api;
 
 import com.anhtuan.bookapp.config.Constant;
+import com.anhtuan.bookapp.request.AuthenVerifyCodeRequest;
 import com.anhtuan.bookapp.request.RegisterRequest;
+import com.anhtuan.bookapp.response.AuthenVerifyCodeResponse;
 import com.anhtuan.bookapp.response.CheckLoggedResponse;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
 import com.anhtuan.bookapp.response.LoginResponse;
@@ -71,4 +73,13 @@ public interface UserApi {
     Call<NoDataResponse> updateName(@Query("userId") String userId,
                                     @Query("password") String password,
                                     @Query("newName") String newName);
+
+    @POST("forgotPassword")
+    Call<NoDataResponse> forgotPassword(@Query("email") String email);
+
+    @POST("authenVerifyCode")
+    Call<AuthenVerifyCodeResponse> authenVerifyCode(@Body AuthenVerifyCodeRequest request);
+    @POST("createNewPassword")
+    Call<NoDataResponse> createNewPassword(@Query("userId") String userId,
+                                        @Query("newPassword") String newPassword);
 }
