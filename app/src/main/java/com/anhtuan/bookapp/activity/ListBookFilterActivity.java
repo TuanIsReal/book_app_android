@@ -4,7 +4,9 @@ import static com.anhtuan.bookapp.api.BookApi.bookApi;
 import static com.anhtuan.bookapp.api.CategoryApi.categoryApi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.adapter.AdapterBookFilter;
 import com.anhtuan.bookapp.adapter.AdapterCategoryOption;
+import com.anhtuan.bookapp.common.PaginationScrollListener;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityListBookFilterBinding;
 import com.anhtuan.bookapp.domain.Book;
@@ -29,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,6 +52,11 @@ public class ListBookFilterActivity extends AppCompatActivity implements Adapter
     int postOption;
     List<String> categoryOptions;
     int order;
+    RecyclerView.ItemDecoration itemDecoration;
+    boolean isLoading;
+    boolean isLastPage;
+    int currentPage = 1;
+    GetBookFilterRequest request;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +67,7 @@ public class ListBookFilterActivity extends AppCompatActivity implements Adapter
         binding.optionSv.setVisibility(View.GONE);
         binding.filterBookBtn.setVisibility(View.GONE);
         manager = new LinearLayoutManager(this);
+        itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         categoryOptions = new ArrayList<>();
         order = -1;
         statusOption = 0;
@@ -142,7 +152,7 @@ public class ListBookFilterActivity extends AppCompatActivity implements Adapter
     }
 
     private void loadFirstOpen(){
-        GetBookFilterRequest request = new GetBookFilterRequest(sortOption, order, statusOption, postOption, new ArrayList<>(), 1);
+        request = new GetBookFilterRequest(sortOption, order, statusOption, postOption, new ArrayList<>(), 1);
         bookApi.getBookFilter(request).enqueue(new Callback<GetBookResponse>() {
             @Override
             public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
@@ -161,7 +171,7 @@ public class ListBookFilterActivity extends AppCompatActivity implements Adapter
     }
 
     private void filterBook(){
-        GetBookFilterRequest request = new GetBookFilterRequest();
+        request = new GetBookFilterRequest();
         switch (sortOption){
             case 1:
                 request.setSort(Constant.FILTER_SORT.SORT_BY_TIME);
@@ -241,6 +251,12 @@ public class ListBookFilterActivity extends AppCompatActivity implements Adapter
 
         request.setPage(1);
 
+        loadListBook();
+
+    }
+
+    private void loadListBook(){
+        currentPage = 1;
         bookApi.getBookFilter(request).enqueue(new Callback<GetBookResponse>() {
             @Override
             public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
@@ -256,14 +272,59 @@ public class ListBookFilterActivity extends AppCompatActivity implements Adapter
 
             }
         });
-
     }
 
+    private void loadMoreBook(){
+        request.setPage(currentPage);
+        bookApi.getBookFilter(request).enqueue(new Callback<GetBookResponse>() {
+            @Override
+            public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
+                isLoading = false;
+                if (response.body() != null && response.body().getCode() == 100){
+                    List<Book> listBookMore = response.body().getData();
+                    if (Objects.isNull(listBookMore) || listBookMore.size() < 10){
+                        isLastPage = true;
+                    }
+                    listBookFilter.addAll(listBookMore);
+                    adapterBookFilter.setBooks(listBookFilter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetBookResponse> call, Throwable t) {
+                isLoading = false;
+            }
+        });
+    }
+///
     private void setBookRv(){
         binding.booksRv.setLayoutManager(manager);
+        binding.booksRv.addItemDecoration(itemDecoration);
+
+        binding.booksRv.addOnScrollListener(new PaginationScrollListener(manager) {
+            @Override
+            public void loadMoreItems() {
+                isLoading = true;
+                currentPage += 1;
+                loadMoreBook();
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+        });
+
         adapterBookFilter = new AdapterBookFilter(ListBookFilterActivity.this, listBookFilter);
         binding.booksRv.setAdapter(adapterBookFilter);
     }
+
+    ///
 
     private void loadCategory(){
         categoryApi.getCategory().enqueue(new Callback<CategoriesResponse>() {

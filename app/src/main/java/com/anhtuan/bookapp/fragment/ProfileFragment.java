@@ -110,6 +110,7 @@ public class ProfileFragment extends Fragment {
         userApi.logout(userId).enqueue(new Callback<NoDataResponse>() {
             @Override
             public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
+                getActivity().finish();
                 startActivity(new Intent(context, MainActivity.class));
             }
 

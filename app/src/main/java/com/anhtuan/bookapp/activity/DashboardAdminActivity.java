@@ -122,6 +122,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
         userApi.logout(userId).enqueue(new Callback<NoDataResponse>() {
             @Override
             public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
+                finish();
                 startActivity(new Intent(DashboardAdminActivity.this, MainActivity.class));
             }
 

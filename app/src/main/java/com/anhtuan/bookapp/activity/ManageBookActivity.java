@@ -19,6 +19,7 @@ import com.anhtuan.bookapp.adapter.AdapterBookAdmin;
 import com.anhtuan.bookapp.databinding.ActivityManageBookBinding;
 import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
+import com.anhtuan.bookapp.response.NoDataResponse;
 import com.anhtuan.bookapp.response.SearchBookResponse;
 
 import java.util.ArrayList;
@@ -78,6 +79,13 @@ public class ManageBookActivity extends AppCompatActivity {
             }
         });
 
+        binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout(sharedPreferences, userId);
+            }
+        });
+
     }
 
     private void loadBooks(String text) {
@@ -119,6 +127,25 @@ public class ManageBookActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void logout(SharedPreferences sharedPreferences, String userId){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("userId", "");
+        editor.apply();
+
+        userApi.logout(userId).enqueue(new Callback<NoDataResponse>() {
+            @Override
+            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
+                finish();
+                startActivity(new Intent(ManageBookActivity.this, MainActivity.class));
+            }
+
+            @Override
+            public void onFailure(Call<NoDataResponse> call, Throwable t) {
+                Toast.makeText(ManageBookActivity.this, ""+ t, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 }

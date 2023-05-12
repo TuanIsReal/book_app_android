@@ -44,10 +44,6 @@ public class AdapterBookFilter extends RecyclerView.Adapter<AdapterBookFilter.Ho
         this.books = books;
     }
 
-    public void setBooks(ArrayList<Book> books) {
-        this.books = books;
-        notifyDataSetChanged();
-    }
 
     @NonNull
     @Override
