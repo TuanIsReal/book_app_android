@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.activity.AddPointActivity;
+import com.anhtuan.bookapp.activity.BalanceChangeActivity;
+import com.anhtuan.bookapp.activity.IncomeActivity;
 import com.anhtuan.bookapp.activity.MainActivity;
 import com.anhtuan.bookapp.activity.SettingActivity;
 import com.anhtuan.bookapp.domain.User;
@@ -38,7 +40,7 @@ public class ProfileFragment extends Fragment {
     String userId;
     ImageButton reloadBtn;
     Button buyPointBtn;
-    TextView nameTv, pointTv, logoutTv, settingTv;
+    TextView nameTv, pointTv, logoutTv, settingTv, incomeTv, changeTv;
     CircleImageView avatar;
     public SharedPreferences sharedPreferences;
     View view;
@@ -88,6 +90,22 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        incomeTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(view.getContext(), IncomeActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
+
+        changeTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(view.getContext(), BalanceChangeActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
+
         return view;
     }
 
@@ -99,6 +117,8 @@ public class ProfileFragment extends Fragment {
         settingTv = view.findViewById(R.id.settingTv);
         reloadBtn = view.findViewById(R.id.reloadBtn);
         buyPointBtn = view.findViewById(R.id.buyPointBtn);
+        incomeTv = view.findViewById(R.id.incomeTv);
+        changeTv = view.findViewById(R.id.changeTv);
     }
 
     private void logout(Context context, String userId){

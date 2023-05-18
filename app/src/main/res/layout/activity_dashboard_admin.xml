@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/shape_toolbar02">
 
         <TextView
@@ -54,22 +54,35 @@
             android:layout_marginEnd="10dp"
             android:text="Quản lý sách"
             android:textStyle="bold"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textColor="@color/white"/>
 
         <TextView
             android:id="@+id/manageRequestTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/subTitileTv"
-            android:layout_toStartOf="@id/manageBookTv"
-            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="11dp"
             android:layout_marginEnd="20dp"
+            android:layout_toStartOf="@id/manageBookTv"
             android:text="Quản lý yêu cầu"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/manageIncomeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/subTitileTv"
+            android:layout_marginTop="11dp"
+            android:layout_marginEnd="20dp"
+            android:layout_toStartOf="@id/manageRequestTv"
+            android:text="Quản lý thu nhập"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
 
     </RelativeLayout>

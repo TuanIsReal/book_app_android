@@ -40,4 +40,8 @@ public interface PurchasedBookApi {
     @GET("getPurchasedBook")
     Call<GetPurchasedBookResponse> getPurchasedBook(@Query("bookId") String bookId,
                                                     @Query("userId") String userId);
+
+    @POST("unShowBook")
+    Call<NoDataResponse> unShowBook(@Query("bookId") String bookId,
+                                  @Query("userId") String userId);
 }

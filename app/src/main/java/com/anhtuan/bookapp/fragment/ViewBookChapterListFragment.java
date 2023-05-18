@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,8 @@ public class ViewBookChapterListFragment extends Fragment implements AdapterBook
     String userId;
     View view;
     int lastReadChapter;
+    SwipeRefreshLayout swipeRefresh;
+
     public ViewBookChapterListFragment(String bookId, String userId) {
         this.bookId = bookId;
         this.userId = userId;
@@ -56,9 +59,16 @@ public class ViewBookChapterListFragment extends Fragment implements AdapterBook
         view = inflater.inflate(R.layout.fragment_view_book_chapter_list, container, false);
         chapterNum = view.findViewById(R.id.chapterNum);
         bookChaptersRv = view.findViewById(R.id.bookChaptersRv);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
 
         loadPurchasedBook();
 
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadPurchasedBook();
+            }
+        });
         return view;
     }
 
@@ -82,6 +92,7 @@ public class ViewBookChapterListFragment extends Fragment implements AdapterBook
 
             @Override
             public void onFailure(Call<GetPurchasedBookResponse> call, Throwable t) {
+                swipeRefresh.setRefreshing(false);
                 Toast.makeText(view.getContext(), "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
             }
         });
@@ -91,6 +102,7 @@ public class ViewBookChapterListFragment extends Fragment implements AdapterBook
         bookChapterApi.getBookChapterList(bookId).enqueue(new Callback<GetBookChapterListResponse>() {
             @Override
             public void onResponse(Call<GetBookChapterListResponse> call, Response<GetBookChapterListResponse> response) {
+                swipeRefresh.setRefreshing(false);
                 if (response.body() != null){
                     GetBookChapterListResponse responseBody = response.body();
                     if (responseBody.getCode() == 106){
@@ -107,6 +119,7 @@ public class ViewBookChapterListFragment extends Fragment implements AdapterBook
 
             @Override
             public void onFailure(Call<GetBookChapterListResponse> call, Throwable t) {
+                swipeRefresh.setRefreshing(false);
                 Toast.makeText(view.getContext(), "" +t, Toast.LENGTH_SHORT).show();
             }
         });

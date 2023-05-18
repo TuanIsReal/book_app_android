@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
@@ -64,8 +65,17 @@ public class AdapterViewBookReview extends RecyclerView.Adapter<AdapterViewBookR
                 if (response.body() != null && response.body().getCode() == 100){
                     User user = response.body().getData();
                     holder.nameTv.setText(user.getName());
+                    String imageName = user.getAvatarImage();
+                    Boolean isLoginGoogle = user.getGoogleLogin();
 
-                    if (user.getAvatarImage() != null){
+                    if (!Objects.isNull(isLoginGoogle) && isLoginGoogle){
+                        Glide.with(context)
+                                .load(imageName)
+                                .into(holder.avatar);
+
+                    }
+
+                    if (imageName != null && Objects.isNull(isLoginGoogle)){
                         userApi.getAvatarImage(user.getAvatarImage()).enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

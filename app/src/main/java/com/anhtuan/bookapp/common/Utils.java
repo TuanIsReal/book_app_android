@@ -5,6 +5,13 @@ import java.util.List;
 public class Utils {
     public static String covertLongToTimeString(long time){
         long number;
+        time += 1000;
+
+        if (time < 60000){
+            number = Math.floorDiv(time, 1000);
+            return number + " giây trước";
+        }
+
         if (time < 3600000){
             number = Math.floorDiv(time, 60000);
             return number + " phút trước";

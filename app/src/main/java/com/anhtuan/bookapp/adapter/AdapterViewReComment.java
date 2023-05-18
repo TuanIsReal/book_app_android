@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.databinding.RowReCommentBinding;
 import com.anhtuan.bookapp.domain.ReComment;
 import com.anhtuan.bookapp.domain.User;
@@ -20,6 +22,8 @@ import com.anhtuan.bookapp.response.GetUserInfoResponse;
 import com.bumptech.glide.Glide;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,7 +57,7 @@ public class AdapterViewReComment extends RecyclerView.Adapter<AdapterViewReComm
         long time = System.currentTimeMillis();
 
         holder.bodyCmt.setText(commentContent);
-        holder.timeCmt.setText(covertLongToTimeString(time - commentTime));
+        holder.timeCmt.setText(Utils.covertLongToTimeString(time - commentTime));
 
         if (author != null){
             userApi.getUserInfo(author).enqueue(new Callback<GetUserInfoResponse>() {
@@ -63,8 +67,17 @@ public class AdapterViewReComment extends RecyclerView.Adapter<AdapterViewReComm
                         if (response.body().getCode() == 100){
                             user = response.body().getData();
                             holder.nameTv.setText(user.getName());
+                            String imageName = user.getAvatarImage();
+                            Boolean isLoginGoogle = user.getGoogleLogin();
 
-                            if (user.getAvatarImage() != null){
+                            if (!Objects.isNull(isLoginGoogle) && isLoginGoogle){
+                                Glide.with(context)
+                                        .load(imageName)
+                                        .into(holder.avatar);
+
+                            }
+
+                            if (imageName != null && Objects.isNull(isLoginGoogle)){
                                 userApi.getAvatarImage(user.getAvatarImage()).enqueue(new Callback<ResponseBody>() {
                                     @Override
                                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -116,19 +129,4 @@ public class AdapterViewReComment extends RecyclerView.Adapter<AdapterViewReComm
         }
     }
 
-    private String covertLongToTimeString(long time){
-        long number;
-        if (time < 3600000){
-            number = Math.floorDiv(time, 60000);
-            return number + " phút trước";
-        }
-
-        if (time < 43200000){
-            number = Math.floorDiv(time, 3600000);
-            return number + " giờ trước";
-        }
-
-        number = Math.floorDiv(time, 43200000);
-        return number + " ngày trước";
-    }
 }

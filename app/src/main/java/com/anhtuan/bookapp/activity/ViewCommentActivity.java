@@ -3,6 +3,7 @@ package com.anhtuan.bookapp.activity;
 import static com.anhtuan.bookapp.api.CommentApi.commentApi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -67,6 +68,13 @@ public class ViewCommentActivity extends AppCompatActivity {
             }
         });
 
+        binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadCommentList();
+            }
+        });
+
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +87,7 @@ public class ViewCommentActivity extends AppCompatActivity {
         commentApi.getCommentList(bookId).enqueue(new Callback<GetCommentListResponse>() {
             @Override
             public void onResponse(Call<GetCommentListResponse> call, Response<GetCommentListResponse> response) {
+                binding.swipeRefresh.setRefreshing(false);
                 if (response.body() != null){
                     if (response.body().getCode() == 100){
                         commentList = response.body().getData();
@@ -90,6 +99,7 @@ public class ViewCommentActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GetCommentListResponse> call, Throwable t) {
+                binding.swipeRefresh.setRefreshing(false);
                 Toast.makeText(ViewCommentActivity.this, "" + t, Toast.LENGTH_SHORT).show();
             }
         });

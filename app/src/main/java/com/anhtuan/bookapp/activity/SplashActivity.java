@@ -6,9 +6,12 @@ import static com.anhtuan.bookapp.api.UserApi.userApi;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -33,12 +36,14 @@ import retrofit2.Response;
 public class SplashActivity extends AppCompatActivity {
 
 //    private FirebaseAuth firebaseAuth;
+    private static final int MY_REQUEST_CODE = 20000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        requestPermission();
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -47,8 +52,8 @@ public class SplashActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
                 String userId = sharedPreferences.getString("userId","");
                 if (userId.isBlank()){
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     finish();
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 }
                 else {
                     autoLogin(userId);
@@ -94,12 +99,13 @@ public class SplashActivity extends AppCompatActivity {
 
                             } else if (responseBody.getCode() == 100) {
                                 if (role.equals("admin")){
+                                    finish();
                                     startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
                                 }
                                 else {
+                                    finish();
                                     startActivity(new Intent(SplashActivity.this, DashboardUserActivity.class));
                                 }
-                                finish();
                             }
                         }
                     }
@@ -107,12 +113,13 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<NoDataResponse> call, Throwable t) {
                         if (role.equals("admin")){
+                            finish();
                             startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
                         }
                         else {
+                            finish();
                             startActivity(new Intent(SplashActivity.this, DashboardUserActivity.class));
                         }
-                        finish();
                     }
                 });
             }
@@ -133,13 +140,16 @@ public class SplashActivity extends AppCompatActivity {
                     editor.putString("userId", user.getId());
                     editor.apply();
                     if (user.getRole().equals("member")){
+                        finish();
                         startActivity(new Intent(SplashActivity.this, DashboardUserActivity.class));
                     }
                     if (user.getRole().equals("admin")){
+                        finish();
                         startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
                     }
                 }
                 else {
+                    finish();
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 }
             }
@@ -149,5 +159,18 @@ public class SplashActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void requestPermission(){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+            return;
+        }
+        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED){
+            String[] permission;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                permission = new String[]{Manifest.permission.POST_NOTIFICATIONS};
+                requestPermissions(permission, MY_REQUEST_CODE);
+            }
+        }
     }
 }

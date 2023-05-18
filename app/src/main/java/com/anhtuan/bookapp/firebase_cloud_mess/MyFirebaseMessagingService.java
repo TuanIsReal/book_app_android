@@ -42,7 +42,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void sendNotification(String title, String bodyMess) {
         Intent intent = new Intent(this, NotificationFragment.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE);
 
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ChannelNotification.CHANNEL_ID)

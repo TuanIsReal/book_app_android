@@ -43,7 +43,7 @@
         android:layout_alignParentBottom="true"
         android:textColor="@color/purple_500"
         android:background="@drawable/shape_button2"
-        android:text="Bỏ qua"/>
+        android:text="Đăng ký"/>
 
 
 </RelativeLayout>

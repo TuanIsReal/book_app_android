@@ -42,7 +42,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:fontFamily="sans-serif-condensed"
-            android:text="Thêm sách mới"
+            android:text="Thêm truyện mới"
             android:textColor="@color/white"
             android:textSize="28sp"/>
 
@@ -69,7 +69,7 @@
                 android:background="@drawable/shape_edittex01"
                 android:drawableStart="@drawable/ic_book_blue"
                 android:drawablePadding="10dp"
-                android:hint="Tên sách"
+                android:hint="Tên truyện"
                 android:inputType="textPersonName|textCapWords"
                 android:padding="10dp"
                 android:textColor="@color/black"
@@ -145,7 +145,7 @@
                 android:background="@drawable/shape_edittex01"
                 android:drawableStart="@drawable/ic_point_gold"
                 android:drawablePadding="10dp"
-                android:hint="Giá sách"
+                android:hint="Giá truyện"
                 android:inputType="number"
                 android:padding="10dp"
                 android:textColor="@color/black"
@@ -167,7 +167,7 @@
             android:drawableEnd="@drawable/ic_down_blue"
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
-            android:hint="Loại sách                      (Tối đa 3 loại)"
+            android:hint="Loại truyện                      (Tối đa 3 loại)"
             android:textColorHint="@color/gray01"
             android:padding="10dp"
             android:textColor="@color/black"
@@ -182,7 +182,7 @@
             android:layout_marginTop="5dp"
             android:background="@drawable/shape_button2"
             android:layout_below="@id/categoryTv"
-            android:text="Tải lên ảnh cho sách"
+            android:text="Tải lên ảnh cho truyện"
             android:textColor="@color/black"/>
 
         <TextView

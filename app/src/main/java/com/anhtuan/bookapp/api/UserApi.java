@@ -6,6 +6,7 @@ import com.anhtuan.bookapp.request.AuthenVerifyCodeRequest;
 import com.anhtuan.bookapp.request.RegisterRequest;
 import com.anhtuan.bookapp.response.AuthenVerifyCodeResponse;
 import com.anhtuan.bookapp.response.CheckLoggedResponse;
+import com.anhtuan.bookapp.response.GetBalanceChangeResponse;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
 import com.anhtuan.bookapp.response.LoginResponse;
 import com.anhtuan.bookapp.response.RegisterResponse;
@@ -87,4 +88,6 @@ public interface UserApi {
     @POST("createNewPassword")
     Call<NoDataResponse> createNewPassword(@Query("userId") String userId,
                                         @Query("newPassword") String newPassword);
+    @POST("getBalanceChange")
+    Call<GetBalanceChangeResponse> getBalanceChange(@Query("userId") String userId);
 }

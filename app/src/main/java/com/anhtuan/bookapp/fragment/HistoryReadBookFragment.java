@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +34,7 @@ public class HistoryReadBookFragment extends Fragment {
     public List<UserBookLibrary> bookList;
     private AdapterHistoryReadBook adapter;
     RecyclerView booksRv;
-    ImageView reloadBt;
+    SwipeRefreshLayout swipeRefresh;
     String userId;
     View view;
 
@@ -46,14 +47,14 @@ public class HistoryReadBookFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_history_read_book, container, false);
         bookList = new ArrayList<>();
         booksRv = view.findViewById(R.id.booksRv);
-        reloadBt = view.findViewById(R.id.reloadBt);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         userId = sharedPreferences.getString("userId","");
         loadHistoryBook();
 
-        reloadBt.setOnClickListener(new View.OnClickListener() {
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v){
+            public void onRefresh() {
                 loadHistoryBook();
             }
         });
@@ -66,11 +67,12 @@ public class HistoryReadBookFragment extends Fragment {
             @Override
             public void onResponse(Call<GetUserBookLibraryResponse> call, Response<GetUserBookLibraryResponse> response) {
                 GetUserBookLibraryResponse responseBody = response.body();
+                swipeRefresh.setRefreshing(false);
                 if (responseBody.getCode() == 106){
                     Toast.makeText(view.getContext(), "user khong ton tai", Toast.LENGTH_SHORT).show();
                 } else if (responseBody.getCode() == 100) {
                     bookList = responseBody.getData();
-                    adapter = new AdapterHistoryReadBook(view.getContext(), bookList);
+                    adapter = new AdapterHistoryReadBook(view.getContext(), bookList, userId);
                     booksRv.setAdapter(adapter);
                 }else {
                     Toast.makeText(view.getContext(), "Loi khong xac dinh", Toast.LENGTH_SHORT).show();
@@ -79,6 +81,7 @@ public class HistoryReadBookFragment extends Fragment {
 
             @Override
             public void onFailure(Call<GetUserBookLibraryResponse> call, Throwable t) {
+                swipeRefresh.setRefreshing(false);
                 Toast.makeText(view.getContext(), "" + t, Toast.LENGTH_SHORT).show();
             }
         });

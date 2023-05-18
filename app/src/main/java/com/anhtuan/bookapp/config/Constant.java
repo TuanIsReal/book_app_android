@@ -1,7 +1,7 @@
 package com.anhtuan.bookapp.config;
 
 public class Constant {
-    public static final String IP_SERVER = "http://192.168.218.143:8080/";
+    public static final String IP_SERVER = "http://192.168.1.9:8080/";
 
     //ip Hai
 //    public static final String IP_SERVER = "http://192.168.43.143:8080/";
@@ -54,5 +54,20 @@ public class Constant {
 
     public class VERIFY_CODE_TYPE{
         public static final int FORGOT_PASS = 1;
+    }
+
+    public static String createContentTransactionHistory(int type){
+        switch (type){
+            case 1:
+                return "Trừ Point mua sách";
+            case 2:
+                return "Cộng Point bán sách";
+            case 3:
+                return "Cộng Point nạp tiền";
+            case 4:
+                return "Cộng Point từ admin";
+            default:
+                return "Không xác định";
+        }
     }
 }

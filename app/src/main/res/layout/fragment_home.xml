@@ -130,13 +130,14 @@
 
                 <TextView
                     android:id="@+id/ratingPointNew"
-                    android:layout_width="wrap_content"
+                    android:layout_width="30dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:textSize="12dp"
+                    android:textSize="14dp"
                     android:layout_below="@id/introductionNewTv"
                     android:layout_toRightOf="@+id/ratingBarNew"
                     android:layout_marginLeft="10dp"
+                    android:maxLines="1"
                     />
 
                 <androidx.cardview.widget.CardView

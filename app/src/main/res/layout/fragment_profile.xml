@@ -98,13 +98,39 @@
         android:drawableRight="@drawable/ic_right_black"/>
 
     <TextView
+        android:id="@+id/incomeTv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Thống kê thu chi"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_below="@id/line1"
+        android:gravity="left|center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:drawableRight="@drawable/ic_right_black"/>
+
+    <TextView
+        android:id="@+id/changeTv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Biến động số dư"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_below="@id/line2"
+        android:gravity="left|center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:drawableRight="@drawable/ic_right_black"/>
+
+    <TextView
         android:id="@+id/logoutTv"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="Đăng xuất"
         android:textSize="20dp"
         android:textColor="@color/black"
-        android:layout_below="@id/line1"
+        android:layout_below="@id/line3"
         android:gravity="left|center"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
@@ -114,7 +140,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        android:layout_below="@id/logoutTv"/>
+        android:layout_below="@id/incomeTv"/>
     <View
         android:id="@+id/line1"
         android:layout_width="match_parent"
@@ -129,5 +155,20 @@
         android:background="@android:color/darker_gray"
         android:layout_below="@id/avatar"
         android:layout_marginTop="80dp"/>
+
+    <View
+        android:id="@+id/line3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/changeTv"
+        />
+    <View
+        android:id="@+id/line4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/logoutTv"
+        />
 
 </RelativeLayout>

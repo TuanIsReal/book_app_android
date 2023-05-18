@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/toolbarChapterRl"
         android:layout_width="match_parent"
-        android:layout_height="45dp">
+        android:layout_height="wrap_content">
 
         <ImageButton
             android:id="@+id/returnBtn"
@@ -23,7 +23,7 @@
         <TextView
             android:id="@+id/charterTv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_toEndOf="@id/returnBtn"
             android:text=""
             android:textSize="20sp"
@@ -160,7 +160,7 @@
             android:textAlignment="center"
             android:drawableStart="@drawable/baseline_book_info_gray"
             android:drawablePadding="15dp"
-            android:text="Thông tin sách"
+            android:text="Thông tin truyện"
             android:textColor="@color/black"
             android:textSize="20sp"/>
 

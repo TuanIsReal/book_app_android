@@ -4,6 +4,7 @@ import static com.anhtuan.bookapp.api.BookApi.bookApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +36,9 @@ public class ManageBookActivity extends AppCompatActivity {
     private ArrayList<Book> books;
 
     private AdapterBookAdmin adapterBookAdmin;
+    public static final long TIME_INTERVAL = 3000;
+    long backPressed;
+    String text = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +50,7 @@ public class ManageBookActivity extends AppCompatActivity {
         String userId = sharedPreferences.getString("userId","");
 
         loadTitle(userId);
-        loadBooks("");
+        loadBooks(text);
 
         binding.searchEt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -56,7 +60,12 @@ public class ManageBookActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                loadBooks(s.toString());
+                if (s.length() > 0){
+                    text = s.toString();
+                } else {
+                    text = "";
+                }
+                loadBooks(text);
             }
 
             @Override
@@ -65,10 +74,18 @@ public class ManageBookActivity extends AppCompatActivity {
             }
         });
 
+        binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadBooks(text);
+            }
+        });
+
         binding.dashboardAdminTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ManageBookActivity.this, DashboardAdminActivity.class));
+                finish();
             }
         });
 
@@ -86,12 +103,28 @@ public class ManageBookActivity extends AppCompatActivity {
             }
         });
 
+        binding.manageRequestTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ManageBookActivity.this, ManageRequestBookActivity.class));
+                finish();
+            }
+        });
+
+        binding.manageIncomeTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ManageBookActivity.this, IncomeAdminActivity.class));
+                finish();
+            }
+        });
     }
 
     private void loadBooks(String text) {
         bookApi.searchBook(text).enqueue(new Callback<SearchBookResponse>() {
             @Override
             public void onResponse(Call<SearchBookResponse> call, Response<SearchBookResponse> response) {
+                binding.swipeRefresh.setRefreshing(false);
                 SearchBookResponse searchBookResponse = response.body();
                 if (searchBookResponse.getCode() == 100){
                     books = searchBookResponse.getData();
@@ -104,6 +137,7 @@ public class ManageBookActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SearchBookResponse> call, Throwable t) {
+                binding.swipeRefresh.setRefreshing(false);
                 Toast.makeText(ManageBookActivity.this, ""+t, Toast.LENGTH_SHORT).show();
             }
         });
@@ -148,4 +182,14 @@ public class ManageBookActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        if (backPressed + TIME_INTERVAL > System.currentTimeMillis()){
+            super.onBackPressed();
+            return;
+        } else {
+            Toast.makeText(ManageBookActivity.this, "Quay lại lần nữa để thoát", Toast.LENGTH_SHORT).show();
+        }
+        backPressed = System.currentTimeMillis();
+    }
 }

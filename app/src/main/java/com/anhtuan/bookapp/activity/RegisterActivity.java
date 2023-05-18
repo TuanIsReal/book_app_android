@@ -170,10 +170,16 @@ public class RegisterActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
             return;
         }
-        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+        if (checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
             openStorage();
         } else {
-            String[] permission = {Manifest.permission.READ_EXTERNAL_STORAGE};
+            String[] permission;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                permission = new String[]{Manifest.permission.READ_MEDIA_IMAGES};
+            } else {
+                permission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
+            }
             requestPermissions(permission, MY_REQUEST_CODE);
         }
     }

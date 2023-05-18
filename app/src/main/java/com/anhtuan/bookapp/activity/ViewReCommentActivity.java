@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.anhtuan.bookapp.adapter.AdapterViewReComment;
+import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.databinding.ActivityViewReCommentBinding;
 import com.anhtuan.bookapp.domain.Comment;
 import com.anhtuan.bookapp.domain.ReComment;
@@ -36,7 +37,6 @@ public class ViewReCommentActivity extends AppCompatActivity {
     List<ReComment> reCommentList;
     User user;
     Comment parentComment;
-    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +88,7 @@ public class ViewReCommentActivity extends AppCompatActivity {
 
     private void setParentCommentInfo(){
         binding.bodyMainCmt.setText(parentComment.getCommentContent());
-        binding.timeMainCmt.setText(covertLongToTimeString(System.currentTimeMillis() - parentComment.getCommentTime()));
+        binding.timeMainCmt.setText(Utils.covertLongToTimeString(System.currentTimeMillis() - parentComment.getCommentTime()));
 
         userApi.getUserInfo(parentComment.getAuthor()).enqueue(new Callback<GetUserInfoResponse>() {
             @Override
@@ -156,19 +156,4 @@ public class ViewReCommentActivity extends AppCompatActivity {
     }
 
 
-    private String covertLongToTimeString(long time){
-        long number;
-        if (time < 3600000){
-            number = Math.floorDiv(time, 60000);
-            return number + " phút trước";
-        }
-
-        if (time < 43200000){
-            number = Math.floorDiv(time, 3600000);
-            return number + " giờ trước";
-        }
-
-        number = Math.floorDiv(time, 43200000);
-        return number + " ngày trước";
-    }
 }

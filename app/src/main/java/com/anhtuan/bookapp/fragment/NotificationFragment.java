@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ public class NotificationFragment extends Fragment {
     RecyclerView notificationsRv;
     AdapterNotification adapterNotification;
     String userId;
+    SwipeRefreshLayout swipeRefresh;
 
     public NotificationFragment() {
     }
@@ -44,10 +46,25 @@ public class NotificationFragment extends Fragment {
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         userId = sharedPreferences.getString("userId","");
         notificationsRv = view.findViewById(R.id.notificationsRv);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
 
+        loadNotifications();
+
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadNotifications();
+            }
+        });
+
+        return view;
+    }
+
+    private void loadNotifications() {
         notificationApi.getNotification(userId).enqueue(new Callback<GetNotificationResponse>() {
             @Override
             public void onResponse(Call<GetNotificationResponse> call, Response<GetNotificationResponse> response) {
+                swipeRefresh.setRefreshing(false);
                 if (response.body() != null && response.body().getCode() == 100){
                     List<Notification> notificationList = response.body().getData();
                     adapterNotification = new AdapterNotification(view.getContext(), notificationList);
@@ -57,11 +74,9 @@ public class NotificationFragment extends Fragment {
 
             @Override
             public void onFailure(Call<GetNotificationResponse> call, Throwable t) {
+                swipeRefresh.setRefreshing(false);
                 Toast.makeText(view.getContext(), ""+t, Toast.LENGTH_SHORT).show();
             }
         });
-
-
-        return view;
     }
 }

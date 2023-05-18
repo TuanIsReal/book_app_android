@@ -31,7 +31,8 @@ public class DashboardAdminActivity extends AppCompatActivity {
     private ArrayList<Category> categories;
 
     private AdapterCategory adapterCategory;
-
+    public static final long TIME_INTERVAL = 3000;
+    long backPressed;
 
 
     @Override
@@ -81,6 +82,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
         binding.manageBookTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 startActivity(new Intent(DashboardAdminActivity.this, ManageBookActivity.class));
             }
         });
@@ -88,7 +90,16 @@ public class DashboardAdminActivity extends AppCompatActivity {
         binding.manageRequestTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 startActivity(new Intent(DashboardAdminActivity.this, ManageRequestBookActivity.class));
+            }
+        });
+
+        binding.manageIncomeTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(DashboardAdminActivity.this, IncomeAdminActivity.class));
             }
         });
 
@@ -151,14 +162,15 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
     }
-//    private void checkUser(){
-//        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-//        if (firebaseUser == null){
-//            startActivity(new Intent(this, MainActivity.class));
-//            finish();
-//        } else {
-//            String email = firebaseUser.getEmail();
-//            binding.subTitileTv.setText(email);
-//        }
-//    }
+
+    @Override
+    public void onBackPressed() {
+        if (backPressed + TIME_INTERVAL > System.currentTimeMillis()){
+            super.onBackPressed();
+            return;
+        } else {
+            Toast.makeText(DashboardAdminActivity.this, "Quay lại lần nữa để thoát", Toast.LENGTH_SHORT).show();
+        }
+        backPressed = System.currentTimeMillis();
+    }
 }

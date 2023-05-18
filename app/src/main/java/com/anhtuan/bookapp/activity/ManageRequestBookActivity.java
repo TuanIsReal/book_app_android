@@ -5,6 +5,7 @@ import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +34,8 @@ public class ManageRequestBookActivity extends AppCompatActivity implements Adap
     AdapterManageRequestBook adapterManageRequestBook;
     public List<BookRequestUp> bookRequestUpList;
     BookRequestUp bookRequestUp;
+    public static final long TIME_INTERVAL = 3000;
+    long backPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,13 @@ public class ManageRequestBookActivity extends AppCompatActivity implements Adap
         String userId = sharedPreferences.getString("userId","");
 
         loadRequestUploadBook();
+
+        binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadRequestUploadBook();
+            }
+        });
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,12 +75,21 @@ public class ManageRequestBookActivity extends AppCompatActivity implements Adap
                 startActivity(new Intent(ManageRequestBookActivity.this, ManageBookActivity.class));
             }
         });
+
+        binding.manageIncomeTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(ManageRequestBookActivity.this, IncomeAdminActivity.class));
+            }
+        });
     }
 
     private void loadRequestUploadBook() {
         bookRequestUpApi.getAllRequestUploadBook().enqueue(new Callback<GetRequestUploadBookResponse>() {
             @Override
             public void onResponse(Call<GetRequestUploadBookResponse> call, Response<GetRequestUploadBookResponse> response) {
+                binding.swipeRefresh.setRefreshing(false);
                 if (response.body() != null){
                     GetRequestUploadBookResponse responseBody = response.body();
                     if (responseBody.getCode() == 100){
@@ -82,7 +101,7 @@ public class ManageRequestBookActivity extends AppCompatActivity implements Adap
 
             @Override
             public void onFailure(Call<GetRequestUploadBookResponse> call, Throwable t) {
-
+                binding.swipeRefresh.setRefreshing(false);
             }
         });
     }
@@ -130,5 +149,16 @@ public class ManageRequestBookActivity extends AppCompatActivity implements Adap
                 Toast.makeText(ManageRequestBookActivity.this, ""+ t, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (backPressed + TIME_INTERVAL > System.currentTimeMillis()){
+            super.onBackPressed();
+            return;
+        } else {
+            Toast.makeText(ManageRequestBookActivity.this, "Quay lại lần nữa để thoát", Toast.LENGTH_SHORT).show();
+        }
+        backPressed = System.currentTimeMillis();
     }
 }

@@ -108,7 +108,6 @@ public class AdapterBookAdmin extends RecyclerView.Adapter<AdapterBookAdmin.Hold
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ChapterAddAdminActivity.class);
-                ArrayList<String> bookInfo = new ArrayList<>();
                 intent.putExtra("bookName", bookName);
                 context.startActivity(intent);
             }

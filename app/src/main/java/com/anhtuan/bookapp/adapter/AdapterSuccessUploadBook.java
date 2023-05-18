@@ -114,6 +114,7 @@ public class AdapterSuccessUploadBook extends RecyclerView.Adapter<AdapterSucces
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, BookChapterAddActivity.class);
+                intent.putExtra("bookName", bookName);
                 context.startActivity(intent);
             }
         });
