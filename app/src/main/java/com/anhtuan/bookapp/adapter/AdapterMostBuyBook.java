@@ -1,6 +1,5 @@
 package com.anhtuan.bookapp.adapter;
 
-import static com.anhtuan.bookapp.api.BookApi.bookApi;
 import static com.anhtuan.bookapp.api.STFApi.stfApi;
 
 import android.content.Context;
@@ -15,15 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anhtuan.bookapp.activity.ViewBookActivity;
-import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.databinding.ColumnMostBuyBookBinding;
 import com.anhtuan.bookapp.domain.Book;
+import com.anhtuan.bookapp.response.ImageResponse;
 import com.bumptech.glide.Glide;
 
-import java.io.IOException;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,18 +52,18 @@ public class AdapterMostBuyBook extends RecyclerView.Adapter<AdapterMostBuyBook.
         holder.purchaseNumber.setText(String.valueOf(book.getTotalPurchased()));
 
         if (bookImage != null && !bookImage.isBlank()){
-            stfApi.getThumbnail(bookImage).enqueue(new Callback<String>() {
+            stfApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
                 @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    if (response.isSuccessful()){
+                public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
+                    if (response.body().getCode() == 100){
                         Glide.with(context)
-                                .load(response.body())
+                                .load(response.body().getData())
                                 .into(holder.bookImage);
                     }
                 }
 
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
+                public void onFailure(Call<ImageResponse> call, Throwable t) {
 
                 }
             });

@@ -93,4 +93,8 @@ public interface UserApi {
                                         @Query("newPassword") String newPassword);
     @POST("getBalanceChange")
     Call<GetBalanceChangeResponse> getBalanceChange(@Query("userId") String userId);
+
+    @POST("loginDevice")
+    Call<NoDataResponse> loginDevice(@Query("userId") String userId,
+                                     @Query("deviceToken") String deviceToken);
 }

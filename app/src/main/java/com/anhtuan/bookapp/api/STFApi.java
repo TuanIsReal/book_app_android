@@ -1,6 +1,7 @@
 package com.anhtuan.bookapp.api;
 
 import com.anhtuan.bookapp.config.Constant;
+import com.anhtuan.bookapp.response.ImageResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,15 +34,15 @@ public interface STFApi {
 
     @Multipart
     @POST("updateAvatarImage")
-    Call<NoDataResponse> updateAvatarImage(@Part("userId") RequestBody bookName,
+    Call<NoDataResponse> updateAvatarImage(@Part("userId") RequestBody userId,
                                            @Part MultipartBody.Part image);
 
     @GET("getBookImage")
-    Call<String> getBookImage(@Query("imageName") String imageName);
+    Call<ImageResponse> getBookImage(@Query("imageName") String imageName);
 
     @GET("getAvatar")
-    Call<String> getAvatar(@Query("imageName") String imageName);
+    Call<ImageResponse> getAvatar(@Query("imageName") String imageName);
 
     @GET("getThumbnail")
-    Call<String> getThumbnail(@Query("thumbnailName") String thumbnailName);
+    Call<ImageResponse> getThumbnail(@Query("thumbnailName") String thumbnailName);
 }

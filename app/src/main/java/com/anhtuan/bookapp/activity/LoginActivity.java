@@ -1,6 +1,5 @@
 package com.anhtuan.bookapp.activity;
 
-import static com.anhtuan.bookapp.api.DeviceApi.deviceApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.NonNull;
@@ -139,10 +138,11 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("userId", loginData.getUserId());
-                    editor.putString("userRole", loginData.getRole());
+                    editor.putInt("userRole", loginData.getRole());
                     editor.putString("theme", "light");
                     editor.apply();
-                    String role = loginData.getRole();
+                    int role = loginData.getRole();
+                    progressDialog.dismiss();
                     sendDeviceToken(loginData.getUserId(), role);
                 } else {
                     progressDialog.dismiss();
@@ -159,8 +159,9 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void sendDeviceToken(String userId, String role){
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+    private void sendDeviceToken(String userId, int role){
+        Log.d("---sendDeviceToken", "---");
+            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
                 if (!task.isSuccessful()){
@@ -168,7 +169,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 String token = task.getResult();
-                deviceApi.loginDevice(userId, token).enqueue(new Callback<NoDataResponse>() {
+                Log.d("---Token", token);
+                userApi.loginDevice(userId, token).enqueue(new Callback<NoDataResponse>() {
                     @Override
                     public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
                         if (response.body() != null){
@@ -176,10 +178,12 @@ public class LoginActivity extends AppCompatActivity {
                             if (responseBody.getCode() == 106){
 
                             } else if (responseBody.getCode() == 100) {
-                                if (role.equals("admin")){
+                                if (role == 2){
+                                    Log.d("---Start ", "Admin activity");
                                     startActivity(new Intent(LoginActivity.this, DashboardAdminActivity.class));
                                 }
                                 else {
+                                    Log.d("---Start ", "User activity");
                                     startActivity(new Intent(LoginActivity.this, DashboardUserActivity.class));
                                 }
                             }
@@ -188,7 +192,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                        if (role.equals("admin")){
+                        if (role == 2){
                             startActivity(new Intent(LoginActivity.this, DashboardAdminActivity.class));
                         }
                         else {
@@ -254,15 +258,14 @@ public class LoginActivity extends AppCompatActivity {
                                         SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         editor.putString("userId", registerData.getUserId());
-                                        editor.putString("userRole", registerData.getRole());
+                                        editor.putInt("userRole", registerData.getRole());
                                         editor.putString("theme", "light");
                                         editor.apply();
-                                        String role = registerData.getRole();
+                                        int role = registerData.getRole();
                                         mGoogleSignInClient.signOut();
                                         sendDeviceToken(registerData.getUserId(), role);
                                     }
                             }
-
                             @Override
                             public void onFailure(Call<RegisterResponse> call, Throwable t) {
 

@@ -8,12 +8,12 @@ public class RegisterData {
     private String userId;
 
     @SerializedName("role")
-    private String role;
+    private int role;
 
     public RegisterData() {
     }
 
-    public RegisterData(String userId, String role) {
+    public RegisterData(String userId, int role) {
         this.userId = userId;
         this.role = role;
     }
@@ -26,11 +26,11 @@ public class RegisterData {
         this.userId = userId;
     }
 
-    public String getRole() {
+    public int getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(int role) {
         this.role = role;
     }
 }

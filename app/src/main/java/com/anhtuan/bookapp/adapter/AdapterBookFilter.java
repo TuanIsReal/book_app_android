@@ -1,6 +1,5 @@
 package com.anhtuan.bookapp.adapter;
 
-import static com.anhtuan.bookapp.api.BookApi.bookApi;
 import static com.anhtuan.bookapp.api.STFApi.stfApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
@@ -19,11 +18,11 @@ import com.anhtuan.bookapp.activity.ViewBookActivity;
 import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.databinding.RowBookFilterBinding;
 import com.anhtuan.bookapp.domain.Book;
+import com.anhtuan.bookapp.response.ImageResponse;
 import com.bumptech.glide.Glide;
-import java.io.IOException;
-import java.util.ArrayList;
+
 import java.util.List;
-import okhttp3.ResponseBody;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -87,20 +86,20 @@ public class AdapterBookFilter extends RecyclerView.Adapter<AdapterBookFilter.Ho
         if (bookImage.isBlank()){
             holder.progressBar.setVisibility(View.GONE);
         } else {
-            stfApi.getThumbnail(bookImage).enqueue(new Callback<String>() {
+            stfApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
                 @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+                public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     holder.progressBar.setVisibility(View.GONE);
-                    if (response.isSuccessful()){
+                    if (response.body().getCode() == 100){
                         Glide.with(context)
-                                .load(response.body())
+                                .load(response.body().getData())
                                 .into(holder.imageView);
                     }
 
                 }
 
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
+                public void onFailure(Call<ImageResponse> call, Throwable t) {
                     holder.progressBar.setVisibility(View.GONE);
                     Log.d("err", "err--fail");
                 }

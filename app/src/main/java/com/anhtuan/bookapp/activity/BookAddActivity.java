@@ -75,9 +75,9 @@ public class BookAddActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId","");
-        String userRole = sharedPreferences.getString("userRole","member");
+        int userRole = sharedPreferences.getInt("userRole",1);
 
-        if (userRole.equals("admin")){
+        if (userRole == 2){
             addType = Constant.AddBookType.ADMIN_ADD;
         } else {
             addType = Constant.AddBookType.MEMBER_ADD;

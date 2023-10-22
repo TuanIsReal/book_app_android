@@ -22,14 +22,14 @@ import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.domain.PurchasedBook;
 import com.anhtuan.bookapp.response.CheckPurchasedBookResponse;
 import com.anhtuan.bookapp.response.GetPurchasedBookResponse;
+import com.anhtuan.bookapp.response.ImageResponse;
 import com.anhtuan.bookapp.response.ViewBookResponse;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import java.io.IOException;
+
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -128,22 +128,22 @@ public class ViewBookActivity extends AppCompatActivity {
         binding.starTv.setText(star);
         binding.priceTv.setText(String.valueOf(price));
         if (imageName != null){
-            stfApi.getBookImage(imageName).enqueue(new Callback<String>() {
+            stfApi.getBookImage(imageName).enqueue(new Callback<ImageResponse>() {
                 @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    if (response.isSuccessful()){
+                public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
+                    if (response.body().getCode() == 100){
                         Glide.with(ViewBookActivity.this)
-                                .load(response.body())
+                                .load(response.body().getData())
                                 .into(binding.imageView);
                         Glide.with(ViewBookActivity.this)
-                                .load(response.body())
+                                .load(response.body().getData())
                                 .apply(RequestOptions.bitmapTransform(new BlurTransformation(25,3)))
                                 .into(binding.backgroundImageView);
                     }
                 }
 
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
+                public void onFailure(Call<ImageResponse> call, Throwable t) {
                     Log.d("err", "err--fail");
                 }
             });

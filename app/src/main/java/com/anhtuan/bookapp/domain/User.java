@@ -8,7 +8,7 @@ public class User {
 
     private String password;
 
-    private String role;
+    private int role;
 
     private String name;
 
@@ -25,7 +25,7 @@ public class User {
     public User() {
     }
 
-    public User(String id, String email, String password, String role, String name, String avatarImage, String lastLoginIp, Boolean isLogged, int point) {
+    public User(String id, String email, String password, int role, String name, String avatarImage, String lastLoginIp, Boolean isLogged, int point) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -61,11 +61,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public int getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(int role) {
         this.role = role;
     }
 

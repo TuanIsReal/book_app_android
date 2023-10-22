@@ -1,5 +1,6 @@
 package com.anhtuan.bookapp.fragment;
 
+import static com.anhtuan.bookapp.api.STFApi.stfApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -23,13 +24,13 @@ import com.anhtuan.bookapp.activity.MainActivity;
 import com.anhtuan.bookapp.activity.SettingActivity;
 import com.anhtuan.bookapp.domain.User;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
+import com.anhtuan.bookapp.response.ImageResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.bumptech.glide.Glide;
-import java.io.IOException;
+
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -162,23 +163,19 @@ public class ProfileFragment extends Fragment {
                     }
 
                     if (imageName != null && Objects.isNull(isLoginGoogle)){
-                        userApi.getAvatarImage(imageName).enqueue(new Callback<ResponseBody>() {
+                        stfApi.getAvatar(imageName).enqueue(new Callback<ImageResponse>() {
                             @Override
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                if (response.isSuccessful()){
-                                    try {
-                                        byte[] bytes = response.body().bytes();
-                                        Glide.with(view.getContext())
-                                                .load(bytes)
-                                                .into(avatar);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                            public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
+                                if (response.body().getCode() == 100){
+                                    Log.d("avatar image", response.body().getData());
+                                    Glide.with(view.getContext())
+                                            .load(response.body().getData())
+                                            .into(avatar);
                                 }
                             }
 
                             @Override
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            public void onFailure(Call<ImageResponse> call, Throwable t) {
                                 Log.d("err", "err--fail");
                             }
                         });

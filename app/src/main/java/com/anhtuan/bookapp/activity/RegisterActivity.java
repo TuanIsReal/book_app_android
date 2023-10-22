@@ -1,7 +1,6 @@
 package com.anhtuan.bookapp.activity;
 
-import static com.anhtuan.bookapp.api.BookApi.bookApi;
-import static com.anhtuan.bookapp.api.DeviceApi.deviceApi;
+import static com.anhtuan.bookapp.api.STFApi.stfApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.NonNull;
@@ -213,7 +212,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void updateAvatarImage(String userId, String role){
+    private void updateAvatarImage(String userId, int role){
         try {
             String realImagePath = RealPathUtil.copyFileToInternal(RegisterActivity.this, imageUri);
             Glide.with(this)
@@ -227,7 +226,7 @@ public class RegisterActivity extends AppCompatActivity {
                             RequestBody userIdRB = RequestBody.create(MediaType.parse("multipart/form-data"), userId);
                             RequestBody image = RequestBody.create(MediaType.parse("multipart/form-data"), stream.toByteArray());
                             MultipartBody.Part multipartBodyImage = MultipartBody.Part.createFormData("image", "", image);
-                            userApi.updateAvatarImage(userIdRB, multipartBodyImage).enqueue(new Callback<NoDataResponse>() {
+                            stfApi.updateAvatarImage(userIdRB, multipartBodyImage).enqueue(new Callback<NoDataResponse>() {
                                 @Override
                                 public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
                                     progressDialog.dismiss();
@@ -260,12 +259,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void sendDeviceToken(String userId, String role){
+    private void sendDeviceToken(String userId, int role){
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
                 String token = task.getResult();
-                deviceApi.loginDevice(userId, token).enqueue(new Callback<NoDataResponse>() {
+                userApi.loginDevice(userId, token).enqueue(new Callback<NoDataResponse>() {
                     @Override
                     public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
                         if (response.body() != null){
@@ -273,7 +272,7 @@ public class RegisterActivity extends AppCompatActivity {
                             if (responseBody.getCode() == 106){
 
                             } else if (responseBody.getCode() == 100) {
-                                if (role.equals("admin")){
+                                if (role == 2){
                                     startActivity(new Intent(RegisterActivity.this, DashboardAdminActivity.class));
                                 }
                                 else {
@@ -285,7 +284,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                        if (role.equals("admin")){
+                        if (role == 2){
                             startActivity(new Intent(RegisterActivity.this, DashboardAdminActivity.class));
                         }
                         else {

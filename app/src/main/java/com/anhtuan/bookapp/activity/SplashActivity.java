@@ -1,6 +1,5 @@
 package com.anhtuan.bookapp.activity;
 
-import static com.anhtuan.bookapp.api.DeviceApi.deviceApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.NonNull;
@@ -43,7 +42,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        requestPermission();
+//        requestPermission();
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -68,9 +67,14 @@ public class SplashActivity extends AppCompatActivity {
         userApi.getUserInfo(userId).enqueue(new Callback<GetUserInfoResponse>() {
             @Override
             public void onResponse(Call<GetUserInfoResponse> call, Response<GetUserInfoResponse> response) {
-                GetUserInfoResponse userInfoResponse = response.body();
-                String role = userInfoResponse.getData().getRole();
-                sendDeviceToken(userId, role);
+                if (response.body().getCode() == 106){
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    GetUserInfoResponse userInfoResponse = response.body();
+                    int role = userInfoResponse.getData().getRole();
+                    sendDeviceToken(userId, role);
+                }
             }
 
             @Override
@@ -81,13 +85,13 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
-    private void sendDeviceToken(String userId, String role){
+    private void sendDeviceToken(String userId, int role){
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
 
                 String token = task.getResult();
-                deviceApi.loginDevice(userId, token).enqueue(new Callback<NoDataResponse>() {
+                userApi.loginDevice(userId, token).enqueue(new Callback<NoDataResponse>() {
                     @Override
                     public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
                         if (response.body() != null){
@@ -95,7 +99,7 @@ public class SplashActivity extends AppCompatActivity {
                             if (responseBody.getCode() == 106){
 
                             } else if (responseBody.getCode() == 100) {
-                                if (role.equals("admin")){
+                                if (role == 2){
                                     finish();
                                     startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
                                 }
@@ -109,7 +113,7 @@ public class SplashActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                        if (role.equals("admin")){
+                        if (role == 2){
                             finish();
                             startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
                         }
@@ -136,11 +140,11 @@ public class SplashActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("userId", user.getId());
                     editor.apply();
-                    if (user.getRole().equals("member")){
+                    if (user.getRole() == 1){
                         finish();
                         startActivity(new Intent(SplashActivity.this, DashboardUserActivity.class));
                     }
-                    if (user.getRole().equals("admin")){
+                    if (user.getRole() == 2){
                         finish();
                         startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
                     }

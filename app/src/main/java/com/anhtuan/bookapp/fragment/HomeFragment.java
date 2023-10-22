@@ -9,7 +9,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.anhtuan.bookapp.R;
-import com.anhtuan.bookapp.activity.DashboardUserActivity;
 import com.anhtuan.bookapp.activity.ListBookFilterActivity;
 import com.anhtuan.bookapp.activity.SearchBookUserActivity;
 import com.anhtuan.bookapp.activity.ViewBookActivity;
@@ -31,12 +29,11 @@ import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.response.GetBookResponse;
+import com.anhtuan.bookapp.response.ImageResponse;
 import com.bumptech.glide.Glide;
 
-import java.io.IOException;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -197,18 +194,18 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
         ratingBarNew.setRating((float) book.getStar());
 
         if (book.getBookImage() != null && !book.getBookImage().isBlank()){
-            stfApi.getThumbnail(book.getBookImage()).enqueue(new Callback<String>() {
+            stfApi.getThumbnail(book.getBookImage()).enqueue(new Callback<ImageResponse>() {
                 @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    if (response.isSuccessful()){
+                public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
+                    if (response.body().getCode() == 100){
                         Glide.with(view.getContext())
-                                .load(response.body())
+                                .load(response.body().getData())
                                 .into(imageBookNew);
                     }
                 }
 
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
+                public void onFailure(Call<ImageResponse> call, Throwable t) {
 
                 }
             });

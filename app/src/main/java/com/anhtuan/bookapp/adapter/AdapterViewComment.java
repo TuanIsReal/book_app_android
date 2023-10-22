@@ -20,12 +20,12 @@ import com.anhtuan.bookapp.databinding.RowCommentBinding;
 import com.anhtuan.bookapp.domain.Comment;
 import com.anhtuan.bookapp.domain.User;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
+import com.anhtuan.bookapp.response.ImageResponse;
 import com.bumptech.glide.Glide;
-import java.io.IOException;
+
 import java.util.List;
 import java.util.Objects;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -82,18 +82,18 @@ public class AdapterViewComment extends RecyclerView.Adapter<AdapterViewComment.
                             }
 
                             if (imageName != null && Objects.isNull(isLoginGoogle)){
-                                stfApi.getThumbnail(user.getAvatarImage()).enqueue(new Callback<String>() {
+                                stfApi.getThumbnail(user.getAvatarImage()).enqueue(new Callback<ImageResponse>() {
                                     @Override
-                                    public void onResponse(Call<String> call, Response<String> response) {
-                                        if (response.isSuccessful()){
+                                    public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
+                                        if (response.body().getCode() == 100){
                                             Glide.with(context)
-                                                    .load(response.body())
+                                                    .load(response.body().getData())
                                                     .into(holder.avatar);
                                         }
                                     }
 
                                     @Override
-                                    public void onFailure(Call<String> call, Throwable t) {
+                                    public void onFailure(Call<ImageResponse> call, Throwable t) {
                                         Log.d("err", "err--fail");
                                     }
                                 });
