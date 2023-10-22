@@ -178,11 +178,9 @@ public class LoginActivity extends AppCompatActivity {
                             } else if (responseBody.getCode() == 100) {
                                 if (role.equals("admin")){
                                     startActivity(new Intent(LoginActivity.this, DashboardAdminActivity.class));
-                                    finish();
                                 }
                                 else {
                                     startActivity(new Intent(LoginActivity.this, DashboardUserActivity.class));
-                                    finish();
                                 }
                             }
                         }
@@ -192,11 +190,9 @@ public class LoginActivity extends AppCompatActivity {
                     public void onFailure(Call<NoDataResponse> call, Throwable t) {
                         if (role.equals("admin")){
                             startActivity(new Intent(LoginActivity.this, DashboardAdminActivity.class));
-                            finish();
                         }
                         else {
                             startActivity(new Intent(LoginActivity.this, DashboardUserActivity.class));
-                            finish();
                         }
                     }
                 });

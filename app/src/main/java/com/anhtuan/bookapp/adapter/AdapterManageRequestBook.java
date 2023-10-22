@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.databinding.RowManageBookRequestBinding;
+import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.domain.BookRequestUp;
 
 import java.text.SimpleDateFormat;
@@ -19,11 +20,11 @@ import java.util.List;
 
 public class AdapterManageRequestBook extends RecyclerView.Adapter<AdapterManageRequestBook.HolderManageRequestBook>{
     public Context context;
-    public List<BookRequestUp> bookRequestUpList;
+    public List<Book> bookRequestUpList;
     private RowManageBookRequestBinding binding;
     private ManageRequestBookListener manageRequestBookListener;
 
-    public AdapterManageRequestBook(Context context, List<BookRequestUp> bookRequestUpList) {
+    public AdapterManageRequestBook(Context context, List<Book> bookRequestUpList) {
         this.context = context;
         this.bookRequestUpList = bookRequestUpList;
     }
@@ -41,7 +42,7 @@ public class AdapterManageRequestBook extends RecyclerView.Adapter<AdapterManage
 
     @Override
     public void onBindViewHolder(@NonNull HolderManageRequestBook holder, int position) {
-        BookRequestUp book = bookRequestUpList.get(position);
+        Book book = bookRequestUpList.get(position);
         String bookName = book.getBookName();
         String author = book.getAuthor();
         int price = book.getBookPrice();

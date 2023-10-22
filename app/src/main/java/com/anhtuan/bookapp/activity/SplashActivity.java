@@ -60,7 +60,7 @@ public class SplashActivity extends AppCompatActivity {
 //                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 }
             }
-        }, 2000);
+        }, 1000);
     }
 
     private void autoLogin(String userId){

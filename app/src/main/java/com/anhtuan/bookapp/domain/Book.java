@@ -9,8 +9,6 @@ public class Book {
 
     private String author;
 
-    private String userPost;
-
     private String introduction;
 
     private String bookImage;
@@ -25,9 +23,13 @@ public class Book {
 
     private int totalPurchased;
 
+    private long requestTime;
+
     private long uploadTime;
 
     private long lastUpdateTime;
+
+    private int status;
 
     public Book() {
     }
@@ -54,14 +56,6 @@ public class Book {
 
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    public String getUserPost() {
-        return userPost;
-    }
-
-    public void setUserPost(String userPost) {
-        this.userPost = userPost;
     }
 
     public String getIntroduction() {
@@ -134,5 +128,21 @@ public class Book {
 
     public void setTotalPurchased(int totalPurchased) {
         this.totalPurchased = totalPurchased;
+    }
+
+    public long getRequestTime() {
+        return requestTime;
+    }
+
+    public void setRequestTime(long requestTime) {
+        this.requestTime = requestTime;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

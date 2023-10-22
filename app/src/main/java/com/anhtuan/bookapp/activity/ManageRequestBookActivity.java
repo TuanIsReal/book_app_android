@@ -1,5 +1,6 @@
 package com.anhtuan.bookapp.activity;
 
+import static com.anhtuan.bookapp.api.BookApi.bookApi;
 import static com.anhtuan.bookapp.api.BookRequestUpApi.bookRequestUpApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.anhtuan.bookapp.adapter.AdapterManageRequestBook;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityManageRequestBookBinding;
+import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.domain.BookRequestUp;
 import com.anhtuan.bookapp.response.GetRequestUploadBookResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
@@ -32,8 +34,8 @@ public class ManageRequestBookActivity extends AppCompatActivity implements Adap
     ActivityManageRequestBookBinding binding;
     private final static int REQUEST_CODE = 100003;
     AdapterManageRequestBook adapterManageRequestBook;
-    public List<BookRequestUp> bookRequestUpList;
-    BookRequestUp bookRequestUp;
+    public List<Book> bookRequestUpList;
+    Book bookRequestUp;
     public static final long TIME_INTERVAL = 3000;
     long backPressed;
 
@@ -86,7 +88,7 @@ public class ManageRequestBookActivity extends AppCompatActivity implements Adap
     }
 
     private void loadRequestUploadBook() {
-        bookRequestUpApi.getAllRequestUploadBook().enqueue(new Callback<GetRequestUploadBookResponse>() {
+        bookApi.getAllRequestUploadBook().enqueue(new Callback<GetRequestUploadBookResponse>() {
             @Override
             public void onResponse(Call<GetRequestUploadBookResponse> call, Response<GetRequestUploadBookResponse> response) {
                 binding.swipeRefresh.setRefreshing(false);

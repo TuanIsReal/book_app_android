@@ -5,6 +5,7 @@ import com.anhtuan.bookapp.request.AddBookRequest;
 
 import com.anhtuan.bookapp.request.GetBookFilterRequest;
 import com.anhtuan.bookapp.response.GetBookResponse;
+import com.anhtuan.bookapp.response.GetRequestUploadBookResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.anhtuan.bookapp.response.SearchBookResponse;
 import com.anhtuan.bookapp.response.ViewBookResponse;
@@ -37,18 +38,22 @@ public interface BookApi {
     @POST("addBook")
     Call<NoDataResponse> addBook(@Body AddBookRequest addBookRequest);
 
-    @GET("getBook")
-    Call<GetBookResponse> getBookByUserId(@Query("userId") String userId);
-    @Multipart
-    @POST("updateBookImage")
-    Call<NoDataResponse> updateBookImage(@Part("bookName")RequestBody bookName,
-                                    @Part MultipartBody.Part image);
+    @POST("reactBookRequestUp")
+    Call<NoDataResponse> reactBookRequestUp(@Query("bookId") String bookId,
+                                            @Query("action") int action);
 
-    @GET("getBookImage")
-    Call<ResponseBody> getBookImage(@Query("imageName") String imageName);
+    @GET("getBookUp")
+    Call<GetBookResponse> getBookByUserId(@Query("userId") String userId);
+
+    @GET("getRequestUploadBook")
+    Call<GetRequestUploadBookResponse> getRequestUploadBook(@Query("userId") String userId,
+                                                            @Query("status") int status);
 
     @GET("searchBook")
     Call<SearchBookResponse> searchBook(@Query("text") String text);
+
+    @GET("getAllRequestUploadBook")
+    Call<GetRequestUploadBookResponse> getAllRequestUploadBook();
 
     @GET("getABook")
     Call<ViewBookResponse> getBookById(@Query("bookId") String bookId);
@@ -59,7 +64,7 @@ public interface BookApi {
 
     @GET("getBookHome")
     Call<GetBookResponse> getBookHome(@Query("typeFilter") int typeFilter,
-                                      @Query("limit") boolean limit);
+                                      @Query("limit") int limit);
 
     @POST("getBookFilter")
     Call<GetBookResponse> getBookFilter(@Body GetBookFilterRequest request);

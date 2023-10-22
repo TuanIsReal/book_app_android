@@ -19,6 +19,7 @@ public class User {
     private Boolean isLogged;
 
     private int point;
+
     private Boolean isGoogleLogin;
 
     public User() {
