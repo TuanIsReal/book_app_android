@@ -2,6 +2,8 @@ package com.anhtuan.bookapp.activity;
 
 import static com.anhtuan.bookapp.api.BookApi.bookApi;
 import static com.anhtuan.bookapp.api.PurchasedBookApi.purchasedBookApi;
+import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -110,32 +112,38 @@ public class ViewBookActivity extends AppCompatActivity {
     private void setBookInfo(){
         binding.bookNameTv.setText(bookName);
         binding.categoriesTv.setText(categories);
-        binding.authorTv.setText("Tác giả: " + author);
+        userApi.getUsername(author).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()){
+                    binding.authorTv.setText("Tác giả: " + response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
         binding.starTv.setText(star);
         binding.priceTv.setText(String.valueOf(price));
         if (imageName != null){
-            bookApi.getBookImage(imageName).enqueue(new Callback<ResponseBody>() {
+            stfApi.getBookImage(imageName).enqueue(new Callback<String>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(Call<String> call, Response<String> response) {
                     if (response.isSuccessful()){
-                        try {
-                            byte[] bytes = response.body().bytes();
-                            Glide.with(ViewBookActivity.this)
-                                    .load(bytes)
-                                    .into(binding.imageView);
-                            Glide.with(ViewBookActivity.this)
-                                    .load(bytes)
-                                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(25,3)))
-                                    .into(binding.backgroundImageView);
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        Glide.with(ViewBookActivity.this)
+                                .load(response.body())
+                                .into(binding.imageView);
+                        Glide.with(ViewBookActivity.this)
+                                .load(response.body())
+                                .apply(RequestOptions.bitmapTransform(new BlurTransformation(25,3)))
+                                .into(binding.backgroundImageView);
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(Call<String> call, Throwable t) {
                     Log.d("err", "err--fail");
                 }
             });

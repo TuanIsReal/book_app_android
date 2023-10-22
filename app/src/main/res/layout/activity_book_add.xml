@@ -87,19 +87,6 @@
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp">
 
-            <EditText
-                android:id="@+id/authorEt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_edittex01"
-                android:drawableStart="@drawable/ic_person_blue"
-                android:drawablePadding="10dp"
-                android:hint="Tên tác giả"
-                android:inputType="textPersonName"
-                android:padding="10dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/gray01"/>
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout

@@ -39,7 +39,19 @@ public class ConfirmBuyBookActivity extends AppCompatActivity {
         price = intent.getIntExtra("price", 0);
 
         binding.bookName.setText(bookName);
-        binding.author.setText(author);
+        userApi.getUsername(author).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()){
+                    binding.author.setText(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
         binding.price.setText(String.valueOf(price));
 
         binding.cancelBtn.setOnClickListener(new View.OnClickListener() {

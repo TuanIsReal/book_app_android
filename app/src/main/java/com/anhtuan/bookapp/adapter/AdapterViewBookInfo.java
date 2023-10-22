@@ -1,6 +1,7 @@
 package com.anhtuan.bookapp.adapter;
 
 import static com.anhtuan.bookapp.api.BookApi.bookApi;
+import static com.anhtuan.bookapp.api.STFApi.stfApi;
 
 import android.content.Context;
 import android.content.Intent;
@@ -53,24 +54,18 @@ public class AdapterViewBookInfo extends RecyclerView.Adapter<AdapterViewBookInf
         holder.bookNameTv.setText(bookName);
         holder.categoriesTv.setText(Utils.toStringCategory(category));
         if (bookImage != null){
-            bookApi.getBookImage(bookImage).enqueue(new Callback<ResponseBody>() {
+            stfApi.getThumbnail(bookImage).enqueue(new Callback<String>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(Call<String> call, Response<String> response) {
                     if (response.isSuccessful()){
-                        try {
-                            byte[] bytes = response.body().bytes();
-                            Glide.with(context)
-                                    .load(bytes)
-                                    .into(holder.imageView);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        Glide.with(context)
+                                .load(response.body())
+                                .into(holder.imageView);
                     }
-
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(Call<String> call, Throwable t) {
                     Log.d("err", "err--"+t);
                 }
             });

@@ -1,5 +1,6 @@
 package com.anhtuan.bookapp.adapter;
 
+import static com.anhtuan.bookapp.api.STFApi.stfApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import android.content.Context;
@@ -81,23 +82,18 @@ public class AdapterViewComment extends RecyclerView.Adapter<AdapterViewComment.
                             }
 
                             if (imageName != null && Objects.isNull(isLoginGoogle)){
-                                userApi.getAvatarImage(user.getAvatarImage()).enqueue(new Callback<ResponseBody>() {
+                                stfApi.getThumbnail(user.getAvatarImage()).enqueue(new Callback<String>() {
                                     @Override
-                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    public void onResponse(Call<String> call, Response<String> response) {
                                         if (response.isSuccessful()){
-                                            try {
-                                                byte[] bytes = response.body().bytes();
-                                                Glide.with(context)
-                                                        .load(bytes)
-                                                        .into(holder.avatar);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
+                                            Glide.with(context)
+                                                    .load(response.body())
+                                                    .into(holder.avatar);
                                         }
                                     }
 
                                     @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                    public void onFailure(Call<String> call, Throwable t) {
                                         Log.d("err", "err--fail");
                                     }
                                 });

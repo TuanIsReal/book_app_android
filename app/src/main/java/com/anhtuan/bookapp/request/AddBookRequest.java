@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddBookRequest {
-    private String userPost;
     private String bookName;
     private String author;
     private String introduction;
@@ -15,8 +14,7 @@ public class AddBookRequest {
     public AddBookRequest() {
     }
 
-    public AddBookRequest(String userPost, String bookName, String author, String introduction, String bookImage, ArrayList<String> bookCategory, int bookPrice) {
-        this.userPost = userPost;
+    public AddBookRequest(String bookName, String author, String introduction, String bookImage, ArrayList<String> bookCategory, int bookPrice) {
         this.bookName = bookName;
         this.author = author;
         this.introduction = introduction;

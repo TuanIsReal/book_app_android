@@ -1,6 +1,7 @@
 package com.anhtuan.bookapp.fragment;
 
 import static com.anhtuan.bookapp.api.BookApi.bookApi;
+import static com.anhtuan.bookapp.api.STFApi.stfApi;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -158,7 +159,7 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
 
     private void loadNewBook() {
 
-        bookApi.getBookHome(Constant.TYPE_FILTER.NEW_BOOK, true).enqueue(new Callback<GetBookResponse>() {
+        bookApi.getBookHome(Constant.TYPE_FILTER.NEW_BOOK, 8).enqueue(new Callback<GetBookResponse>() {
             @Override
             public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
                 if (response.body() != null && response.body().getCode() == 100){
@@ -169,7 +170,6 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
                     adapterNewBook = new AdapterNewBook(view.getContext(), newBookList);
                     newBookRv.setAdapter(adapterNewBook);
                     adapterNewBook.setNewBookListener(HomeFragment.this);
-
 
                     loadRecommendBook();
                 }
@@ -197,23 +197,18 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
         ratingBarNew.setRating((float) book.getStar());
 
         if (book.getBookImage() != null && !book.getBookImage().isBlank()){
-            bookApi.getBookImage(book.getBookImage()).enqueue(new Callback<ResponseBody>() {
+            stfApi.getThumbnail(book.getBookImage()).enqueue(new Callback<String>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(Call<String> call, Response<String> response) {
                     if (response.isSuccessful()){
-                        try {
-                            byte[] bytes = response.body().bytes();
-                            Glide.with(view.getContext())
-                                    .load(bytes)
-                                    .into(imageBookNew);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        Glide.with(view.getContext())
+                                .load(response.body())
+                                .into(imageBookNew);
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(Call<String> call, Throwable t) {
 
                 }
             });
@@ -223,7 +218,7 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
     }
 
     private void loadRecommendBook(){
-        bookApi.getBookHome(Constant.TYPE_FILTER.RECOMMEND_BOOK, true).enqueue(new Callback<GetBookResponse>() {
+        bookApi.getBookHome(Constant.TYPE_FILTER.RECOMMEND_BOOK, 6).enqueue(new Callback<GetBookResponse>() {
             @Override
             public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
                 if (response.body() != null && response.body().getCode() == 100){
@@ -243,7 +238,7 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
     }
 
     private void loadMostBuyBook(){
-        bookApi.getBookHome(Constant.TYPE_FILTER.MOST_BUY, true).enqueue(new Callback<GetBookResponse>() {
+        bookApi.getBookHome(Constant.TYPE_FILTER.MOST_BUY, 6).enqueue(new Callback<GetBookResponse>() {
             @Override
             public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
                 if (response.body() != null && response.body().getCode() == 100){
@@ -262,7 +257,7 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
     }
 
     private void loadMostReviewBook(){
-        bookApi.getBookHome(Constant.TYPE_FILTER.MOST_REVIEW, true).enqueue(new Callback<GetBookResponse>() {
+        bookApi.getBookHome(Constant.TYPE_FILTER.MOST_REVIEW, 6).enqueue(new Callback<GetBookResponse>() {
             @Override
             public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
                 if (response.body() != null && response.body().getCode() == 100){

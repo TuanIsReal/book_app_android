@@ -63,7 +63,6 @@ public class BookAddActivity extends AppCompatActivity {
     private Uri imageUri;
     private int addType;
     String bookName;
-    String author;
     String introduction;
     String bookPriceString;
 
@@ -115,13 +114,13 @@ public class BookAddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 initData();
-                if (validate(bookName, author, bookPriceString)){
+                if (validate(bookName, bookPriceString)){
                     progressDialog.setTitle("");
                     progressDialog.setMessage("Đang thêm sách...");
                     progressDialog.show();
                     int bookPrice = Integer.parseInt(bookPriceString);
                     ArrayList<String> pickCategories = new ArrayList<>(pickedCategoriesSet);
-                    AddBookRequest addBookRequest = new AddBookRequest(userId, bookName, author,
+                    AddBookRequest addBookRequest = new AddBookRequest(bookName,userId,
                             introduction, "", pickCategories, bookPrice);
 
                     addBook(addBookRequest);
@@ -267,55 +266,6 @@ public class BookAddActivity extends AppCompatActivity {
 
     }
 
-    private void updateBookRequestUpImage(String bookName){
-        try {
-            String realImagePath = RealPathUtil.copyFileToInternal(BookAddActivity.this, imageUri);
-
-            Glide.with(this)
-                    .asBitmap()
-                    .load(realImagePath)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            resource.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-                            RequestBody bookNameRB = RequestBody.create(MediaType.parse("multipart/form-data"), bookName);
-                            RequestBody image = RequestBody.create(MediaType.parse("image/jpeg"), stream.toByteArray());
-                            MultipartBody.Part multipartBodyImage = MultipartBody.Part.createFormData("image", "", image);
-                            bookRequestUpApi.updateBookRequestUpImage(bookNameRB, multipartBodyImage).enqueue(new Callback<NoDataResponse>() {
-                                @Override
-                                public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                                    progressDialog.dismiss();
-                                    NoDataResponse responseBody = response.body();
-                                    if (responseBody == null){
-                                        Toast.makeText(BookAddActivity.this, "Call Api lỗi", Toast.LENGTH_SHORT).show();
-                                    } else if (responseBody.getCode() == 109){
-                                        Toast.makeText(BookAddActivity.this, "Không tìm thấy sách được chọn", Toast.LENGTH_SHORT).show();
-                                    } else if (responseBody.getCode() == 108) {
-                                        Toast.makeText(BookAddActivity.this, "File ảnh load lên server lỗi", Toast.LENGTH_SHORT).show();
-                                    }  else if (responseBody.getCode() == 100) {
-                                        setResult(RESULT_OK);
-                                        finish();
-                                    } else {
-                                        Toast.makeText(BookAddActivity.this, "Lỗi không xác định", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                                    progressDialog.dismiss();
-                                    Toast.makeText(BookAddActivity.this, "Lỗi call API:"+t, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    });
-
-        } catch (Exception e){
-            progressDialog.dismiss();
-            Toast.makeText(BookAddActivity.this, "Lỗi try:"+e, Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void addBook(AddBookRequest addBookRequest){
         bookApi.addBook(addBookRequest).enqueue(new Callback<NoDataResponse>() {
             @Override
@@ -350,19 +300,14 @@ public class BookAddActivity extends AppCompatActivity {
 
     private void initData(){
         bookName = binding.bookNameEt.getText().toString().trim();
-        author = binding.authorEt.getText().toString().trim();
         introduction = binding.introductionEt.getText().toString().trim();
         bookPriceString = binding.priceEt.getText().toString();
     }
 
-    private boolean validate(String bookName, String author, String bookPriceString){
+    private boolean validate(String bookName, String bookPriceString){
 
         if (bookName.isBlank()){
             Toast.makeText(BookAddActivity.this, "Không được bỏ trống tên sách", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (author.isBlank()){
-            Toast.makeText(BookAddActivity.this, "Không được bỏ trống tên tác giả", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (bookPriceString.isBlank()){

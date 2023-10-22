@@ -1,5 +1,7 @@
 package com.anhtuan.bookapp.adapter;
 
+import static com.anhtuan.bookapp.api.UserApi.userApi;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,10 @@ import com.anhtuan.bookapp.domain.BookRequestUp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AdapterManageRequestBook extends RecyclerView.Adapter<AdapterManageRequestBook.HolderManageRequestBook>{
     public Context context;
@@ -50,7 +56,19 @@ public class AdapterManageRequestBook extends RecyclerView.Adapter<AdapterManage
         List<String> category = book.getBookCategory();
 
         holder.bookNameTv.setText(bookName);
-        holder.authorTv.setText(author);
+        userApi.getUsername(author).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()){
+                    holder.authorTv.setText(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
         holder.priceTv.setText(Integer.toString(price));
         holder.dateTv.setText(Utils.covertLongToTimeString(System.currentTimeMillis() - time));
         holder.categoryTv.setText(Utils.toStringCategory(category));

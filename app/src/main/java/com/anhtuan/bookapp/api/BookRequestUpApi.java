@@ -31,29 +31,29 @@ public interface BookRequestUpApi {
             .build()
             .create(BookRequestUpApi.class);
 
-    @POST("addBookRequestUp")
-    Call<NoDataResponse> addBook(@Body AddBookRequest addBookRequest);
-
-    @Multipart
-    @POST("updateBookRequestUpImage")
-    Call<NoDataResponse> updateBookRequestUpImage(@Part("bookName") RequestBody bookName,
-                                         @Part MultipartBody.Part image);
-
-    @GET("getRequestUploadBook")
-    Call<GetRequestUploadBookResponse> getRequestUploadBook(@Query("userId") String userId,
-                                                            @Query("status") int status);
-
-    @GET("getAllRequestUploadBook")
-    Call<GetRequestUploadBookResponse> getAllRequestUploadBook();
-
-    @GET("getBookRequestUpImage")
-    Call<ResponseBody> getBookRequestUpImage(@Query("imageName") String imageName);
-
-    @POST("reactBookRequestUp")
-    Call<NoDataResponse> reactBookRequestUp(@Query("bookId") String bookId,
-                                            @Query("action") int action);
-
-    @GET("getQuantityPurchased")
-    Call<NumberResponse> getQuantityPurchased(@Query("bookId") String bookId,
-                                              @Query("userId") String userId);
+//    @POST("addBookRequestUp")
+//    Call<NoDataResponse> addBook(@Body AddBookRequest addBookRequest);
+//
+//    @Multipart
+//    @POST("updateBookRequestUpImage")
+//    Call<NoDataResponse> updateBookRequestUpImage(@Part("bookName") RequestBody bookName,
+//                                         @Part MultipartBody.Part image);
+//
+//    @GET("getRequestUploadBook")
+//    Call<GetRequestUploadBookResponse> getRequestUploadBook(@Query("userId") String userId,
+//                                                            @Query("status") int status);
+//
+//    @GET("getAllRequestUploadBook")
+//    Call<GetRequestUploadBookResponse> getAllRequestUploadBook();
+//
+//    @GET("getBookRequestUpImage")
+//    Call<ResponseBody> getBookRequestUpImage(@Query("imageName") String imageName);
+//
+//    @POST("reactBookRequestUp")
+//    Call<NoDataResponse> reactBookRequestUp(@Query("bookId") String bookId,
+//                                            @Query("action") int action);
+//
+//    @GET("getQuantityPurchased")
+//    Call<NumberResponse> getQuantityPurchased(@Query("bookId") String bookId,
+//                                              @Query("userId") String userId);
 }

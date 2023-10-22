@@ -85,9 +85,6 @@ public class SplashActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
-                if (!task.isSuccessful()){
-                    Log.d("Token LOG--", "No Token");
-                }
 
                 String token = task.getResult();
                 deviceApi.loginDevice(userId, token).enqueue(new Callback<NoDataResponse>() {

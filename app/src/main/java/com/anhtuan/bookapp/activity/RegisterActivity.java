@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,11 +32,15 @@ import com.anhtuan.bookapp.response.RegisterData;
 import com.anhtuan.bookapp.response.RegisterResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.anhtuan.bookapp.retrofit.RetrofitService;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import okhttp3.MediaType;
@@ -211,34 +216,43 @@ public class RegisterActivity extends AppCompatActivity {
     private void updateAvatarImage(String userId, String role){
         try {
             String realImagePath = RealPathUtil.copyFileToInternal(RegisterActivity.this, imageUri);
-            File imageFile = new File(realImagePath);
-            RequestBody userIdRB = RequestBody.create(MediaType.parse("multipart/form-data"), userId);
-            RequestBody image = RequestBody.create(MediaType.parse("multipart/form-data"), imageFile);
-            MultipartBody.Part multipartBodyImage = MultipartBody.Part.createFormData("image", "", image);
-            userApi.updateAvatarImage(userIdRB, multipartBodyImage).enqueue(new Callback<NoDataResponse>() {
-                @Override
-                public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                    progressDialog.dismiss();
-                    NoDataResponse responseBody = response.body();
-                    if (responseBody == null){
-                        Toast.makeText(RegisterActivity.this, "Call Api lỗi", Toast.LENGTH_SHORT).show();
-                    } else if (responseBody.getCode() == 106){
-                        Toast.makeText(RegisterActivity.this, "Không tìm user được chọn", Toast.LENGTH_SHORT).show();
-                    } else if (responseBody.getCode() == 108) {
-                        Toast.makeText(RegisterActivity.this, "File ảnh load lên server lỗi", Toast.LENGTH_SHORT).show();
-                    }  else if (responseBody.getCode() == 100) {
-                        sendDeviceToken(userId, role);
-                    } else {
-                        Toast.makeText(RegisterActivity.this, "Lỗi không xác định", Toast.LENGTH_SHORT).show();
-                    }
-                }
+            Glide.with(this)
+                    .asBitmap()
+                    .load(realImagePath)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            resource.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+                            RequestBody userIdRB = RequestBody.create(MediaType.parse("multipart/form-data"), userId);
+                            RequestBody image = RequestBody.create(MediaType.parse("multipart/form-data"), stream.toByteArray());
+                            MultipartBody.Part multipartBodyImage = MultipartBody.Part.createFormData("image", "", image);
+                            userApi.updateAvatarImage(userIdRB, multipartBodyImage).enqueue(new Callback<NoDataResponse>() {
+                                @Override
+                                public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
+                                    progressDialog.dismiss();
+                                    NoDataResponse responseBody = response.body();
+                                    if (responseBody == null){
+                                        Toast.makeText(RegisterActivity.this, "Call Api lỗi", Toast.LENGTH_SHORT).show();
+                                    } else if (responseBody.getCode() == 106){
+                                        Toast.makeText(RegisterActivity.this, "Không tìm user được chọn", Toast.LENGTH_SHORT).show();
+                                    } else if (responseBody.getCode() == 108) {
+                                        Toast.makeText(RegisterActivity.this, "File ảnh load lên server lỗi", Toast.LENGTH_SHORT).show();
+                                    }  else if (responseBody.getCode() == 100) {
+                                        sendDeviceToken(userId, role);
+                                    } else {
+                                        Toast.makeText(RegisterActivity.this, "Lỗi không xác định", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
 
-                @Override
-                public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                    progressDialog.dismiss();
-                    Toast.makeText(RegisterActivity.this, "Lỗi call API:"+t, Toast.LENGTH_SHORT).show();
-                }
-            });
+                                @Override
+                                public void onFailure(Call<NoDataResponse> call, Throwable t) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(RegisterActivity.this, "Lỗi call API:"+t, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
         } catch (Exception e){
             progressDialog.dismiss();
             Toast.makeText(RegisterActivity.this, "Lỗi try:"+e, Toast.LENGTH_SHORT).show();
@@ -250,10 +264,6 @@ public class RegisterActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
-                if (!task.isSuccessful()){
-                    Log.d("Token LOG--", "No Token");
-                }
-
                 String token = task.getResult();
                 deviceApi.loginDevice(userId, token).enqueue(new Callback<NoDataResponse>() {
                     @Override

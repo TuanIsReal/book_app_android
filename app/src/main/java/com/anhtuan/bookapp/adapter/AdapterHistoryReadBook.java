@@ -2,6 +2,7 @@ package com.anhtuan.bookapp.adapter;
 
 import static com.anhtuan.bookapp.api.BookApi.bookApi;
 import static com.anhtuan.bookapp.api.PurchasedBookApi.purchasedBookApi;
+import static com.anhtuan.bookapp.api.STFApi.stfApi;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -69,26 +70,20 @@ public class AdapterHistoryReadBook extends RecyclerView.Adapter<AdapterHistoryR
         if (bookImage.isBlank()){
             holder.progressBar.setVisibility(View.GONE);
         } else {
-            bookApi.getBookImage(bookImage).enqueue(new Callback<ResponseBody>() {
+            stfApi.getThumbnail(bookImage).enqueue(new Callback<String>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(Call<String> call, Response<String> response) {
                     holder.progressBar.setVisibility(View.GONE);
                     if (response.isSuccessful()){
-                        try {
-                            byte[] bytes = response.body().bytes();
-                            Glide.with(context)
-                                    .load(bytes)
-                                    .into(holder.imageView);
-                        } catch (IOException e) {
-                            holder.progressBar.setVisibility(View.GONE);
-                            e.printStackTrace();
-                        }
+                        Glide.with(context)
+                                .load(response.body())
+                                .into(holder.imageView);
                     }
 
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(Call<String> call, Throwable t) {
                     holder.progressBar.setVisibility(View.GONE);
                     Log.d("err", "err--fail");
                 }

@@ -36,7 +36,7 @@ public interface STFApi {
     Call<NoDataResponse> updateAvatarImage(@Part("userId") RequestBody bookName,
                                            @Part MultipartBody.Part image);
 
-    @GET("getImage")
+    @GET("getBookImage")
     Call<String> getBookImage(@Query("imageName") String imageName);
 
     @GET("getAvatar")

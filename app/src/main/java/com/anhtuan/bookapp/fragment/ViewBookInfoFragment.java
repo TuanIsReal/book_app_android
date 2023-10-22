@@ -1,6 +1,7 @@
 package com.anhtuan.bookapp.fragment;
 
 import static com.anhtuan.bookapp.api.BookApi.bookApi;
+import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import android.os.Bundle;
 
@@ -53,7 +54,19 @@ public class ViewBookInfoFragment extends Fragment {
         introductionTv = view.findViewById(R.id.introductionTv);
         sameAuthorTv = view.findViewById(R.id.sameAuthorTv);
         introductionTv.setText(introduction);
-        sameAuthorTv.setText("Cùng đăng bởi " + author);
+        userApi.getUsername(author).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()){
+                    sameAuthorTv.setText("Cùng đăng bởi " + response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
         loadBookSameAuthor(author, bookId);
         return view;
     }

@@ -61,6 +61,9 @@ public interface UserApi {
     @GET("getUserInfo")
     Call<GetUserInfoResponse> getUserInfo(@Query("userId") String userId);
 
+    @GET("getUsername")
+    Call<String> getUsername(@Query("userId") String userId);
+
     @PUT("logout")
     Call<NoDataResponse> logout(@Query("userId") String userId);
 

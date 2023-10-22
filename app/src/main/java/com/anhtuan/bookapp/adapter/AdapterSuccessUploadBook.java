@@ -2,6 +2,7 @@ package com.anhtuan.bookapp.adapter;
 
 import static com.anhtuan.bookapp.api.BookApi.bookApi;
 import static com.anhtuan.bookapp.api.BookRequestUpApi.bookRequestUpApi;
+import static com.anhtuan.bookapp.api.STFApi.stfApi;
 
 import android.content.Context;
 import android.content.Intent;
@@ -65,50 +66,29 @@ public class AdapterSuccessUploadBook extends RecyclerView.Adapter<AdapterSucces
         holder.priceTv.setText(Integer.toString(price));
         holder.dateTv.setText(Utils.covertLongToTimeString(System.currentTimeMillis() - time));
         holder.categoryTv.setText(Utils.toStringCategory(category));
-
-        bookRequestUpApi.getQuantityPurchased(book.getId(), userId).enqueue(new Callback<NumberResponse>() {
-            @Override
-            public void onResponse(Call<NumberResponse> call, Response<NumberResponse> response) {
-                if (response.body() != null && response.body().getCode() == 100){
-                    holder.numberPurchasesTv.setText(String.valueOf(response.body().getData()));
-
-                    if (bookImage.isBlank()){
-                        holder.progressBar.setVisibility(View.GONE);
-                    } else {
-                        bookApi.getBookImage(bookImage).enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                holder.progressBar.setVisibility(View.GONE);
-                                if (response.isSuccessful()){
-                                    try {
-                                        byte[] bytes = response.body().bytes();
-                                        Glide.with(context)
-                                                .load(bytes)
-                                                .into(holder.imageView);
-                                    } catch (IOException e) {
-                                        holder.progressBar.setVisibility(View.GONE);
-                                        e.printStackTrace();
-                                    }
-                                }
-
-                            }
-
-                            @Override
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                holder.progressBar.setVisibility(View.GONE);
-                                Log.d("err", "err--fail");
-                            }
-                        });
+        holder.numberPurchasesTv.setText(String.valueOf(book.getTotalPurchased()));
+        if (bookImage.isBlank()){
+            holder.progressBar.setVisibility(View.GONE);
+        } else {
+            stfApi.getThumbnail(bookImage).enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    holder.progressBar.setVisibility(View.GONE);
+                    if (response.isSuccessful()){
+                        Glide.with(context)
+                                .load(response.body())
+                                .into(holder.imageView);
                     }
 
                 }
-            }
 
-            @Override
-            public void onFailure(Call<NumberResponse> call, Throwable t) {
-
-            }
-        });
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    holder.progressBar.setVisibility(View.GONE);
+                    Log.d("err", "err--fail");
+                }
+            });
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

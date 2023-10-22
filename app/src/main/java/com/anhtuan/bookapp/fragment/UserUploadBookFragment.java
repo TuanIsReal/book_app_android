@@ -48,7 +48,7 @@ public class UserUploadBookFragment extends Fragment {
     private AdapterRejectUploadBook adapterRejectUploadBook;
     Button addBookBtn;
     RecyclerView successBooksRv, requestBooksRv, rejectBooksRv;
-    List<BookRequestUp> bookRequestList, bookRejectList;
+    List<Book> bookRequestList, bookRejectList;
     List<Book> bookSuccessList;
     String userId;
     TextView requestUploadTv, successUploadTv, rejectUploadTv;
@@ -128,7 +128,7 @@ public class UserUploadBookFragment extends Fragment {
 
     private void loadRequestUploadBook(){
         bookRequestList = new ArrayList<>();
-        bookRequestUpApi.getRequestUploadBook(userId, Constant.StatusBookRequestUp.REQUEST).enqueue(new Callback<GetRequestUploadBookResponse>() {
+        bookApi.getRequestUploadBook(userId, Constant.StatusBookRequestUp.REQUEST).enqueue(new Callback<GetRequestUploadBookResponse>() {
             @Override
             public void onResponse(Call<GetRequestUploadBookResponse> call, Response<GetRequestUploadBookResponse> response) {
                 if (response.body() != null){
@@ -150,11 +150,11 @@ public class UserUploadBookFragment extends Fragment {
 
     private void loadSuccessUploadBook(){
         bookSuccessList = new ArrayList<>();
-        bookApi.getBookByUserId(userId).enqueue(new Callback<GetBookResponse>() {
+        bookApi.getRequestUploadBook(userId, Constant.StatusBookRequestUp.ACCEPTED).enqueue(new Callback<GetRequestUploadBookResponse>() {
             @Override
-            public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
+            public void onResponse(Call<GetRequestUploadBookResponse> call, Response<GetRequestUploadBookResponse> response) {
                 if (response.body() != null){
-                    GetBookResponse responseBody = response.body();
+                    GetRequestUploadBookResponse responseBody = response.body();
                     if (responseBody.getCode() == 100){
                         bookSuccessList = responseBody.getData();
                         adapterSuccessUploadBook = new AdapterSuccessUploadBook(view.getContext(), bookSuccessList, userId);
@@ -164,7 +164,7 @@ public class UserUploadBookFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<GetBookResponse> call, Throwable t) {
+            public void onFailure(Call<GetRequestUploadBookResponse> call, Throwable t) {
 
             }
         });
@@ -172,7 +172,7 @@ public class UserUploadBookFragment extends Fragment {
 
     private void loadRejectUploadBook(){
         bookRejectList = new ArrayList<>();
-        bookRequestUpApi.getRequestUploadBook(userId, Constant.StatusBookRequestUp.REJECTED).enqueue(new Callback<GetRequestUploadBookResponse>() {
+        bookApi.getRequestUploadBook(userId, Constant.StatusBookRequestUp.REJECTED).enqueue(new Callback<GetRequestUploadBookResponse>() {
             @Override
             public void onResponse(Call<GetRequestUploadBookResponse> call, Response<GetRequestUploadBookResponse> response) {
                 if (response.body() != null){

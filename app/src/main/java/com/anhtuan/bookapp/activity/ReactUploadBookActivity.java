@@ -1,6 +1,9 @@
 package com.anhtuan.bookapp.activity;
 
+import static com.anhtuan.bookapp.api.BookApi.bookApi;
 import static com.anhtuan.bookapp.api.BookRequestUpApi.bookRequestUpApi;
+import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,6 +15,7 @@ import android.widget.Toast;
 import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityReactUploadBookBinding;
+import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.domain.BookRequestUp;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.bumptech.glide.Glide;
@@ -26,7 +30,7 @@ import retrofit2.Response;
 public class ReactUploadBookActivity extends AppCompatActivity {
 
     ActivityReactUploadBookBinding binding;
-    BookRequestUp bookRequestUp;
+    Book bookRequestUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,7 @@ public class ReactUploadBookActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         Intent intent = getIntent();
-        bookRequestUp = (BookRequestUp) intent.getSerializableExtra("bookRequestUp");
+        bookRequestUp = (Book) intent.getSerializableExtra("bookRequestUp");
 
         if (bookRequestUp != null){
             loadBookRequestUpInfo();
@@ -47,7 +51,19 @@ public class ReactUploadBookActivity extends AppCompatActivity {
     private void loadBookRequestUpInfo() {
 
         binding.bookName.setText(bookRequestUp.getBookName());
-        binding.author.setText(bookRequestUp.getAuthor());
+        userApi.getUsername(bookRequestUp.getAuthor()).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()){
+                    binding.author.setText(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
         binding.introduction.setText(bookRequestUp.getIntroduction());
         binding.price.setText(String.valueOf(bookRequestUp.getBookPrice()));
 
@@ -83,31 +99,25 @@ public class ReactUploadBookActivity extends AppCompatActivity {
     }
 
     private void loadBookImage() {
-        bookRequestUpApi.getBookRequestUpImage(bookRequestUp.getBookImage()).enqueue(new Callback<ResponseBody>() {
+        stfApi.getBookImage(bookRequestUp.getBookImage()).enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 binding.progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful()){
-                    try {
-                        byte[] bytes = response.body().bytes();
-                        Glide.with(ReactUploadBookActivity.this)
-                                .load(bytes)
-                                .into(binding.imageView);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    Glide.with(ReactUploadBookActivity.this)
+                            .load(response.body())
+                            .into(binding.imageView);
                 }
             }
-
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<String> call, Throwable t) {
                 binding.progressBar.setVisibility(View.GONE);
             }
         });
     }
 
     private void reactBookRequestUp(int action){
-        bookRequestUpApi.reactBookRequestUp(bookRequestUp.getId(), action).enqueue(new Callback<NoDataResponse>() {
+        bookApi.reactBookRequestUp(bookRequestUp.getId(), action).enqueue(new Callback<NoDataResponse>() {
             @Override
             public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
                 if (response.body() != null){

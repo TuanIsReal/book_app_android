@@ -1,6 +1,7 @@
 package com.anhtuan.bookapp.adapter;
 
 import static com.anhtuan.bookapp.api.BookRequestUpApi.bookRequestUpApi;
+import static com.anhtuan.bookapp.api.STFApi.stfApi;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.databinding.RowRejectUploadBookBinding;
+import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.domain.BookRequestUp;
 import com.bumptech.glide.Glide;
 
@@ -30,11 +32,11 @@ import retrofit2.Response;
 public class AdapterRejectUploadBook extends RecyclerView.Adapter<AdapterRejectUploadBook.HolderRejectUploadBook> {
 
     private Context context;
-    public List<BookRequestUp> bookRejectList;
+    public List<Book> bookRejectList;
     private RowRejectUploadBookBinding binding;
 
 
-    public AdapterRejectUploadBook(Context context, List<BookRequestUp> bookRejectList) {
+    public AdapterRejectUploadBook(Context context, List<Book> bookRejectList) {
         this.context = context;
         this.bookRejectList = bookRejectList;
     }
@@ -48,7 +50,7 @@ public class AdapterRejectUploadBook extends RecyclerView.Adapter<AdapterRejectU
 
     @Override
     public void onBindViewHolder(@NonNull HolderRejectUploadBook holder, int position) {
-        BookRequestUp book = bookRejectList.get(position);
+        Book book = bookRejectList.get(position);
         String bookName = book.getBookName();
         int price = book.getBookPrice();
         long time = book.getRequestTime();
@@ -62,24 +64,19 @@ public class AdapterRejectUploadBook extends RecyclerView.Adapter<AdapterRejectU
         holder.categoryTv.setText(Utils.toStringCategory(category));
 
         if (bookImage != null){
-            bookRequestUpApi.getBookRequestUpImage(bookImage).enqueue(new Callback<ResponseBody>() {
+            stfApi.getThumbnail(bookImage).enqueue(new Callback<String>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(Call<String> call, Response<String> response) {
                     holder.progressBar.setVisibility(View.GONE);
                     if (response.isSuccessful()){
-                        try {
-                            byte[] bytes = response.body().bytes();
-                            Glide.with(context)
-                                    .load(bytes)
-                                    .into(holder.imageView);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        Glide.with(context)
+                                .load(response.body())
+                                .into(holder.imageView);
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(Call<String> call, Throwable t) {
                     holder.progressBar.setVisibility(View.GONE);
                 }
             });
