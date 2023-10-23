@@ -18,9 +18,11 @@ import android.widget.Toast;
 import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.activity.ViewBookActivity;
 import com.anhtuan.bookapp.adapter.AdapterViewBookInfo;
+import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.response.GetUsernameResponse;
 import com.anhtuan.bookapp.response.SearchBookResponse;
+import com.anhtuan.bookapp.response.ViewBookResponse;
 
 import java.util.ArrayList;
 
@@ -32,18 +34,16 @@ import retrofit2.Response;
 public class ViewBookInfoFragment extends Fragment {
 
     String bookId;
-    String introduction;
     String author;
     AdapterViewBookInfo adapterViewBookInfo;
     private ArrayList<Book> books;
     RecyclerView booksRv;
-    TextView introductionTv, sameAuthorTv;
+    Book book;
+    TextView introductionTv, sameAuthorTv, writeSpeedTv, totalChapterTv, totalPurchasedTv;
     View view;
 
-    public ViewBookInfoFragment(String bookId, String introduction, String author) {
+    public ViewBookInfoFragment(String bookId) {
         this.bookId = bookId;
-        this.introduction = introduction;
-        this.author = author;
     }
 
 
@@ -56,12 +56,46 @@ public class ViewBookInfoFragment extends Fragment {
         booksRv = view.findViewById(R.id.booksRv);
         introductionTv = view.findViewById(R.id.introductionTv);
         sameAuthorTv = view.findViewById(R.id.sameAuthorTv);
-        introductionTv.setText(introduction);
-        userApi.getUsername(author).enqueue(new Callback<GetUsernameResponse>() {
+        writeSpeedTv = view.findViewById(R.id.writeSpeedTv);
+        totalChapterTv = view.findViewById(R.id.totalChapterTv);
+        totalPurchasedTv = view.findViewById(R.id.totalPurchasedTv);
+        loadBook(bookId);
+        return view;
+    }
+
+    private void loadBook(String bookId) {
+        bookApi.getBookById(bookId).enqueue(new Callback<ViewBookResponse>() {
+            @Override
+            public void onResponse(Call<ViewBookResponse> call, Response<ViewBookResponse> response) {
+                if (response.body() != null){
+                    if (response.body().getCode() == 109){
+
+                    } else{
+                        book = response.body().getData();
+                        loadBookInfo();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ViewBookResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void loadBookInfo() {
+        author = book.getAuthor();
+        introductionTv.setText(book.getIntroduction());
+        totalChapterTv.setText(String.valueOf(book.getTotalChapter()));
+        totalPurchasedTv.setText(String.valueOf(book.getTotalPurchased()));
+        writeSpeedTv.setText(getWriteSpeed(book.getTotalChapter(), book.getUploadTime()));
+        userApi.getUsername(book.getAuthor()).enqueue(new Callback<GetUsernameResponse>() {
             @Override
             public void onResponse(Call<GetUsernameResponse> call, Response<GetUsernameResponse> response) {
-                if (response.body().getCode() == 100){
+                if (response.body() != null && response.body().getCode() == 100){
                     sameAuthorTv.setText("Cùng đăng bởi " + response.body().getData());
+                    loadBookSameAuthor(author, bookId);
                 }
             }
 
@@ -70,8 +104,6 @@ public class ViewBookInfoFragment extends Fragment {
 
             }
         });
-        loadBookSameAuthor(author, bookId);
-        return view;
     }
 
     private void loadBookSameAuthor(String author, String bookId) {
@@ -93,5 +125,18 @@ public class ViewBookInfoFragment extends Fragment {
                 Toast.makeText(view.getContext(), ""+t, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private String getWriteSpeed(int totalChapter, long uploadTime){
+        long currentTime = System.currentTimeMillis();
+        long timeUpBook = currentTime - uploadTime;
+        int speed;
+        if (timeUpBook <= Constant.A_DAY * 7){
+            speed = totalChapter;
+        } else {
+            speed = (int) ((totalChapter * Constant.A_DAY * 7) / timeUpBook);
+        }
+
+        return String.valueOf(speed);
     }
 }

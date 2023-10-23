@@ -1,6 +1,7 @@
 package com.anhtuan.bookapp.activity;
 
 import static com.anhtuan.bookapp.api.ReCommentApi.reCommentApi;
+import static com.anhtuan.bookapp.api.STFApi.stfApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import com.anhtuan.bookapp.domain.User;
 import com.anhtuan.bookapp.request.AddReCommentRequest;
 import com.anhtuan.bookapp.response.GetReCommentListResponse;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
+import com.anhtuan.bookapp.response.ImageResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.bumptech.glide.Glide;
 import java.io.IOException;
@@ -99,26 +101,25 @@ public class ViewReCommentActivity extends AppCompatActivity {
                     if (response.body().getCode() == 100){
                         user = response.body().getData();
                         binding.nameTv.setText(user.getName());
-
-                        if (user.getAvatarImage() != null){
-                            userApi.getAvatarImage(user.getAvatarImage()).enqueue(new Callback<ResponseBody>() {
+                        if (user.getAvatarImage() != null && user.getGoogleLogin()){
+                            Glide.with(ViewReCommentActivity.this)
+                                    .load(user.getAvatarImage())
+                                    .into(binding.avatar);
+                            loadReCommentList();
+                        } else if (user.getAvatarImage() != null){
+                            stfApi.getThumbnail(user.getAvatarImage()).enqueue(new Callback<ImageResponse>() {
                                 @Override
-                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                    if (response.isSuccessful()){
-                                        try {
-                                            byte[] bytes = response.body().bytes();
-                                            Glide.with(ViewReCommentActivity.this)
-                                                    .load(bytes)
-                                                    .into(binding.avatar);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
+                                public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
+                                    if (response.body().getCode() == 100){
+                                        Glide.with(ViewReCommentActivity.this)
+                                                .load(response.body().getData())
+                                                .into(binding.avatar);
                                         loadReCommentList();
                                     }
                                 }
 
                                 @Override
-                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                public void onFailure(Call<ImageResponse> call, Throwable t) {
                                     Log.d("err", "err--fail");
                                 }
                             });

@@ -30,7 +30,7 @@
             android:layout_marginLeft="20dp"
             android:textSize="15dp"
             android:textColor="@color/black"
-            android:text="Username"/>
+            android:text=""/>
 
         <TextView
             android:id="@+id/bodyCmt"
@@ -41,7 +41,7 @@
             android:layout_marginLeft="20dp"
             android:textSize="15dp"
             android:textColor="@color/black"
-            android:text="qawdsadfdfasfdfdsffdsfdsfsfdaffdafsfdasfasfdasfsafdafdasfda"/>
+            android:text=""/>
 
         <TextView
             android:id="@+id/timeCmt"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:textSize="10dp"
-            android:text="thời gian trước"
+            android:text=""
             android:layout_marginTop="10dp"/>
 
     </RelativeLayout>

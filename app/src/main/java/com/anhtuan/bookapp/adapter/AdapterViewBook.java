@@ -13,17 +13,15 @@ public class AdapterViewBook extends FragmentStatePagerAdapter {
     int numPage;
     String userId;
     String bookId;
-    String introduction;
     String author;
     boolean isPurchased;
 
-    public AdapterViewBook(@NonNull FragmentManager fm, int behavior, String userId, String bookId, String introduction, String author, boolean isPurchased) {
+    public AdapterViewBook(@NonNull FragmentManager fm, int behavior, String userId, String bookId, boolean isPurchased, String author) {
         super(fm, behavior);
         this.userId = userId;
         this.bookId = bookId;
-        this.introduction = introduction;
-        this.author = author;
         this.isPurchased = isPurchased;
+        this.author = author;
         numPage = behavior;
     }
 
@@ -32,13 +30,13 @@ public class AdapterViewBook extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return new ViewBookInfoFragment(bookId, introduction, author);
+                return new ViewBookInfoFragment(bookId);
             case 1:
-                return new ViewBookReviewFragment(bookId, isPurchased);
+                return new ViewBookReviewFragment(bookId, isPurchased, author);
             case 2:
                 return new ViewBookChapterListFragment(bookId, userId);
             default:
-                return new ViewBookInfoFragment(bookId, introduction, author);
+                return new ViewBookInfoFragment(bookId);
         }
     }
 

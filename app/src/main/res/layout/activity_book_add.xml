@@ -78,22 +78,10 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/authorTil"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/bookNameTil"
-            app:hintEnabled="false"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp">
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/introductionTil"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_below="@id/authorTil"
+            android:layout_below="@id/bookNameTil"
             app:hintEnabled="false"
             android:layout_marginTop="5dp"
             android:layout_marginStart="30dp"
@@ -141,11 +129,37 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/freeChapterTil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/priceTil"
+            app:hintEnabled="false"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp">
+
+            <EditText
+                android:id="@+id/freeChapterEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_edittex01"
+                android:drawableStart="@drawable/ic_book_purchased_gray"
+                android:drawablePadding="10dp"
+                android:hint="Số chương đọc thử"
+                android:inputType="number"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray01"/>
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <TextView
             android:id="@+id/categoryTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/priceTil"
+            android:layout_below="@id/freeChapterTil"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="5dp"

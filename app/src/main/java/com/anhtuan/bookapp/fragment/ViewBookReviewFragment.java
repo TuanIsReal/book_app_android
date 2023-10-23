@@ -45,10 +45,12 @@ public class ViewBookReviewFragment extends Fragment {
     AdapterViewBookReview adapterViewBookReview;
     List<BookReview> bookReviewList;
     boolean isPurchased;
+    String author;
 
-    public ViewBookReviewFragment(String bookId, boolean isPurchased) {
+    public ViewBookReviewFragment(String bookId, boolean isPurchased, String author) {
         this.bookId = bookId;
         this.isPurchased = isPurchased;
+        this.author = author;
     }
 
 
@@ -64,7 +66,7 @@ public class ViewBookReviewFragment extends Fragment {
         newReviewTv = view.findViewById(R.id.newReviewTv);
         bookReviewsRv = view.findViewById(R.id.bookReviewsRv);
 
-        if (!isPurchased){
+        if (!isPurchased || userId.equals(author)){
             newReviewTv.setVisibility(View.GONE);
             loadBookReviews();
         } else {

@@ -18,6 +18,8 @@ public class Book implements Serializable {
 
     private int bookPrice;
 
+    private int freeChapter;
+
     private double star;
 
     private int totalChapter;
@@ -145,5 +147,13 @@ public class Book implements Serializable {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getFreeChapter() {
+        return freeChapter;
+    }
+
+    public void setFreeChapter(int freeChapter) {
+        this.freeChapter = freeChapter;
     }
 }

@@ -1,7 +1,7 @@
 package com.anhtuan.bookapp.config;
 
 public class Constant {
-    public static final String IP_SERVER = "http://192.168.1.3:8080/";
+    public static final String IP_SERVER = "http://192.168.1.9:8080/";
 
     //ip Hai
 //    public static final String IP_SERVER = "http://192.168.43.143:8080/";
@@ -9,6 +9,8 @@ public class Constant {
 //    public static final String IP_SERVER = "http://192.168.90.197:8080/";
     // ip tuan
 //    public static final String IP_SERVER = "http://192.168.130.143:8080/";
+
+    public static final int A_DAY = 86400000;
 
     public static class AddBookType{
         public static final int MEMBER_ADD = 1;

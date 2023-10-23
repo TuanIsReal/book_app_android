@@ -66,7 +66,7 @@ public class BookAddActivity extends AppCompatActivity {
     String bookName;
     String introduction;
     String bookPriceString;
-
+    String freeChapterString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,14 +116,15 @@ public class BookAddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 initData();
-                if (validate(bookName, bookPriceString)){
+                if (validate(bookName, bookPriceString, freeChapterString)){
                     progressDialog.setTitle("");
                     progressDialog.setMessage("Đang thêm sách...");
                     progressDialog.show();
                     int bookPrice = Integer.parseInt(bookPriceString);
+                    int freeChapter = Integer.parseInt(freeChapterString);
                     ArrayList<String> pickCategories = new ArrayList<>(pickedCategoriesSet);
                     AddBookRequest addBookRequest = new AddBookRequest(bookName,userId,
-                            introduction, "", pickCategories, bookPrice);
+                            introduction, "", pickCategories, bookPrice, freeChapter);
 
                     addBook(addBookRequest);
                 }
@@ -304,23 +305,37 @@ public class BookAddActivity extends AppCompatActivity {
         bookName = binding.bookNameEt.getText().toString().trim();
         introduction = binding.introductionEt.getText().toString().trim();
         bookPriceString = binding.priceEt.getText().toString();
+        freeChapterString = binding.freeChapterEt.getText().toString();
     }
 
-    private boolean validate(String bookName, String bookPriceString){
+    private boolean validate(String bookName, String bookPriceString, String freeChapterString){
 
         if (bookName.isBlank()){
             Toast.makeText(BookAddActivity.this, "Không được bỏ trống tên sách", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (bookPriceString.isBlank()){
-            Toast.makeText(BookAddActivity.this, "Không được bỏ trống trống giá sách", Toast.LENGTH_SHORT).show();
+            Toast.makeText(BookAddActivity.this, "Không được bỏ trống giá sách", Toast.LENGTH_SHORT).show();
             return false;
         }
+
+        if (freeChapterString.isBlank()){
+            Toast.makeText(BookAddActivity.this, "Không được bỏ trống số chương đọc thử", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         int bookPrice = Integer.parseInt(bookPriceString);
         if (bookPrice > 9999){
             Toast.makeText(BookAddActivity.this, "Giá sách tối đa là 9999", Toast.LENGTH_SHORT).show();
             return false;
         }
+
+        int freeChapter = Integer.parseInt(freeChapterString);
+        if (freeChapter <= 3){
+            Toast.makeText(BookAddActivity.this, "Số chương đọc thử tối thiểu là 3", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         if (pickedCategoriesSet.size() == 0){
             Toast.makeText(BookAddActivity.this, "Chọn ít nhất 1 loại sách", Toast.LENGTH_SHORT).show();
             return false;

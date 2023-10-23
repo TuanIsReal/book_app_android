@@ -10,34 +10,42 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
             android:layout_marginBottom="55dp">
 
-
-            <TextView
-                android:id="@+id/reCmtTv"
+            <RelativeLayout
+                android:id="@+id/titleRl"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:text="Chi tiết bình luận"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center" />
-
-            <ImageButton
-                android:id="@+id/backBtn"
-                android:background="@color/white"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_left_black"
-                android:padding="10dp" />
+                android:background="@color/gray04">
+
+                <TextView
+                    android:id="@+id/reCmtTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="Chi tiết bình luận"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:layout_marginTop="40dp"
+                    android:gravity="center" />
+
+                <ImageButton
+                    android:id="@+id/backBtn"
+                    android:background="@color/gray04"
+                    android:layout_marginTop="35dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_left_black"
+                    android:padding="10dp" />
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/cmtMainRl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/reCmtTv"
+                android:layout_below="@id/titleRl"
                 android:background="@color/gray01">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -60,7 +68,7 @@
                     android:layout_marginLeft="20dp"
                     android:textSize="15dp"
                     android:textColor="@color/black"
-                    android:text="Username"/>
+                    android:text=""/>
 
                 <TextView
                     android:id="@+id/bodyMainCmt"
@@ -71,7 +79,7 @@
                     android:layout_marginLeft="20dp"
                     android:textSize="15dp"
                     android:textColor="@color/black"
-                    android:text="qawdsadfdfasfdfdsffdsfdsfsfdaffdafsfdasfasfdasfsafdafdasfda"/>
+                    android:text=""/>
 
                 <TextView
                     android:id="@+id/timeMainCmt"
@@ -82,7 +90,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="20dp"
                     android:textSize="10dp"
-                    android:text="thời gian trước"
+                    android:text=""
                     android:layout_marginTop="5dp"/>
 
             </RelativeLayout>

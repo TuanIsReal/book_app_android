@@ -172,7 +172,7 @@ public class ViewBookActivity extends AppCompatActivity {
                     introduction = book.getIntroduction();
                     imageName = book.getBookImage();
                     price = book.getBookPrice();
-                    adapterViewBook = new AdapterViewBook(getSupportFragmentManager(), 3, userId, bookId, introduction, author, isPurchased);
+                    adapterViewBook = new AdapterViewBook(getSupportFragmentManager(), 3, userId, bookId, isPurchased, author);
                     binding.viewPager.setAdapter(adapterViewBook);
                     binding.tab.setupWithViewPager(binding.viewPager);
                     binding.buyBookBtn.setOnClickListener(new View.OnClickListener() {
