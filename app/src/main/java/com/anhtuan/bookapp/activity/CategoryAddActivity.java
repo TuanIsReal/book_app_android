@@ -4,6 +4,7 @@ package com.anhtuan.bookapp.activity;
 import static com.anhtuan.bookapp.api.CategoryApi.categoryApi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -27,6 +28,7 @@ public class CategoryAddActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityCategoryAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

@@ -8,6 +8,7 @@ import com.anhtuan.bookapp.response.AuthenVerifyCodeResponse;
 import com.anhtuan.bookapp.response.CheckLoggedResponse;
 import com.anhtuan.bookapp.response.GetBalanceChangeResponse;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
+import com.anhtuan.bookapp.response.GetUsernameResponse;
 import com.anhtuan.bookapp.response.LoginResponse;
 import com.anhtuan.bookapp.response.RegisterResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
@@ -62,7 +63,7 @@ public interface UserApi {
     Call<GetUserInfoResponse> getUserInfo(@Query("userId") String userId);
 
     @GET("getUsername")
-    Call<String> getUsername(@Query("userId") String userId);
+    Call<GetUsernameResponse> getUsername(@Query("userId") String userId);
 
     @PUT("logout")
     Call<NoDataResponse> logout(@Query("userId") String userId);

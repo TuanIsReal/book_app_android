@@ -3,6 +3,7 @@ package com.anhtuan.bookapp.fragment;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -27,6 +28,7 @@ public class UserBookLibraryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
         View view = inflater.inflate(R.layout.fragment_user_book_library, container, false);
         TabLayout tab;
         ViewPager viewPager;

@@ -7,6 +7,7 @@ import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.domain.PurchasedBook;
 import com.anhtuan.bookapp.response.CheckPurchasedBookResponse;
 import com.anhtuan.bookapp.response.GetPurchasedBookResponse;
+import com.anhtuan.bookapp.response.GetUsernameResponse;
 import com.anhtuan.bookapp.response.ImageResponse;
 import com.anhtuan.bookapp.response.ViewBookResponse;
 import com.bumptech.glide.Glide;
@@ -55,6 +57,7 @@ public class ViewBookActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityViewBookBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -112,16 +115,16 @@ public class ViewBookActivity extends AppCompatActivity {
     private void setBookInfo(){
         binding.bookNameTv.setText(bookName);
         binding.categoriesTv.setText(categories);
-        userApi.getUsername(author).enqueue(new Callback<String>() {
+        userApi.getUsername(author).enqueue(new Callback<GetUsernameResponse>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.isSuccessful()){
-                    binding.authorTv.setText("Tác giả: " + response.body());
+            public void onResponse(Call<GetUsernameResponse> call, Response<GetUsernameResponse> response) {
+                if (response.body().getCode() == 100){
+                    binding.authorTv.setText("Tác giả: " + response.body().getData());
                 }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<GetUsernameResponse> call, Throwable t) {
 
             }
         });

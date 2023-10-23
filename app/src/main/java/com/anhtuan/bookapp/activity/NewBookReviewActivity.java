@@ -3,6 +3,7 @@ package com.anhtuan.bookapp.activity;
 import static com.anhtuan.bookapp.api.BookReviewApi.bookReviewApi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +34,7 @@ public class NewBookReviewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityNewBookReviewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Intent intent = getIntent();

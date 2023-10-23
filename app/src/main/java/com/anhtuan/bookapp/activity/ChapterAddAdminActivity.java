@@ -3,6 +3,7 @@ package com.anhtuan.bookapp.activity;
 import static com.anhtuan.bookapp.api.BookChapterApi.bookChapterApi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -29,6 +30,7 @@ public class ChapterAddAdminActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityChapterAddAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         progressDialog = new ProgressDialog(this);

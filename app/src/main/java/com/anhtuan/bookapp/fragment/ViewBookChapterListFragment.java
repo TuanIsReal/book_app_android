@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -56,6 +57,7 @@ public class ViewBookChapterListFragment extends Fragment implements AdapterBook
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
         view = inflater.inflate(R.layout.fragment_view_book_chapter_list, container, false);
         chapterNum = view.findViewById(R.id.chapterNum);
         bookChaptersRv = view.findViewById(R.id.bookChaptersRv);
@@ -80,7 +82,7 @@ public class ViewBookChapterListFragment extends Fragment implements AdapterBook
                     GetPurchasedBookResponse responseBody = response.body();
                     if (responseBody.getCode() == 106){
                         Toast.makeText(view.getContext(), "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
-                    } else if (responseBody.getCode() == 112) {
+                    } else if (responseBody.getCode() == 120) {
                         loadBookChapterList();
                     } else if (responseBody.getCode() == 100) {
                         PurchasedBook purchasedBook = responseBody.getData();
@@ -127,26 +129,11 @@ public class ViewBookChapterListFragment extends Fragment implements AdapterBook
 
     @Override
     public void onItemClick(View view, int position) {
-
-        purchasedBookApi.checkPurchasedBook(bookId, userId).enqueue(new Callback<CheckPurchasedBookResponse>() {
-            @Override
-            public void onResponse(Call<CheckPurchasedBookResponse> call, Response<CheckPurchasedBookResponse> response) {
-                if (response.body() != null && response.body().getCode() == 100){
-                    if (response.body().getData() == 1){
-                        int chapterNumber = bookChapters.get(position).getChapterNumber();
-                        Intent intent = new Intent(view.getContext(), ViewChapterActivity.class);
-                        intent.putExtra("userId", userId);
-                        intent.putExtra("bookId", bookId);
-                        intent.putExtra("chapterNumber", chapterNumber);
-                        startActivity(intent);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CheckPurchasedBookResponse> call, Throwable t) {
-
-            }
-        });
+        int chapterNumber = bookChapters.get(position).getChapterNumber();
+        Intent intent = new Intent(view.getContext(), ViewChapterActivity.class);
+        intent.putExtra("userId", userId);
+        intent.putExtra("bookId", bookId);
+        intent.putExtra("chapterNumber", chapterNumber);
+        startActivity(intent);
     }
 }

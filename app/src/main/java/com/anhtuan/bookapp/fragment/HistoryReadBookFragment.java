@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -44,6 +45,7 @@ public class HistoryReadBookFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
         view = inflater.inflate(R.layout.fragment_history_read_book, container, false);
         bookList = new ArrayList<>();
         booksRv = view.findViewById(R.id.booksRv);

@@ -4,6 +4,7 @@ import static com.anhtuan.bookapp.api.PurchasedBookApi.purchasedBookApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.anhtuan.bookapp.databinding.ActivityConfirmBuyBookBinding;
 import com.anhtuan.bookapp.response.BaseResponse;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
+import com.anhtuan.bookapp.response.GetUsernameResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,6 +31,7 @@ public class ConfirmBuyBookActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityConfirmBuyBookBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Intent intent = getIntent();
@@ -39,16 +42,16 @@ public class ConfirmBuyBookActivity extends AppCompatActivity {
         price = intent.getIntExtra("price", 0);
 
         binding.bookName.setText(bookName);
-        userApi.getUsername(author).enqueue(new Callback<String>() {
+        userApi.getUsername(author).enqueue(new Callback<GetUsernameResponse>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.isSuccessful()){
-                    binding.author.setText(response.body());
+            public void onResponse(Call<GetUsernameResponse> call, Response<GetUsernameResponse> response) {
+                if (response.body().getCode() == 100){
+                    binding.author.setText(response.body().getData());
                 }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<GetUsernameResponse> call, Throwable t) {
 
             }
         });

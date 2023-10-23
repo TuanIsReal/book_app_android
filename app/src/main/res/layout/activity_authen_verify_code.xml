@@ -16,22 +16,23 @@
         <TextView
             android:id="@+id/settingTv"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:text="Xác thực mã xác nhận"
             android:textColor="@color/black"
             android:textSize="20dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="45dp"
             android:gravity="center" />
 
         <ImageButton
-            android:id="@+id/backBtn"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp"
+            android:id="@+id/returnBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_left_black"
-            android:background="@android:color/transparent"
-            android:padding="10dp" />
+            android:src="@drawable/icon_back_white"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="10dp"
+            android:padding="10dp"
+            android:background="@android:color/transparent"/>
 
     </RelativeLayout>
 

@@ -6,6 +6,7 @@ import static com.anhtuan.bookapp.api.STFApi.stfApi;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -61,6 +62,7 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
         view = inflater.inflate(R.layout.fragment_home, container, false);
         initView();
 

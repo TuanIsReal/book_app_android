@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="40dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:background="@android:color/transparent"
@@ -32,7 +32,7 @@
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="50dp"
             android:src="@drawable/logo"/>
 
         <TextView
@@ -60,7 +60,7 @@
             app:hintEnabled="false"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
-            android:layout_marginTop="195dp">
+            android:layout_marginTop="225dp">
 
             <EditText
                 android:id="@+id/bookNameEt"

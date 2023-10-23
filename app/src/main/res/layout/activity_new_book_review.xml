@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_left_black"
+        android:layout_marginTop="40dp"
         android:padding="8dp"/>
 
     <TextView
@@ -21,6 +22,7 @@
         android:gravity="center"
         android:text="Viết đánh giá"
         android:textColor="@color/black"
+        android:layout_marginTop="40dp"
         android:textSize="25dp" />
 
     <TextView
@@ -32,12 +34,13 @@
         android:layout_marginLeft="15dp"
         android:gravity="center"
         android:textColor="@color/black"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/newRatingTv"/>
 
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_below="@id/newRatingTv"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:layout_marginLeft="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

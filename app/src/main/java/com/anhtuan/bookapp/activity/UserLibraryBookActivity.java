@@ -1,6 +1,7 @@
 package com.anhtuan.bookapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ public class UserLibraryBookActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityUserLibraryBookBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
     }

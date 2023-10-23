@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/shape_toolbar02">
 
         <TextView
@@ -18,9 +18,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="5dp"
             android:text="Tìm kiếm sách"
             android:textStyle="bold"
+            android:textSize="20dp"
             android:textColor="@color/white"/>
 
     </RelativeLayout>

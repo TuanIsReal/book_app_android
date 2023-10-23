@@ -1,5 +1,6 @@
 package com.anhtuan.bookapp.adapter;
 
+import static com.anhtuan.bookapp.api.STFApi.stfApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import android.content.Context;
@@ -17,6 +18,7 @@ import com.anhtuan.bookapp.databinding.RowBookReviewBinding;
 import com.anhtuan.bookapp.domain.BookReview;
 import com.anhtuan.bookapp.domain.User;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
+import com.anhtuan.bookapp.response.ImageResponse;
 import com.bumptech.glide.Glide;
 
 import java.io.IOException;
@@ -76,23 +78,18 @@ public class AdapterViewBookReview extends RecyclerView.Adapter<AdapterViewBookR
                     }
 
                     if (imageName != null && Objects.isNull(isLoginGoogle)){
-                        userApi.getAvatarImage(user.getAvatarImage()).enqueue(new Callback<ResponseBody>() {
+                        stfApi.getThumbnail(user.getAvatarImage()).enqueue(new Callback<ImageResponse>() {
                             @Override
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                if (response.isSuccessful()){
-                                    try {
-                                        byte[] bytes = response.body().bytes();
-                                        Glide.with(context)
-                                                .load(bytes)
-                                                .into(holder.avatar);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                            public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
+                                if (response.body().getCode() == 100){
+                                    Glide.with(context)
+                                            .load(response.body().getData())
+                                            .into(holder.avatar);
                                 }
                             }
 
                             @Override
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            public void onFailure(Call<ImageResponse> call, Throwable t) {
 
                             }
                         });

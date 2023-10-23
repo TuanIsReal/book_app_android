@@ -5,6 +5,7 @@ import static com.anhtuan.bookapp.api.STFApi.stfApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityReactUploadBookBinding;
 import com.anhtuan.bookapp.domain.Book;
+import com.anhtuan.bookapp.response.GetUsernameResponse;
 import com.anhtuan.bookapp.response.ImageResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.bumptech.glide.Glide;
@@ -30,6 +32,7 @@ public class ReactUploadBookActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityReactUploadBookBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -46,16 +49,16 @@ public class ReactUploadBookActivity extends AppCompatActivity {
     private void loadBookRequestUpInfo() {
 
         binding.bookName.setText(bookRequestUp.getBookName());
-        userApi.getUsername(bookRequestUp.getAuthor()).enqueue(new Callback<String>() {
+        userApi.getUsername(bookRequestUp.getAuthor()).enqueue(new Callback<GetUsernameResponse>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.isSuccessful()){
-                    binding.author.setText(response.body());
+            public void onResponse(Call<GetUsernameResponse> call, Response<GetUsernameResponse> response) {
+                if (response.body().getCode() == 100){
+                    binding.author.setText(response.body().getData());
                 }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<GetUsernameResponse> call, Throwable t) {
 
             }
         });
@@ -117,10 +120,8 @@ public class ReactUploadBookActivity extends AppCompatActivity {
             public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
                 if (response.body() != null){
                     NoDataResponse responseBody = response.body();
-                    if (responseBody.getCode() == 105){
-                        Toast.makeText(ReactUploadBookActivity.this, "bookId đã tồn tại", Toast.LENGTH_SHORT).show();
-                    } else if (responseBody.getCode() == 115) {
-                        Toast.makeText(ReactUploadBookActivity.this, "Truyện yêu cầu không tồn tại", Toast.LENGTH_SHORT).show();
+                    if (responseBody.getCode() == 109) {
+                        Toast.makeText(ReactUploadBookActivity.this, "Truyện không tồn tại", Toast.LENGTH_SHORT).show();
                     } else if (responseBody.getCode() == 100) {
                         Intent intent = new Intent();
                         intent.putExtra("action", action);

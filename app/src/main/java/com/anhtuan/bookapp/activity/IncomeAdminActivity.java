@@ -4,6 +4,7 @@ import static com.anhtuan.bookapp.api.StatApi.statApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +53,7 @@ public class IncomeAdminActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityIncomeAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

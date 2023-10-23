@@ -19,6 +19,7 @@ import com.anhtuan.bookapp.activity.ViewBookActivity;
 import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.databinding.RowBookUserBinding;
 import com.anhtuan.bookapp.domain.Book;
+import com.anhtuan.bookapp.response.GetUsernameResponse;
 import com.anhtuan.bookapp.response.ImageResponse;
 import com.bumptech.glide.Glide;
 
@@ -63,16 +64,16 @@ public class AdapterSearchBookUser extends RecyclerView.Adapter<AdapterSearchBoo
 
         //
         holder.bookNameTv.setText(bookName);
-        userApi.getUsername(author).enqueue(new Callback<String>() {
+        userApi.getUsername(author).enqueue(new Callback<GetUsernameResponse>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.isSuccessful()){
-                    holder.authorTv.setText(response.body());
+            public void onResponse(Call<GetUsernameResponse> call, Response<GetUsernameResponse> response) {
+                if (response.body().getCode() == 100){
+                    holder.authorTv.setText(response.body().getData());
                 }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<GetUsernameResponse> call, Throwable t) {
 
             }
         });

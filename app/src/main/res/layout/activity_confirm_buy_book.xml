@@ -10,13 +10,14 @@
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="100dp"
         android:background="@color/blue">
 
         <TextView
             android:id="@+id/toolbarTv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
             android:text="Xác nhận mua truyện"
             style="@style/TextAppearance.MaterialComponents.Headline6"
             android:textSize="20dp"

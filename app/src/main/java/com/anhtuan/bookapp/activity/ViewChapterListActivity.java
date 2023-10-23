@@ -4,6 +4,7 @@ import static com.anhtuan.bookapp.api.BookChapterApi.bookChapterApi;
 import static com.anhtuan.bookapp.api.PurchasedBookApi.purchasedBookApi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -38,6 +39,7 @@ public class ViewChapterListActivity extends AppCompatActivity implements Adapte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityViewChapterListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Intent intent = getIntent();

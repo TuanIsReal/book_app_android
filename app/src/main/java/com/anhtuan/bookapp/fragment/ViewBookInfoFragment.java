@@ -5,6 +5,7 @@ import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import android.os.Bundle;
 
+import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +19,7 @@ import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.activity.ViewBookActivity;
 import com.anhtuan.bookapp.adapter.AdapterViewBookInfo;
 import com.anhtuan.bookapp.domain.Book;
+import com.anhtuan.bookapp.response.GetUsernameResponse;
 import com.anhtuan.bookapp.response.SearchBookResponse;
 
 import java.util.ArrayList;
@@ -49,21 +51,22 @@ public class ViewBookInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
         view = inflater.inflate(R.layout.fragment_view_book_info, container, false);
         booksRv = view.findViewById(R.id.booksRv);
         introductionTv = view.findViewById(R.id.introductionTv);
         sameAuthorTv = view.findViewById(R.id.sameAuthorTv);
         introductionTv.setText(introduction);
-        userApi.getUsername(author).enqueue(new Callback<String>() {
+        userApi.getUsername(author).enqueue(new Callback<GetUsernameResponse>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.isSuccessful()){
-                    sameAuthorTv.setText("Cùng đăng bởi " + response.body());
+            public void onResponse(Call<GetUsernameResponse> call, Response<GetUsernameResponse> response) {
+                if (response.body().getCode() == 100){
+                    sameAuthorTv.setText("Cùng đăng bởi " + response.body().getData());
                 }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<GetUsernameResponse> call, Throwable t) {
 
             }
         });

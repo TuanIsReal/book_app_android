@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:background="@color/blue">
 
         <ImageButton
@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="40dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:background="@android:color/transparent"
@@ -27,11 +27,12 @@
         <TextView
             android:id="@+id/toolbarTv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="Xử lý yêu cầu đăng truyện"
             style="@style/TextAppearance.MaterialComponents.Headline6"
             android:textSize="20dp"
-            android:gravity="center|center"/>
+            android:layout_marginTop="50dp"
+            android:gravity="center"/>
 
     </RelativeLayout>
 
