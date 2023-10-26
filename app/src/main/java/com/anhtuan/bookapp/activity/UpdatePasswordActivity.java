@@ -44,7 +44,7 @@ public class UpdatePasswordActivity extends AppCompatActivity {
                                 Toast.makeText(UpdatePasswordActivity.this, "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
                                 onBackPressed();
                             }
-                            if (response.body() != null && response.body().getCode() == 106){
+                            if (response.body() != null && response.body().getCode() == 123){
                                 Toast.makeText(UpdatePasswordActivity.this, "Mật kẩu cũ không đúng", Toast.LENGTH_SHORT).show();
                             }
                         }

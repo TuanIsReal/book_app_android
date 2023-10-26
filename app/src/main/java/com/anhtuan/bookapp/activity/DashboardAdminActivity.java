@@ -98,11 +98,11 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
 
-        binding.manageIncomeTv.setOnClickListener(new View.OnClickListener() {
+        binding.manageStatTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
-                startActivity(new Intent(DashboardAdminActivity.this, IncomeAdminActivity.class));
+                startActivity(new Intent(DashboardAdminActivity.this, StatisticalActivity.class));
             }
         });
 

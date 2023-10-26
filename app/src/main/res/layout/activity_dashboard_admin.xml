@@ -72,14 +72,14 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/manageIncomeTv"
+            android:id="@+id/manageStatTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/subTitileTv"
             android:layout_marginTop="11dp"
             android:layout_marginEnd="20dp"
             android:layout_toStartOf="@id/manageRequestTv"
-            android:text="Quản lý thu nhập"
+            android:text="Xem thống kê"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold" />

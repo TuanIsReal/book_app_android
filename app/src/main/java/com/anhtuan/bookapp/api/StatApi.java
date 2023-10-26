@@ -3,6 +3,8 @@ package com.anhtuan.bookapp.api;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.response.IncomeAdminResponse;
 import com.anhtuan.bookapp.response.IncomeMemberResponse;
+import com.anhtuan.bookapp.response.RankingBookResponse;
+import com.anhtuan.bookapp.response.RankingUserResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -25,6 +27,12 @@ public interface StatApi {
     Call<IncomeMemberResponse> incomeMember(@Query("userId") String userId,
                                             @Query("startDate") String startDate,
                                             @Query("endDate") String endDate);
+
+    @POST("rankingUser")
+    Call<RankingUserResponse> getRankingUser(@Query("typeRanking") int typeRanking);
+
+    @POST("rankingBook")
+    Call<RankingBookResponse> getRankingBook();
 
     @POST("incomeAdmin")
     Call<IncomeAdminResponse> incomeAdmin(@Query("startDate") String startDate,

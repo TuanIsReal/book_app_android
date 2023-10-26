@@ -113,10 +113,10 @@ public class ManageBookActivity extends AppCompatActivity {
             }
         });
 
-        binding.manageIncomeTv.setOnClickListener(new View.OnClickListener() {
+        binding.manageStatTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ManageBookActivity.this, IncomeAdminActivity.class));
+                startActivity(new Intent(ManageBookActivity.this, StatisticalActivity.class));
                 finish();
             }
         });

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.StatisticalActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbarRl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_toolbar02">
+
+        <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:text="Bảng điểu khiển xem thống kê"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/subTitileTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/titleTv"
+            android:text=""
+            android:textColor="@color/white"/>
+
+        <ImageButton
+            android:id="@+id/logoutBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_logout_white"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="60dp"
+            android:layout_marginStart="5dp"
+            android:background="@android:color/transparent"/>
+
+        <TextView
+            android:id="@+id/manageBookTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/subTitileTv"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:text="Quản lý sách"
+            android:textStyle="bold"
+            android:textSize="14dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/manageCategoryTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/subTitileTv"
+            android:layout_toStartOf="@id/manageBookTv"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:text="Quản lý loại sách"
+            android:textStyle="bold"
+            android:textSize="14dp"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/manageRequestTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/subTitileTv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:layout_toStartOf="@id/manageCategoryTv"
+            android:text="Quản lý yêu cầu"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/incomeWriterTv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Xem thống kê thu nhập người viết"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:layout_below="@id/line0"
+        android:gravity="left|center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:drawableRight="@drawable/ic_right_black"/>
+
+    <TextView
+        android:id="@+id/spendPointTv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Xem thống kê người dùng chi tiêu"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_below="@id/line1"
+        android:gravity="left|center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:drawableRight="@drawable/ic_right_black"/>
+
+    <TextView
+        android:id="@+id/rechargeTv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Xem thống kê người dùng nạp tiền"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_below="@id/line2"
+        android:gravity="left|center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:drawableRight="@drawable/ic_right_black"/>
+
+    <TextView
+        android:id="@+id/bookIncomeTv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Xem thống kê thu nhập sách"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_below="@id/line3"
+        android:gravity="left|center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:drawableRight="@drawable/ic_right_black"/>
+
+    <TextView
+        android:id="@+id/incomeAdminTv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Xem thống kê thu nhập hệ thống"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_below="@id/line4"
+        android:gravity="left|center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:drawableRight="@drawable/ic_right_black"/>
+    <View
+        android:id="@+id/line2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/spendPointTv"/>
+    <View
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/incomeWriterTv"
+        />
+    <View
+        android:id="@+id/line0"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/toolbarRl"
+        android:layout_marginTop="80dp"/>
+
+    <View
+        android:id="@+id/line3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/rechargeTv"
+        />
+    <View
+        android:id="@+id/line4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/bookIncomeTv"
+        />
+
+    <View
+        android:id="@+id/line5"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/incomeAdminTv"
+        />
+
+</RelativeLayout>

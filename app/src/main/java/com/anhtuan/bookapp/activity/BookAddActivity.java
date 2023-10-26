@@ -331,7 +331,7 @@ public class BookAddActivity extends AppCompatActivity {
         }
 
         int freeChapter = Integer.parseInt(freeChapterString);
-        if (freeChapter <= 3){
+        if (freeChapter < 3){
             Toast.makeText(BookAddActivity.this, "Số chương đọc thử tối thiểu là 3", Toast.LENGTH_SHORT).show();
             return false;
         }

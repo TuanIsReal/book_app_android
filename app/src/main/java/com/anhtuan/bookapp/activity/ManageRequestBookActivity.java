@@ -80,11 +80,11 @@ public class ManageRequestBookActivity extends AppCompatActivity implements Adap
             }
         });
 
-        binding.manageIncomeTv.setOnClickListener(new View.OnClickListener() {
+        binding.manageStatTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
-                startActivity(new Intent(ManageRequestBookActivity.this, IncomeAdminActivity.class));
+                startActivity(new Intent(ManageRequestBookActivity.this, StatisticalActivity.class));
             }
         });
     }

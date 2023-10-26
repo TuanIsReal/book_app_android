@@ -5,8 +5,10 @@ import androidx.core.view.WindowCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -30,7 +32,18 @@ public class TransactionWebViewActivity extends AppCompatActivity {
 
         if (!url.isBlank()){
             binding.webView.loadUrl(url);
-            binding.webView.setWebViewClient(new WebViewClient());
+            binding.webView.setWebViewClient(new WebViewClient(){
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                    Log.d("url request", request.getUrl().toString());
+                    if (request.getUrl().toString().equals("app://back")) {
+                        setResult(RESULT_OK);
+                        finish();
+                        return true;
+                    }
+                    return super.shouldOverrideUrlLoading(view, url);
+                }
+            });
             binding.webView.getSettings().setJavaScriptEnabled(true);
             binding.webView.setWebChromeClient(new WebChromeClient());
         } else {

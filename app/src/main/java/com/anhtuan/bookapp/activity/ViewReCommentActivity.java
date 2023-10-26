@@ -101,7 +101,7 @@ public class ViewReCommentActivity extends AppCompatActivity {
                     if (response.body().getCode() == 100){
                         user = response.body().getData();
                         binding.nameTv.setText(user.getName());
-                        if (user.getAvatarImage() != null && user.getGoogleLogin()){
+                        if (user.getAvatarImage() != null && user.getGoogleLogin() != null && user.getGoogleLogin()){
                             Glide.with(ViewReCommentActivity.this)
                                     .load(user.getAvatarImage())
                                     .into(binding.avatar);

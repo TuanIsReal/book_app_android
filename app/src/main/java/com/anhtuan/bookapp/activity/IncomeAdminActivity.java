@@ -57,8 +57,6 @@ public class IncomeAdminActivity extends AppCompatActivity {
         binding = ActivityIncomeAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId","");
         binding.resultStat.setVisibility(View.GONE);
         binding.pointChart.setVisibility(View.GONE);
         binding.moneyChart.setVisibility(View.GONE);
@@ -128,34 +126,10 @@ public class IncomeAdminActivity extends AppCompatActivity {
             }
         });
 
-        binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout(sharedPreferences, userId);
-            }
-        });
-
-        binding.manageCategoryTv.setOnClickListener(new View.OnClickListener() {
+        binding.returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
-                startActivity(new Intent(IncomeAdminActivity.this, DashboardAdminActivity.class));
-            }
-        });
-
-        binding.manageBookTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                startActivity(new Intent(IncomeAdminActivity.this, ManageBookActivity.class));
-            }
-        });
-
-        binding.manageRequestTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                startActivity(new Intent(IncomeAdminActivity.this, ManageRequestBookActivity.class));
             }
         });
     }
@@ -238,25 +212,6 @@ public class IncomeAdminActivity extends AppCompatActivity {
         binding.transactionChart.setData(barDataTransaction);
         binding.transactionChart.getDescription().setText("Biểu đồ lượt giao dịch nạp trong tháng");
         binding.transactionChart.animateY(2000);
-    }
-
-    private void logout(SharedPreferences sharedPreferences, String userId){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("userId", "");
-        editor.apply();
-
-        userApi.logout(userId).enqueue(new Callback<NoDataResponse>() {
-            @Override
-            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                finish();
-                startActivity(new Intent(IncomeAdminActivity.this, MainActivity.class));
-            }
-
-            @Override
-            public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                Toast.makeText(IncomeAdminActivity.this, ""+ t, Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     @Override

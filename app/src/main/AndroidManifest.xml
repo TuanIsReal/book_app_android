@@ -15,15 +15,21 @@
         android:name=".config.ChannelNotification"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.BookApp"
-        android:windowFullscreen="true"
         android:usesCleartextTraffic="true"
-        android:enableOnBackInvokedCallback="true"
+        android:windowFullscreen="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activity.StatisticalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.StatisticalDetailActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.BalanceChangeActivity"
             android:exported="false" />
@@ -65,12 +71,12 @@
             android:exported="false" />
         <activity
             android:name=".activity.ViewReCommentActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.ViewCommentActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
 
         <service
             android:name=".firebase_cloud_mess.MyFirebaseMessagingService"

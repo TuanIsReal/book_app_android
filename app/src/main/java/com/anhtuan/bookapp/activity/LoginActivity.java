@@ -135,7 +135,10 @@ public class LoginActivity extends AppCompatActivity {
                 LoginResponse loginResponse = response.body();
                 if (loginResponse.getCode() == 102) {
                     progressDialog.dismiss();
-                    Toast.makeText(LoginActivity.this, "Email hoặc mật khẩu chưa đúng", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Email không tồn tại trên hệ thống", Toast.LENGTH_SHORT).show();
+                } else if (loginResponse.getCode() == 123) {
+                    progressDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, "Mật khẩu chưa đúng", Toast.LENGTH_SHORT).show();
                 } else if (loginResponse.getCode() == 100) {
                     LoginData loginData = (LoginData) loginResponse.getData();
                     SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
