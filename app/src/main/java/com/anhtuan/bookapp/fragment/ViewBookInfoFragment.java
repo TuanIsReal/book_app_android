@@ -39,7 +39,7 @@ public class ViewBookInfoFragment extends Fragment {
     private ArrayList<Book> books;
     RecyclerView booksRv;
     Book book;
-    TextView introductionTv, sameAuthorTv, writeSpeedTv, totalChapterTv, totalPurchasedTv;
+    TextView introductionTv, sameAuthorTv, writeSpeedTv, totalChapterTv, totalPurchasedTv, totalChapterText;
     View view;
 
     public ViewBookInfoFragment(String bookId) {
@@ -59,6 +59,7 @@ public class ViewBookInfoFragment extends Fragment {
         writeSpeedTv = view.findViewById(R.id.writeSpeedTv);
         totalChapterTv = view.findViewById(R.id.totalChapterTv);
         totalPurchasedTv = view.findViewById(R.id.totalPurchasedTv);
+        totalChapterText = view.findViewById(R.id.totalChapterText);
         loadBook(bookId);
         return view;
     }
@@ -89,6 +90,9 @@ public class ViewBookInfoFragment extends Fragment {
         introductionTv.setText(book.getIntroduction());
         totalChapterTv.setText(String.valueOf(book.getTotalChapter()));
         totalPurchasedTv.setText(String.valueOf(book.getTotalPurchased()));
+        if (book.getStatus() == 2){
+            totalChapterText.setText("Chương-Hoàn thành");
+        }
         writeSpeedTv.setText(getWriteSpeed(book.getTotalChapter(), book.getUploadTime()));
         userApi.getUsername(book.getAuthor()).enqueue(new Callback<GetUsernameResponse>() {
             @Override

@@ -54,7 +54,6 @@
             android:text=""/>
 
         <TextView
-            android:maxLines="1"
             android:id="@+id/rankTv"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"

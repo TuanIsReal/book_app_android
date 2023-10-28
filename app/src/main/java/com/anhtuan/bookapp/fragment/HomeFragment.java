@@ -32,6 +32,7 @@ import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.response.GetBookResponse;
 import com.anhtuan.bookapp.response.ImageResponse;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.util.List;
 
@@ -202,6 +203,7 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
                     if (response.body().getCode() == 100){
                         Glide.with(view.getContext())
                                 .load(response.body().getData())
+                                .signature(new ObjectKey(response.body().getData()))
                                 .into(imageBookNew);
                     }
                 }

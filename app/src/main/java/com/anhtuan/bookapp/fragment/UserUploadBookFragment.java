@@ -199,8 +199,6 @@ public class UserUploadBookFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK){
             loadRequestUploadBook();
-        } else {
-            Toast.makeText(view.getContext(), "Huy dang ky", Toast.LENGTH_SHORT).show();
         }
     }
 }

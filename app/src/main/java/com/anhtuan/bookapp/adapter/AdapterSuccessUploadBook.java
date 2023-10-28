@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,11 +17,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anhtuan.bookapp.activity.BookChapterAddActivity;
+import com.anhtuan.bookapp.activity.UpdateBookInfoActivity;
 import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.databinding.RowSuccessUploadBookBinding;
 import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.response.ImageResponse;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.util.List;
 
@@ -61,6 +64,9 @@ public class AdapterSuccessUploadBook extends RecyclerView.Adapter<AdapterSucces
         holder.dateTv.setText(Utils.covertLongToTimeString(System.currentTimeMillis() - time));
         holder.categoryTv.setText(Utils.toStringCategory(category));
         holder.numberPurchasesTv.setText(String.valueOf(book.getTotalPurchased()));
+        if (book.getStatus() == 2){
+            holder.statusTv.setText("Đã hoàn thành");
+        }
         if (bookImage.isBlank()){
             holder.progressBar.setVisibility(View.GONE);
         } else {
@@ -71,6 +77,7 @@ public class AdapterSuccessUploadBook extends RecyclerView.Adapter<AdapterSucces
                     if (response.body().getCode() == 100){
                         Glide.with(context)
                                 .load(response.body().getData())
+                                .signature(new ObjectKey(response.body().getData()))
                                 .into(holder.imageView);
                     }
 
@@ -87,9 +94,22 @@ public class AdapterSuccessUploadBook extends RecyclerView.Adapter<AdapterSucces
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, BookChapterAddActivity.class);
-                intent.putExtra("bookName", bookName);
-                context.startActivity(intent);
+                if (book.getStatus() == 1){
+                    Intent intent = new Intent(context, BookChapterAddActivity.class);
+                    intent.putExtra("bookName", bookName);
+                    context.startActivity(intent);
+                }
+            }
+        });
+
+        holder.moreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (book.getStatus() == 1){
+                    Intent intent = new Intent(context, UpdateBookInfoActivity.class);
+                    intent.putExtra("uploadBookId", book.getId());
+                    context.startActivity(intent);
+                }
             }
         });
 
@@ -104,7 +124,8 @@ public class AdapterSuccessUploadBook extends RecyclerView.Adapter<AdapterSucces
 
         ImageView imageView;
         ProgressBar progressBar;
-        TextView bookNameTv, numberPurchasesTv, categoryTv, dateTv, priceTv;
+        TextView bookNameTv, numberPurchasesTv, categoryTv, dateTv, priceTv, statusTv;
+        ImageButton moreBtn;
 
         public HolderSuccessUploadBook(@NonNull View itemView) {
             super(itemView);
@@ -115,6 +136,8 @@ public class AdapterSuccessUploadBook extends RecyclerView.Adapter<AdapterSucces
             categoryTv = binding.categoryTv;
             dateTv = binding.dateTv;
             priceTv = binding.priceTv;
+            moreBtn = binding.moreBtn;
+            statusTv = binding.statusTv;
         }
     }
 

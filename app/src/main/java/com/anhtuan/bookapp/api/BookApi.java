@@ -4,6 +4,7 @@ import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.request.AddBookRequest;
 
 import com.anhtuan.bookapp.request.GetBookFilterRequest;
+import com.anhtuan.bookapp.request.UpdateBookRequest;
 import com.anhtuan.bookapp.response.GetBookResponse;
 import com.anhtuan.bookapp.response.GetRequestUploadBookResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
@@ -69,4 +70,6 @@ public interface BookApi {
     @POST("getBookFilter")
     Call<GetBookResponse> getBookFilter(@Body GetBookFilterRequest request);
 
+    @POST("updateBookInfo")
+    Call<NoDataResponse> updateBookInfo(@Body UpdateBookRequest updateBookRequest);
 }

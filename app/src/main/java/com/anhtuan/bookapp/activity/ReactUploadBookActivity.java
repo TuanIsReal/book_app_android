@@ -19,6 +19,7 @@ import com.anhtuan.bookapp.response.GetUsernameResponse;
 import com.anhtuan.bookapp.response.ImageResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -104,6 +105,7 @@ public class ReactUploadBookActivity extends AppCompatActivity {
                 if (response.body().getCode() == 100){
                     Glide.with(ReactUploadBookActivity.this)
                             .load(response.body().getData())
+                            .signature(new ObjectKey(response.body().getData()))
                             .into(binding.imageView);
                 }
             }

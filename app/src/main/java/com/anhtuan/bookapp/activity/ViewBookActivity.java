@@ -28,6 +28,7 @@ import com.anhtuan.bookapp.response.ImageResponse;
 import com.anhtuan.bookapp.response.ViewBookResponse;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.util.List;
 
@@ -137,9 +138,11 @@ public class ViewBookActivity extends AppCompatActivity {
                     if (response.body().getCode() == 100){
                         Glide.with(ViewBookActivity.this)
                                 .load(response.body().getData())
+                                .signature(new ObjectKey(response.body().getData()))
                                 .into(binding.imageView);
                         Glide.with(ViewBookActivity.this)
                                 .load(response.body().getData())
+                                .signature(new ObjectKey(response.body().getData()))
                                 .apply(RequestOptions.bitmapTransform(new BlurTransformation(25,3)))
                                 .into(binding.backgroundImageView);
                     }

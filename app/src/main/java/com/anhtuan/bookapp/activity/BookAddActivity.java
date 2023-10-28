@@ -62,7 +62,6 @@ public class BookAddActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
     private Uri imageUri;
-    private int addType;
     String bookName;
     String introduction;
     String bookPriceString;
@@ -78,12 +77,6 @@ public class BookAddActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId","");
         int userRole = sharedPreferences.getInt("userRole",1);
-
-        if (userRole == 2){
-            addType = Constant.AddBookType.ADMIN_ADD;
-        } else {
-            addType = Constant.AddBookType.MEMBER_ADD;
-        }
 
         progressDialog = new ProgressDialog(BookAddActivity.this);
 
@@ -118,7 +111,7 @@ public class BookAddActivity extends AppCompatActivity {
                 initData();
                 if (validate(bookName, bookPriceString, freeChapterString)){
                     progressDialog.setTitle("");
-                    progressDialog.setMessage("Đang thêm sách...");
+                    progressDialog.setMessage("Đang thêm truyện...");
                     progressDialog.show();
                     int bookPrice = Integer.parseInt(bookPriceString);
                     int freeChapter = Integer.parseInt(freeChapterString);
@@ -276,7 +269,7 @@ public class BookAddActivity extends AppCompatActivity {
                 NoDataResponse responseBody = response.body();
                 if (responseBody.getCode() == 105){
                     progressDialog.dismiss();
-                    Toast.makeText(BookAddActivity.this, "Tên sách đã tồn tại", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BookAddActivity.this, "Tên truyện đã tồn tại", Toast.LENGTH_SHORT).show();
                 }
                 if (responseBody.getCode() == 106){
                     progressDialog.dismiss();
@@ -287,7 +280,7 @@ public class BookAddActivity extends AppCompatActivity {
                 }
                 if (responseBody.getCode() == 100){
                     progressDialog.dismiss();
-                    Toast.makeText(BookAddActivity.this, "Thêm sách thành công", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BookAddActivity.this, "Thêm truyện thành công", Toast.LENGTH_SHORT).show();
                     setResult(RESULT_OK);
                     finish();
                 }

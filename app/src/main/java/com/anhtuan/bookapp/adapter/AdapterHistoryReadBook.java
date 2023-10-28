@@ -25,6 +25,7 @@ import com.anhtuan.bookapp.domain.UserBookLibrary;
 import com.anhtuan.bookapp.response.ImageResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.util.List;
 import java.util.Objects;
@@ -75,6 +76,7 @@ public class AdapterHistoryReadBook extends RecyclerView.Adapter<AdapterHistoryR
                     if (response.body().getCode() == 100){
                         Glide.with(context)
                                 .load(response.body().getData())
+                                .signature(new ObjectKey(response.body().getData()))
                                 .into(holder.imageView);
                     }
 

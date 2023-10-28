@@ -21,6 +21,7 @@ import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.response.GetUsernameResponse;
 import com.anhtuan.bookapp.response.ImageResponse;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.util.List;
 
@@ -94,6 +95,7 @@ public class AdapterBookFilter extends RecyclerView.Adapter<AdapterBookFilter.Ho
                     if (response.body().getCode() == 100){
                         Glide.with(context)
                                 .load(response.body().getData())
+                                .signature(new ObjectKey(response.body().getData()))
                                 .into(holder.imageView);
                     }
 

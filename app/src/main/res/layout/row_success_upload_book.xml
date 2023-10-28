@@ -43,9 +43,20 @@
             android:layout_height="wrap_content"
             style="@style/TextAppearance.MaterialComponents.Headline6"
             android:text="Tên sách"
+            android:textSize="18dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="35dp"
             android:layout_toEndOf="@id/bookRl"
             android:maxLines="1"/>
+
+        <ImageButton
+            android:id="@+id/moreBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:padding="5dp"
+            android:src="@drawable/ic_more_blue"
+            android:layout_alignParentEnd="true"/>
 
         <TextView
             android:id="@+id/numberPurchasesTv"
@@ -88,7 +99,18 @@
             android:textAlignment="textEnd"
             android:textSize="20dp" />
 
-
+        <TextView
+            android:id="@+id/statusTv"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:text="Đang ra"
+            android:textSize="20dp"
+            android:layout_alignParentEnd="true"
+            android:textAlignment="center"
+            android:layout_below="@id/numberPurchasesTv"
+            android:layout_toEndOf="@id/priceTv"
+            android:maxLines="1"/>
 
         <TextView
             android:id="@+id/categoryTv"

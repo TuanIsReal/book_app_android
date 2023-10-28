@@ -22,6 +22,8 @@ import com.anhtuan.bookapp.response.GetUserInfoResponse;
 import com.anhtuan.bookapp.response.ImageResponse;
 import com.anhtuan.bookapp.response.ViewBookResponse;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
+
 import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -100,7 +102,10 @@ public class AdapterRankingUser extends RecyclerView.Adapter<AdapterRankingUser.
                                 @Override
                                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                                     if (response.body().getCode() == 100) {
-                                        Glide.with(context).load(response.body().getData()).into(holder.avatar);
+                                        Glide.with(context)
+                                                .load(response.body().getData())
+                                                .signature(new ObjectKey(response.body().getData()))
+                                                .into(holder.avatar);
                                     }
                                 }
 
