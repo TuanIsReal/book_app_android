@@ -19,8 +19,16 @@ import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.request.AddChapterRequest;
 import com.anhtuan.bookapp.response.GetBookResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,6 +38,7 @@ public class BookChapterAddActivity extends AppCompatActivity {
     private ActivityBookChapterAddBinding binding;
     private List<Book> books;
     private ProgressDialog progressDialog;
+    private List<String> bannedWords = new ArrayList<>();
 
 
     @Override
@@ -42,6 +51,7 @@ public class BookChapterAddActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId","");
         progressDialog = new ProgressDialog(this);
+        getBannedWords();
         loadBooks(userId);
         Intent intent = getIntent();
         String bookName = intent.getStringExtra("bookName");
@@ -76,7 +86,7 @@ public class BookChapterAddActivity extends AppCompatActivity {
                     progressDialog.setTitle("");
                     progressDialog.setMessage("Đang thêm chapter...");
                     progressDialog.show();
-                    bookChapterApi.addChapter(new AddChapterRequest(bookName, chapterNumber, chapterName, chapterContent))
+                    bookChapterApi.addChapter(new AddChapterRequest(bookName, chapterNumber, chapterName, chapterContent.replaceAll("\\s+", " ")))
                             .enqueue(new Callback<NoDataResponse>() {
                         @Override
                         public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
@@ -108,6 +118,18 @@ public class BookChapterAddActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void getBannedWords() {
+        File file = new File(getFilesDir(), "banned_words.txt");
+        try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                bannedWords.add(line);
+            }
+        } catch (IOException e) {
+
+        }
     }
 
     private void loadBooks(String userId) {
@@ -176,7 +198,27 @@ public class BookChapterAddActivity extends AppCompatActivity {
             Toast.makeText(BookChapterAddActivity.this, "Nội dung chương ít nhất 100 từ và nhiều nhất 10000 từ", Toast.LENGTH_SHORT).show();
             return false;
         }
+        if (containsBannedWords(chapterContent)){
+            Toast.makeText(BookChapterAddActivity.this, "Nội dung có tồn tại từ nhạy cảm, vui lòng kiểm tra lại", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         return true;
+    }
+
+    public boolean containsBannedWords(String text) {
+        if (bannedWords.isEmpty()){
+            return false;
+        }
+        for (String bannedWord : bannedWords) {
+            Pattern pattern = Pattern.compile("[^a-zA-Z]" + Pattern.quote(bannedWord) + "[^a-zA-Z]");
+            Matcher matcher = pattern.matcher(text);
+
+            if (matcher.find()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

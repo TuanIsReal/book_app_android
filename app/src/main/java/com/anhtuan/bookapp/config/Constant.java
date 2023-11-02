@@ -13,7 +13,7 @@ public class Constant {
     // ip tuan
 //    public static final String IP_SERVER = "http://192.168.130.143:8080/";
 
-    public static final int A_DAY = 86400000;
+    public static final long A_DAY = 86400000;
 
     public static class AddBookType{
         public static final int MEMBER_ADD = 1;

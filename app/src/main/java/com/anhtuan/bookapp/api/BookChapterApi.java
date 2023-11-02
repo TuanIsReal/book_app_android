@@ -3,6 +3,7 @@ package com.anhtuan.bookapp.api;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.request.AddBookRequest;
 import com.anhtuan.bookapp.request.AddChapterRequest;
+import com.anhtuan.bookapp.response.GetBannedWordResponse;
 import com.anhtuan.bookapp.response.GetBookChapterListResponse;
 import com.anhtuan.bookapp.response.GetBookResponse;
 import com.anhtuan.bookapp.response.GetChapterContentResponse;
@@ -44,5 +45,6 @@ public interface BookChapterApi {
     @GET("getBookChapterList")
     Call<GetBookChapterListResponse> getBookChapterList(@Query("bookId") String bookId);
 
-
+    @GET("getBannedWord")
+    Call<GetBannedWordResponse> getBannedWord(@Query("version") int version);
 }

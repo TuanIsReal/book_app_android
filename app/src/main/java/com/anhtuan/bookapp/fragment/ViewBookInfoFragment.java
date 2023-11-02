@@ -9,6 +9,7 @@ import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,11 +134,16 @@ public class ViewBookInfoFragment extends Fragment {
 
     private String getWriteSpeed(int totalChapter, long uploadTime){
         long currentTime = System.currentTimeMillis();
+        Log.d("----currentTime", String.valueOf(currentTime));
+        Log.d("----uploadTime", String.valueOf(uploadTime));
+        Log.d("----totalChapter", String.valueOf(totalChapter));
         long timeUpBook = currentTime - uploadTime;
         int speed;
         if (timeUpBook <= Constant.A_DAY * 7){
             speed = totalChapter;
         } else {
+            Log.d("---time", String.valueOf((totalChapter * Constant.A_DAY * 7)));
+            Log.d("----timeUpBook", String.valueOf(timeUpBook));
             speed = (int) ((totalChapter * Constant.A_DAY * 7) / timeUpBook);
         }
 

@@ -9,9 +9,9 @@
     <ScrollView
         android:id="@+id/contentSv"
         android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/white"
-        android:scrollbars="none"
-        android:layout_height="match_parent">
+        android:scrollbars="none">
 
         <RelativeLayout
             android:id="@+id/contentRl"
@@ -28,22 +28,21 @@
                     android:id="@+id/writeSpeedTv"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="20dp"
-                    android:textSize="30sp"
+                    android:layout_marginLeft="25dp"
                     android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/writeSpeedText"
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
                     android:layout_below="@id/writeSpeedTv"
+                    android:layout_marginLeft="20dp"
                     android:text="Chương/Tuần"
-                    android:textSize="12sp"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/totalChapterTv"
@@ -51,44 +50,44 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
-                    android:textSize="30sp"
                     android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/totalChapterText"
                     android:layout_width="125dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:layout_below="@id/totalChapterTv"
+                    android:layout_centerHorizontal="true"
                     android:text="Chương - Đang ra"
-                    android:textSize="12sp"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/totalPurchasedTv"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginRight="15dp"
                     android:layout_marginTop="20dp"
-                    android:textSize="30sp"
+                    android:layout_marginRight="15dp"
                     android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/totalPurchasedText"
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/totalPurchasedTv"
                     android:layout_alignParentEnd="true"
                     android:layout_marginRight="25dp"
-                    android:layout_below="@id/totalPurchasedTv"
-                    android:text="Lượt mua"
-                    android:textSize="12sp"
                     android:layout_marginBottom="10dp"
-                    android:textColor="@color/white"/>
+                    android:text="Lượt mua"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
 
             </RelativeLayout>
 
@@ -96,32 +95,32 @@
                 android:id="@+id/introductionTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:textSize="18sp"
-                android:text="Nội dung"
                 android:layout_below="@id/infoRL"
-                android:textColor="@color/black"/>
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="20dp"
+                android:text="Nội dung"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
             <RelativeLayout
                 android:id="@+id/sameAuthorRl"
                 android:layout_width="match_parent"
                 android:layout_height="550dp"
+                android:layout_below="@id/introductionTv"
                 android:layout_marginTop="40dp"
-                android:background="@color/gray03"
-                android:layout_below="@id/introductionTv">
+                android:background="@color/gray03">
 
                 <TextView
                     android:id="@+id/sameAuthorTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toStartOf="@id/rightBtn"
-                    android:layout_marginTop="15dp"
-                    android:text="Cùng đăng bởi"
-                    android:textSize="22sp"
                     android:layout_marginLeft="20dp"
-                    android:textColor="@color/black"/>
+                    android:layout_marginTop="15dp"
+                    android:layout_toStartOf="@id/rightBtn"
+                    android:text="Cùng đăng bởi"
+                    android:textColor="@color/black"
+                    android:textSize="22sp" />
 
                 <ImageButton
                     android:id="@+id/rightBtn"
@@ -130,20 +129,20 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="15dp"
                     android:layout_marginRight="20dp"
+                    android:background="@android:color/transparent"
                     android:padding="5dp"
-                    android:src="@drawable/ic_right_black"
-                    android:background="@android:color/transparent"/>
+                    android:src="@drawable/ic_right_black" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/booksRv"
                     android:layout_width="match_parent"
                     android:layout_height="210dp"
                     android:layout_below="@id/sameAuthorTv"
-                    android:layout_marginTop="5dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:orientation="horizontal"
                     android:layout_marginLeft="20dp"
-                    tools:listitem="@layout/column_same_author_book"/>
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/column_same_author_book" />
 
                 <TextView
                     android:id="@+id/errorReportTv"

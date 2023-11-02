@@ -1,5 +1,6 @@
 package com.anhtuan.bookapp.activity;
 
+import static com.anhtuan.bookapp.api.BookChapterApi.bookChapterApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.NonNull;
@@ -20,7 +21,9 @@ import android.view.View;
 import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.api.UserApi;
 import com.anhtuan.bookapp.common.ApiAddress;
+import com.anhtuan.bookapp.domain.BannedWord;
 import com.anhtuan.bookapp.response.CheckLoggedResponse;
+import com.anhtuan.bookapp.response.GetBannedWordResponse;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
 import com.anhtuan.bookapp.domain.User;
 import com.anhtuan.bookapp.response.NoDataResponse;
@@ -30,6 +33,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,6 +45,8 @@ public class SplashActivity extends AppCompatActivity {
 
 //    private FirebaseAuth firebaseAuth;
     private static final int MY_REQUEST_CODE = 20000;
+    int bannedVersion;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +60,10 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
 //                checkLogged();
-                SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+                sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
                 String userId = sharedPreferences.getString("userId","");
+                bannedVersion = sharedPreferences.getInt("bannedVersion",1);
+                getBannedWord();
                 if (userId.isBlank()){
                     finish();
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
@@ -176,5 +187,34 @@ public class SplashActivity extends AppCompatActivity {
                 requestPermissions(permission, MY_REQUEST_CODE);
             }
         }
+    }
+
+    private void getBannedWord() {
+        bookChapterApi.getBannedWord(bannedVersion).enqueue(new Callback<GetBannedWordResponse>() {
+            @Override
+            public void onResponse(Call<GetBannedWordResponse> call, Response<GetBannedWordResponse> response) {
+                if (response.body() == null || response.body().getCode() == 98){
+                    return;
+                }
+                BannedWord bannedWord = response.body().getData();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("bannedVersion", bannedWord.getVersion());
+                editor.apply();
+                File file = new File(getFilesDir(), "banned_words.txt");
+
+                try (FileWriter writer = new FileWriter(file)){
+                    for (String word : bannedWord.getWords()) {
+                        writer.write(word + "\n");
+                    }
+                } catch (IOException e){
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetBannedWordResponse> call, Throwable t) {
+
+            }
+        });
     }
 }

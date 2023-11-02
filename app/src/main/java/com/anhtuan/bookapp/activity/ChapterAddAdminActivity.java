@@ -60,7 +60,7 @@ public class ChapterAddAdminActivity extends AppCompatActivity {
                     progressDialog.setTitle("");
                     progressDialog.setMessage("Đang thêm chapter...");
                     progressDialog.show();
-                    bookChapterApi.addChapter(new AddChapterRequest(bookName, chapterNumber, chapterName, chapterContent))
+                    bookChapterApi.addChapter(new AddChapterRequest(bookName, chapterNumber, chapterName, chapterContent.replaceAll("\\s+", " ")))
                             .enqueue(new Callback<NoDataResponse>() {
                                 @Override
                                 public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {

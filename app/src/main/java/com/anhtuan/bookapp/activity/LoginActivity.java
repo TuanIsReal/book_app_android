@@ -1,5 +1,6 @@
 package com.anhtuan.bookapp.activity;
 
+import static com.anhtuan.bookapp.api.BookChapterApi.bookChapterApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.NonNull;
@@ -20,7 +21,9 @@ import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.common.ApiAddress;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityLoginBinding;
+import com.anhtuan.bookapp.domain.BannedWord;
 import com.anhtuan.bookapp.request.GoogleLoginRequest;
+import com.anhtuan.bookapp.response.GetBannedWordResponse;
 import com.anhtuan.bookapp.response.LoginData;
 import com.anhtuan.bookapp.response.LoginResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
@@ -61,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
     // [START declare_auth]
     private FirebaseAuth mAuth;
     // [END declare_auth]
+    SharedPreferences sharedPreferences;
 
     private GoogleSignInClient mGoogleSignInClient;
     @Override
@@ -69,6 +73,8 @@ public class LoginActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Xin chờ");
