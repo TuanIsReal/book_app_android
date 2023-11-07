@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.anhtuan.bookapp.activity.ViewBookActivity;
 import com.anhtuan.bookapp.common.Utils;
+import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.RowBookUserBinding;
 import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.response.GetUsernameResponse;
@@ -92,9 +93,10 @@ public class AdapterSearchBookUser extends RecyclerView.Adapter<AdapterSearchBoo
                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     holder.progressBar.setVisibility(View.GONE);
                     if (response.body().getCode() == 100){
+                        String path = Constant.IP_SERVER_IMAGE + response.body().getData();
                         Glide.with(context)
-                                .load(response.body().getData())
-                                .signature(new ObjectKey(response.body().getData()))
+                                .load(path)
+                                .signature(new ObjectKey(path))
                                 .into(holder.imageView);
                     }
 

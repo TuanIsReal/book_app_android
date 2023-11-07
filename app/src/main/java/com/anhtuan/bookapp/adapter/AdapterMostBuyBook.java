@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anhtuan.bookapp.activity.ViewBookActivity;
+import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ColumnMostBuyBookBinding;
 import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.response.ImageResponse;
@@ -57,9 +58,10 @@ public class AdapterMostBuyBook extends RecyclerView.Adapter<AdapterMostBuyBook.
                 @Override
                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     if (response.body().getCode() == 100){
+                        String path = Constant.IP_SERVER_IMAGE + response.body().getData();
                         Glide.with(context)
-                                .load(response.body().getData())
-                                .signature(new ObjectKey(response.body().getData()))
+                                .load(path)
+                                .signature(new ObjectKey(path))
                                 .into(holder.bookImage);
                     }
                 }

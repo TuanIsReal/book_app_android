@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 import com.anhtuan.bookapp.adapter.AdapterViewReComment;
 import com.anhtuan.bookapp.common.Utils;
+import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityViewReCommentBinding;
 import com.anhtuan.bookapp.domain.Comment;
 import com.anhtuan.bookapp.domain.ReComment;
@@ -111,8 +112,9 @@ public class ViewReCommentActivity extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                                     if (response.body().getCode() == 100){
+                                        String path = Constant.IP_SERVER_IMAGE + response.body().getData();
                                         Glide.with(ViewReCommentActivity.this)
-                                                .load(response.body().getData())
+                                                .load(path)
                                                 .into(binding.avatar);
                                         loadReCommentList();
                                     }

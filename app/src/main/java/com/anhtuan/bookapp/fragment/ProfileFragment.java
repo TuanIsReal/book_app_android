@@ -24,6 +24,7 @@ import com.anhtuan.bookapp.activity.BalanceChangeActivity;
 import com.anhtuan.bookapp.activity.IncomeActivity;
 import com.anhtuan.bookapp.activity.MainActivity;
 import com.anhtuan.bookapp.activity.SettingActivity;
+import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.domain.User;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
 import com.anhtuan.bookapp.response.ImageResponse;
@@ -170,9 +171,9 @@ public class ProfileFragment extends Fragment {
                             @Override
                             public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                                 if (response.body().getCode() == 100){
-                                    Log.d("avatar image", response.body().getData());
+                                    String path = Constant.IP_SERVER_IMAGE + response.body().getData();
                                     Glide.with(view.getContext())
-                                            .load(response.body().getData())
+                                            .load(path)
                                             .into(avatar);
                                 }
                             }

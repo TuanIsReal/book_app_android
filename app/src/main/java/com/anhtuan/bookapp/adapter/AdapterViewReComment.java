@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anhtuan.bookapp.common.Utils;
+import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.RowReCommentBinding;
 import com.anhtuan.bookapp.domain.ReComment;
 import com.anhtuan.bookapp.domain.User;
@@ -83,8 +84,9 @@ public class AdapterViewReComment extends RecyclerView.Adapter<AdapterViewReComm
                                     @Override
                                     public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                                         if (response.body().getCode() == 100){
+                                            String path = Constant.IP_SERVER_IMAGE + response.body().getData();
                                             Glide.with(context)
-                                                    .load(response.body().getData())
+                                                    .load(path)
                                                     .into(holder.avatar);
                                         }
                                     }

@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.anhtuan.bookapp.adapter.AdapterViewBook;
+import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityViewBookBinding;
 import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.domain.PurchasedBook;
@@ -136,13 +137,14 @@ public class ViewBookActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     if (response.body().getCode() == 100){
+                        String path = Constant.IP_SERVER_IMAGE + response.body().getData();
                         Glide.with(ViewBookActivity.this)
-                                .load(response.body().getData())
-                                .signature(new ObjectKey(response.body().getData()))
+                                .load(path)
+                                .signature(new ObjectKey(path))
                                 .into(binding.imageView);
                         Glide.with(ViewBookActivity.this)
-                                .load(response.body().getData())
-                                .signature(new ObjectKey(response.body().getData()))
+                                .load(path)
+                                .signature(new ObjectKey(path))
                                 .apply(RequestOptions.bitmapTransform(new BlurTransformation(25,3)))
                                 .into(binding.backgroundImageView);
                     }

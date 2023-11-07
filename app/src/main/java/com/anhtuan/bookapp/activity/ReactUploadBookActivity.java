@@ -103,9 +103,11 @@ public class ReactUploadBookActivity extends AppCompatActivity {
             public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                 binding.progressBar.setVisibility(View.GONE);
                 if (response.body().getCode() == 100){
+                    String path = Constant.IP_SERVER_IMAGE + response.body().getData();
                     Glide.with(ReactUploadBookActivity.this)
-                            .load(response.body().getData())
-                            .signature(new ObjectKey(response.body().getData()))
+                            .load(path)
+                            .signature(new ObjectKey(path
+                            ))
                             .into(binding.imageView);
                 }
             }
