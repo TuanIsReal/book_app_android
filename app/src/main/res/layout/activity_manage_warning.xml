@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back01"
-    tools:context=".activity.DashboardAdminActivity">
-    
+    tools:context=".activity.ManageWarningActivity">
+
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
@@ -19,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
-            android:text="Bảng điểu khiển quản lý loại sách"
+            android:text="Bảng điểu khiển quản lý vi phạm"
             android:textStyle="bold"
             android:textColor="@color/white"/>
 
@@ -27,7 +26,7 @@
             android:id="@+id/subTitileTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-             android:layout_centerHorizontal="true"
+            android:layout_centerHorizontal="true"
             android:layout_below="@id/titleTv"
             android:text=""
             android:textColor="@color/white"/>
@@ -39,7 +38,7 @@
             android:src="@drawable/ic_logout_white"
             android:layout_alignParentStart="true"
             android:layout_marginTop="50dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="5dp"
             android:background="@android:color/transparent"/>
 
         <TextView
@@ -47,7 +46,7 @@
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/subTitileTv"
-            android:layout_toEndOf="@id/manageWarningTv"
+            android:layout_toEndOf="@id/manageCategoryTv"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:text="Sách"
@@ -57,14 +56,14 @@
             android:textColor="@color/white"/>
 
         <TextView
-            android:id="@+id/manageWarningTv"
+            android:id="@+id/manageCategoryTv"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/subTitileTv"
             android:layout_toEndOf="@id/centerTV"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="20dp"
-            android:text="Vi phạm"
+            android:text="Loại sách"
             android:textStyle="bold"
             android:textSize="14dp"
             android:textColor="@color/white"/>
@@ -101,61 +100,25 @@
             android:textSize="14dp"
             android:textStyle="bold" />
 
-
     </RelativeLayout>
-    
-    <EditText
-        android:id="@+id/searchEt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbarRl"
-        android:hint="Tìm kiếm"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
-        android:drawableStart="@drawable/ic_search_blue"
-        android:padding="10dp"
-        android:background="@drawable/shape_button2"
-        android:textColorHint="@color/gray01"/>
 
-    
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/categoriesRv"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottomLl"
-        android:layout_below="@id/searchEt"
+        android:layout_below="@id/toolbarRl"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/row_category" />
+        android:layout_marginBottom="10dp">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/warningChapterRv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/row_warning_chapter" />
 
-    <LinearLayout
-        android:id="@+id/bottomLl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/addCategoryBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Thêm loại sách"
-            android:layout_weight="1"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/shape_button1"
-            android:minHeight="50dp"
-            android:textAllCaps="false"
-            android:textColor="@color/white"/>
-
-
-    </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

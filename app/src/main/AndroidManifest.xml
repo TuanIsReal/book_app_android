@@ -25,6 +25,9 @@
         android:windowFullscreen="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.ManageWarningActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.UpdateBookInfoActivity"
             android:exported="false" />
         <activity

@@ -1,7 +1,7 @@
 package com.anhtuan.bookapp.config;
 
 public class Constant {
-    public static final String IP_SERVER = "http://192.168.1.9:8080/";
+    public static final String IP_SERVER = "http://192.168.1.73:8080/";
     public static final String BOOK_IMAGE = "http://192.168.1.9/book_image/";
     public static final String THUMBNAIL = "http://192.168.1.9/thumbnail/";
     public static final String JPG = ".jpg";

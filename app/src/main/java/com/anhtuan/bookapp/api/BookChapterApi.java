@@ -7,6 +7,7 @@ import com.anhtuan.bookapp.response.GetBannedWordResponse;
 import com.anhtuan.bookapp.response.GetBookChapterListResponse;
 import com.anhtuan.bookapp.response.GetBookResponse;
 import com.anhtuan.bookapp.response.GetChapterContentResponse;
+import com.anhtuan.bookapp.response.GetChapterResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,6 +42,9 @@ public interface BookChapterApi {
     Call<GetChapterContentResponse> getChapterContent(@Query("userId") String userId,
                                                       @Query("bookId") String bookId,
                                                @Query("chapterNumber") int chapterNumber);
+
+    @GET("getChapterInfo")
+    Call<GetChapterResponse> getChapterInfo(@Query("chapterId") String chapterId);
 
     @GET("getBookChapterList")
     Call<GetBookChapterListResponse> getBookChapterList(@Query("bookId") String bookId);

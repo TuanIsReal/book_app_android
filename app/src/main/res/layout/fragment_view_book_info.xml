@@ -29,6 +29,7 @@
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
+                    android:layout_marginTop="20dp"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="30sp"
@@ -57,11 +58,11 @@
 
                 <TextView
                     android:id="@+id/totalChapterText"
-                    android:layout_width="125dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/totalChapterTv"
                     android:layout_centerHorizontal="true"
-                    android:text="Chương - Đang ra"
+                    android:text="Chương - đang ra"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 

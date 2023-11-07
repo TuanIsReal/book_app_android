@@ -106,6 +106,14 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
 
+        binding.manageWarningTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(DashboardAdminActivity.this, ManageWarningActivity.class));
+            }
+        });
+
     }
 
     private void loadTitle(String userId){
