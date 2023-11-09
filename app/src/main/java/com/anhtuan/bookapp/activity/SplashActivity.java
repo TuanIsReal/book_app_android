@@ -114,12 +114,12 @@ public class SplashActivity extends AppCompatActivity {
 
                             } else if (responseBody.getCode() == 100) {
                                 if (role == 2){
-                                    finish();
                                     startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
+                                    finish();
                                 }
                                 else {
-                                    finish();
                                     startActivity(new Intent(SplashActivity.this, DashboardUserActivity.class));
+                                    finish();
                                 }
                             }
                         }
@@ -128,12 +128,12 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<NoDataResponse> call, Throwable t) {
                         if (role == 2){
-                            finish();
                             startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
+                            finish();
                         }
                         else {
-                            finish();
                             startActivity(new Intent(SplashActivity.this, DashboardUserActivity.class));
+                            finish();
                         }
                     }
                 });
@@ -155,17 +155,17 @@ public class SplashActivity extends AppCompatActivity {
                     editor.putString("userId", user.getId());
                     editor.apply();
                     if (user.getRole() == 1){
-                        finish();
                         startActivity(new Intent(SplashActivity.this, DashboardUserActivity.class));
+                        finish();
                     }
                     if (user.getRole() == 2){
-                        finish();
                         startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
+                        finish();
                     }
                 }
                 else {
-                    finish();
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    finish();
                 }
             }
 
