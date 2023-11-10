@@ -17,7 +17,7 @@ public class LoginResponse extends BaseResponse{
         this.data = data;
     }
 
-    public Object getData() {
+    public LoginData getData() {
         return data;
     }
 

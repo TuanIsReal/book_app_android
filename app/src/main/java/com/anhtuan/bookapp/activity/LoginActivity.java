@@ -149,13 +149,13 @@ public class LoginActivity extends AppCompatActivity {
                     LoginData loginData = (LoginData) loginResponse.getData();
                     SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("userId", loginData.getUserId());
+                    editor.putString("userId", "a");
                     editor.putInt("userRole", loginData.getRole());
                     editor.putString("theme", "light");
                     editor.apply();
                     int role = loginData.getRole();
                     progressDialog.dismiss();
-                    sendDeviceToken(loginData.getUserId(), role);
+                    sendDeviceToken("b", role);
                 } else {
                     progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Đăng nhập không thành công", Toast.LENGTH_SHORT).show();

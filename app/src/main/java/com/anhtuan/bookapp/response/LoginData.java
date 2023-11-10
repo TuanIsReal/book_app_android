@@ -4,8 +4,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class LoginData {
 
-    @SerializedName("userId")
-    private String userId;
+    @SerializedName("token")
+    private String token;
+
+    @SerializedName("refreshToken")
+    private String refreshToken;
 
     @SerializedName("role")
     private int role;
@@ -13,17 +16,26 @@ public class LoginData {
     public LoginData() {
     }
 
-    public LoginData(String userId, int role) {
-        this.userId = userId;
+    public LoginData(String token, String refreshToken, int role) {
+        this.token = token;
+        this.refreshToken = refreshToken;
         this.role = role;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getToken() {
+        return token;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
     public int getRole() {
@@ -34,12 +46,5 @@ public class LoginData {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "LoginData{" +
-                "userId='" + userId + '\'' +
-                ", role='" + role + '\'' +
-                '}';
-    }
 }
 

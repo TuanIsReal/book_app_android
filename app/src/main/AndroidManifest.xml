@@ -12,7 +12,7 @@
         android:maxSdkVersion="32" />
 
     <application
-        android:name=".config.ChannelNotification"
+        android:name=".config.BookApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"

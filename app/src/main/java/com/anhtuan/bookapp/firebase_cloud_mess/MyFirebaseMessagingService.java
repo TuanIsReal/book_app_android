@@ -6,18 +6,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.anhtuan.bookapp.R;
-import com.anhtuan.bookapp.activity.SplashActivity;
-import com.anhtuan.bookapp.config.ChannelNotification;
+import com.anhtuan.bookapp.config.BookApplication;
 import com.anhtuan.bookapp.fragment.NotificationFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -45,7 +40,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE);
 
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ChannelNotification.CHANNEL_ID)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, BookApplication.CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(bodyMess)
                 .setSmallIcon(R.drawable.logo)

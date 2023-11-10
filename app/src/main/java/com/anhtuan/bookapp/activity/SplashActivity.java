@@ -1,5 +1,6 @@
 package com.anhtuan.bookapp.activity;
 
+import static com.anhtuan.bookapp.api.AuthApi.authApi;
 import static com.anhtuan.bookapp.api.BookChapterApi.bookChapterApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
@@ -19,14 +20,18 @@ import android.util.Log;
 import android.view.View;
 
 import com.anhtuan.bookapp.R;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.api.UserApi;
+import com.anhtuan.bookapp.common.AccountManager;
 import com.anhtuan.bookapp.common.ApiAddress;
+import com.anhtuan.bookapp.common.TokenManager;
 import com.anhtuan.bookapp.domain.BannedWord;
 import com.anhtuan.bookapp.response.CheckLoggedResponse;
 import com.anhtuan.bookapp.response.GetBannedWordResponse;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
 import com.anhtuan.bookapp.domain.User;
 import com.anhtuan.bookapp.response.NoDataResponse;
+import com.anhtuan.bookapp.response.PingResponse;
 import com.anhtuan.bookapp.retrofit.RetrofitService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -53,8 +58,25 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_splash);
-
 //        requestPermission();
+        AccountManager.getInstance().saveAccount("gvbchatbot@gmail.com", null);
+        TokenManager.getInstance().saveToken("12jk54b", "feefef");
+
+        authApi.ping().enqueue(new RetrofitCallBack<PingResponse>() {
+            @Override
+            public void onSuccess(PingResponse response) {
+                if (response != null && response.getCode() == 100){
+                    Log.d("PING", "PONG");
+                }else {
+                    Log.d("PING", "Fail");
+                }
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                Log.d("PING ERROR", errorMessage);
+            }
+        });
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -213,7 +235,6 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GetBannedWordResponse> call, Throwable t) {
-
             }
         });
     }

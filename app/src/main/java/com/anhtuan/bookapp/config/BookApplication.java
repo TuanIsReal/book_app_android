@@ -5,13 +5,18 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
-public class ChannelNotification extends Application {
+import com.anhtuan.bookapp.common.AccountManager;
+import com.anhtuan.bookapp.common.TokenManager;
+
+public class BookApplication extends Application {
 
     public static final String CHANNEL_ID = "push_notification_id";
 
     @Override
     public void onCreate() {
         super.onCreate();
+        TokenManager.getInstance().init(getApplicationContext());
+        AccountManager.getInstance().init(getApplicationContext());
         createChannelNotification();
     }
 
