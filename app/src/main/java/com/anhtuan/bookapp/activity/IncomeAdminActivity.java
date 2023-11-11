@@ -1,28 +1,20 @@
 package com.anhtuan.bookapp.activity;
 
 import static com.anhtuan.bookapp.api.StatApi.statApi;
-import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.anhtuan.bookapp.R;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivityIncomeAdminBinding;
 import com.anhtuan.bookapp.domain.Payment;
-import com.anhtuan.bookapp.domain.TransactionHistory;
 import com.anhtuan.bookapp.response.IncomeAdminData;
 import com.anhtuan.bookapp.response.IncomeAdminResponse;
-import com.anhtuan.bookapp.response.IncomeMemberData;
-import com.anhtuan.bookapp.response.IncomeMemberResponse;
-import com.anhtuan.bookapp.response.NoDataResponse;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -36,10 +28,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class IncomeAdminActivity extends AppCompatActivity {
 
@@ -95,12 +83,12 @@ public class IncomeAdminActivity extends AppCompatActivity {
                 if (Objects.isNull(start) || start.isBlank()){
                     Toast.makeText(IncomeAdminActivity.this, "Chưa chọn thời gian thống kê", Toast.LENGTH_SHORT).show();
                 } else {
-                    statApi.incomeAdmin(start, end).enqueue(new Callback<IncomeAdminResponse>() {
+                    statApi.incomeAdmin(start, end).enqueue(new RetrofitCallBack<IncomeAdminResponse>() {
                         @Override
-                        public void onResponse(Call<IncomeAdminResponse> call, Response<IncomeAdminResponse> response) {
+                        public void onSuccess(IncomeAdminResponse response) {
                             binding.resultStat.setVisibility(View.VISIBLE);
-                            if (response.body() != null && response.body().getCode() == 100){
-                                IncomeAdminData data = response.body().getData();
+                            if (response != null && response.getCode() == 100){
+                                IncomeAdminData data = response.getData();
                                 binding.point.setText(String.valueOf(data.getTotalPoint()) + " point");
                                 binding.money.setText(String.valueOf(data.getTotalMoney()) + " VND");
                                 binding.transactionPoint.setText(String.valueOf(data.getTransactionPoint()) + " point");
@@ -110,8 +98,8 @@ public class IncomeAdminActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(Call<IncomeAdminResponse> call, Throwable t) {
-                            Toast.makeText(IncomeAdminActivity.this, ""+t, Toast.LENGTH_SHORT).show();
+                        public void onFailure(String errorMessage) {
+
                         }
                     });
                 }

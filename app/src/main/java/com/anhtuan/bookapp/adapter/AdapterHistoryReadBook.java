@@ -1,12 +1,11 @@
 package com.anhtuan.bookapp.adapter;
 
 import static com.anhtuan.bookapp.api.PurchasedBookApi.purchasedBookApi;
-import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +13,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anhtuan.bookapp.activity.ViewBookActivity;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.RowUserBookLibraryBinding;
 import com.anhtuan.bookapp.domain.UserBookLibrary;
@@ -40,12 +38,10 @@ public class AdapterHistoryReadBook extends RecyclerView.Adapter<AdapterHistoryR
     private Context context;
     public List<UserBookLibrary> bookList;
     public RowUserBookLibraryBinding binding;
-    private String userId;
 
-    public AdapterHistoryReadBook(Context context, List<UserBookLibrary> bookList, String userId) {
+    public AdapterHistoryReadBook(Context context, List<UserBookLibrary> bookList) {
         this.context = context;
         this.bookList = bookList;
-        this.userId= userId;
     }
 
     @NonNull
@@ -70,7 +66,7 @@ public class AdapterHistoryReadBook extends RecyclerView.Adapter<AdapterHistoryR
         if (bookImage.isBlank()){
             holder.progressBar.setVisibility(View.GONE);
         } else {
-            stfApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
+            unAuthApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
                 @Override
                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     holder.progressBar.setVisibility(View.GONE);
@@ -87,7 +83,6 @@ public class AdapterHistoryReadBook extends RecyclerView.Adapter<AdapterHistoryR
                 @Override
                 public void onFailure(Call<ImageResponse> call, Throwable t) {
                     holder.progressBar.setVisibility(View.GONE);
-                    Log.d("err", "err--fail");
                 }
             });
         }
@@ -95,18 +90,18 @@ public class AdapterHistoryReadBook extends RecyclerView.Adapter<AdapterHistoryR
         holder.unShowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                purchasedBookApi.unShowBook(bookId, userId).enqueue(new Callback<NoDataResponse>() {
+                purchasedBookApi.unShowBook(bookId).enqueue(new RetrofitCallBack<NoDataResponse>() {
                     @Override
-                    public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                        if (!Objects.isNull(response.body()) &&  response.body().getCode() == 100){
+                    public void onSuccess(NoDataResponse response) {
+                        if (!Objects.isNull(response) &&  response.getCode() == 100){
                             bookList.remove(position);
                             notifyDataSetChanged();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                        Toast.makeText(context, ""+t, Toast.LENGTH_SHORT).show();
+                    public void onFailure(String errorMessage) {
+
                     }
                 });
             }

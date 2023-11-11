@@ -13,12 +13,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.anhtuan.bookapp.R;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivityIncomeBinding;
 import com.anhtuan.bookapp.domain.TransactionHistory;
 import com.anhtuan.bookapp.response.IncomeMemberData;
 import com.anhtuan.bookapp.response.IncomeMemberResponse;
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -33,17 +32,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class IncomeActivity extends AppCompatActivity {
 
     ArrayList<BarEntry> dataRevenue, dataSpend, dataChange;
     ActivityIncomeBinding binding;
     List<TransactionHistory> transactionHistoryList;
     String start, end;
-    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +46,6 @@ public class IncomeActivity extends AppCompatActivity {
         binding = ActivityIncomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        userId = sharedPreferences.getString("userId","");
         binding.resultStat.setVisibility(View.GONE);
         binding.revenueChart.setVisibility(View.GONE);
         binding.spendChart.setVisibility(View.GONE);
@@ -92,12 +84,12 @@ public class IncomeActivity extends AppCompatActivity {
                 if (Objects.isNull(start) || start.isBlank()){
                     Toast.makeText(IncomeActivity.this, "Chưa chọn thời gian thống kê", Toast.LENGTH_SHORT).show();
                 } else {
-                    statApi.incomeMember(userId, start, end).enqueue(new Callback<IncomeMemberResponse>() {
+                    statApi.incomeMember(start, end).enqueue(new RetrofitCallBack<IncomeMemberResponse>() {
                         @Override
-                        public void onResponse(Call<IncomeMemberResponse> call, Response<IncomeMemberResponse> response) {
+                        public void onSuccess(IncomeMemberResponse response) {
                             binding.resultStat.setVisibility(View.VISIBLE);
-                            if (response.body() != null && response.body().getCode() == 100){
-                                IncomeMemberData data = response.body().getData();
+                            if (response != null && response.getCode() == 100){
+                                IncomeMemberData data = response.getData();
                                 binding.revenue.setText(String.valueOf(data.getRevenue()) + " point");
                                 binding.spend.setText(String.valueOf(data.getSpend()) + " point");
                                 binding.change.setText(String.valueOf(data.getChange()) + " point");
@@ -106,8 +98,8 @@ public class IncomeActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(Call<IncomeMemberResponse> call, Throwable t) {
-                            Toast.makeText(IncomeActivity.this, ""+t, Toast.LENGTH_SHORT).show();
+                        public void onFailure(String errorMessage) {
+
                         }
                     });
                 }

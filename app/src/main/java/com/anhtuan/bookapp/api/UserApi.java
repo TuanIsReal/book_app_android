@@ -6,6 +6,7 @@ import com.anhtuan.bookapp.request.AuthenVerifyCodeRequest;
 import com.anhtuan.bookapp.request.RegisterRequest;
 import com.anhtuan.bookapp.response.AuthenVerifyCodeResponse;
 import com.anhtuan.bookapp.response.CheckLoggedResponse;
+import com.anhtuan.bookapp.response.CheckUserInfoResponse;
 import com.anhtuan.bookapp.response.GetBalanceChangeResponse;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
 import com.anhtuan.bookapp.response.GetUsernameResponse;
@@ -29,73 +30,41 @@ import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
 
-public interface UserApi {
-
-    Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
+public interface UserApi extends BaseApi{
 
     UserApi userApi = new Retrofit.Builder()
             .baseUrl(Constant.IP_SERVER + "user/")
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(httpClient.build())
             .build()
             .create(UserApi.class);
 
-    @GET("login")
-    Call<LoginResponse> login(@Query("email") String email,
-                              @Query("password") String password,
-                              @Query("ip") String ip);
-
-    @POST("register")
-    Call<RegisterResponse> register(@Body RegisterRequest registerRequest);
-
-
-    @POST("google-login")
-    Call<RegisterResponse> loginGoogle(@Body GoogleLoginRequest googleLoginRequest);
-
-    @Multipart
-    @POST("updateAvatarImage")
-    Call<NoDataResponse> updateAvatarImage(@Part("userId") RequestBody bookName,
-                                         @Part MultipartBody.Part image);
-
-    @GET("checkExistUser")
-    Call<NoDataResponse> checkExistUser(@Query("email") String email);
-
     @GET("getUserInfo")
     Call<GetUserInfoResponse> getUserInfo(@Query("userId") String userId);
+
+    @GET("checkUserInfo")
+    Call<CheckUserInfoResponse> checkUserInfo();
 
     @GET("getUsername")
     Call<GetUsernameResponse> getUsername(@Query("userId") String userId);
 
     @PUT("logout")
-    Call<NoDataResponse> logout(@Query("userId") String userId);
+    Call<NoDataResponse> logout();
 
     @GET("checkUserLogged")
     Call<CheckLoggedResponse> checkUserLogged(@Query("ip") String ip);
 
-    @GET("getAvatarImage")
-    Call<ResponseBody> getAvatarImage(@Query("imageName") String imageName);
-
     @POST("updatePassword")
-    Call<NoDataResponse> updatePassword(@Query("userId") String userId,
-                                        @Query("password") String password,
+    Call<NoDataResponse> updatePassword(@Query("password") String password,
                                         @Query("newPassword") String newPassword);
 
     @POST("updateName")
-    Call<NoDataResponse> updateName(@Query("userId") String userId,
-                                    @Query("password") String password,
+    Call<NoDataResponse> updateName(@Query("password") String password,
                                     @Query("newName") String newName);
 
-    @POST("forgotPassword")
-    Call<NoDataResponse> forgotPassword(@Query("email") String email);
-
-    @POST("authenVerifyCode")
-    Call<AuthenVerifyCodeResponse> authenVerifyCode(@Body AuthenVerifyCodeRequest request);
-    @POST("createNewPassword")
-    Call<NoDataResponse> createNewPassword(@Query("userId") String userId,
-                                        @Query("newPassword") String newPassword);
     @POST("getBalanceChange")
-    Call<GetBalanceChangeResponse> getBalanceChange(@Query("userId") String userId);
+    Call<GetBalanceChangeResponse> getBalanceChange();
 
     @POST("loginDevice")
-    Call<NoDataResponse> loginDevice(@Query("userId") String userId,
-                                     @Query("deviceToken") String deviceToken);
+    Call<NoDataResponse> loginDevice(@Query("deviceToken") String deviceToken);
 }

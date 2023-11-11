@@ -5,9 +5,7 @@ import static com.anhtuan.bookapp.api.UserApi.userApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,16 +13,15 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.anhtuan.bookapp.adapter.AdapterCategory;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
+import com.anhtuan.bookapp.common.AccountManager;
+import com.anhtuan.bookapp.common.TokenManager;
 import com.anhtuan.bookapp.databinding.ActivityDashboardAdminBinding;
 import com.anhtuan.bookapp.domain.Category;
 import com.anhtuan.bookapp.response.CategoriesResponse;
-import com.anhtuan.bookapp.response.GetUserInfoResponse;
+import com.anhtuan.bookapp.response.CheckUserInfoResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class DashboardAdminActivity extends AppCompatActivity {
 
@@ -44,17 +41,14 @@ public class DashboardAdminActivity extends AppCompatActivity {
         binding = ActivityDashboardAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId","");
-
-        loadTitle(userId);
+        loadTitle();
 
         loadCategories("");
 
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logout(sharedPreferences, userId);
+                logout();
             }
         });
 
@@ -116,62 +110,54 @@ public class DashboardAdminActivity extends AppCompatActivity {
 
     }
 
-    private void loadTitle(String userId){
-        if (userId.equals("")){
-            binding.subTitileTv.setText("UserId null");
-        }
-        else {
-            userApi.getUserInfo(userId).enqueue(new Callback<GetUserInfoResponse>() {
-                @Override
-                public void onResponse(Call<GetUserInfoResponse> call, Response<GetUserInfoResponse> response) {
-                    GetUserInfoResponse getUserInfoResponse = response.body();
-                    binding.subTitileTv.setText(getUserInfoResponse.getData().getName());
-                }
-
-                @Override
-                public void onFailure(Call<GetUserInfoResponse> call, Throwable t) {
-                    Toast.makeText(DashboardAdminActivity.this, ""+ t, Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-    }
-
-    private void logout(SharedPreferences sharedPreferences, String userId){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("userId", "");
-        editor.apply();
-
-        userApi.logout(userId).enqueue(new Callback<NoDataResponse>() {
+    private void loadTitle(){
+        userApi.checkUserInfo().enqueue(new RetrofitCallBack<CheckUserInfoResponse>() {
             @Override
-            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                finish();
-                startActivity(new Intent(DashboardAdminActivity.this, MainActivity.class));
+            public void onSuccess(CheckUserInfoResponse response) {
+                binding.subTitileTv.setText(response.getData().getName());
             }
 
             @Override
-            public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                Toast.makeText(DashboardAdminActivity.this, ""+ t, Toast.LENGTH_LONG).show();
+            public void onFailure(String errorMessage) {
+
+            }
+        });
+    }
+
+    private void logout(){
+        userApi.logout().enqueue(new RetrofitCallBack<NoDataResponse>() {
+            @Override
+            public void onSuccess(NoDataResponse response) {
+                TokenManager.getInstance().deleteToken();
+                AccountManager.getInstance().logoutAccount();
+                startActivity(new Intent(DashboardAdminActivity.this, MainActivity.class));
+                finish();
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+
             }
         });
     }
 
     public void loadCategories(String text){
-        categoryApi.searchCategory(text).enqueue(new Callback<CategoriesResponse>() {
+        categoryApi.searchCategory(text).enqueue(new RetrofitCallBack<CategoriesResponse>() {
             @Override
-            public void onResponse(Call<CategoriesResponse> call, Response<CategoriesResponse> response) {
-                CategoriesResponse categoriesResponse = response.body();
-                if (categoriesResponse.getCode() == 100){
-                    categories = categoriesResponse.getData();
+            public void onSuccess(CategoriesResponse response) {
+                if (response.getCode() == 100){
+                    categories = response.getData();
                 }
                 adapterCategory = new AdapterCategory(DashboardAdminActivity.this, categories);
                 binding.categoriesRv.setAdapter(adapterCategory);
             }
 
             @Override
-            public void onFailure(Call<CategoriesResponse> call, Throwable t) {
-                Toast.makeText(DashboardAdminActivity.this, ""+ t, Toast.LENGTH_LONG).show();
+            public void onFailure(String errorMessage) {
+
             }
         });
+
     }
 
     @Override

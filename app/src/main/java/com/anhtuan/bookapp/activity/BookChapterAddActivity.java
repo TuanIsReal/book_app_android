@@ -7,13 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivityBookChapterAddBinding;
 import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.request.AddChapterRequest;
@@ -48,11 +48,9 @@ public class BookChapterAddActivity extends AppCompatActivity {
         binding = ActivityBookChapterAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId","");
         progressDialog = new ProgressDialog(this);
         getBannedWords();
-        loadBooks(userId);
+        loadBooks();
         Intent intent = getIntent();
         String bookName = intent.getStringExtra("bookName");
         if (bookName != null){
@@ -87,34 +85,30 @@ public class BookChapterAddActivity extends AppCompatActivity {
                     progressDialog.setMessage("Đang thêm chapter...");
                     progressDialog.show();
                     bookChapterApi.addChapter(new AddChapterRequest(bookName, chapterNumber, chapterName, chapterContent.replaceAll("\\s+", " ")))
-                            .enqueue(new Callback<NoDataResponse>() {
-                        @Override
-                        public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                            progressDialog.dismiss();
-                            NoDataResponse responseBody = response.body();
-                            if (responseBody == null){
-                                Toast.makeText(BookChapterAddActivity.this, "Call Api lỗi", Toast.LENGTH_SHORT).show();
-                            } else if (responseBody.getCode() == 109){
-                                Toast.makeText(BookChapterAddActivity.this, "Không tìm thấy sách được chọn", Toast.LENGTH_SHORT).show();
-                            } else if (responseBody.getCode() == 107) {
-                                Toast.makeText(BookChapterAddActivity.this, "Số chương bị trùng", Toast.LENGTH_SHORT).show();
-                            } else if (responseBody.getCode() == 108) {
-                                Toast.makeText(BookChapterAddActivity.this, "data truyền bị lỗi", Toast.LENGTH_SHORT).show();
-                            }  else if (responseBody.getCode() == 100) {
-                                Toast.makeText(BookChapterAddActivity.this, "Thêm chương thành công", Toast.LENGTH_SHORT).show();
-                                binding.chapterNumberEt.setText("");
-                                binding.chapterNameEt.setText("");
-                                binding.chapterContentEt.setText("");
-                            } else {
-                                Toast.makeText(BookChapterAddActivity.this, "Lỗi không xác định", Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                            .enqueue(new RetrofitCallBack<NoDataResponse>() {
+                                @Override
+                                public void onSuccess(NoDataResponse response) {
+                                    progressDialog.dismiss();
+                                    if (response == null){
+                                        Toast.makeText(BookChapterAddActivity.this, "Call Api lỗi", Toast.LENGTH_SHORT).show();
+                                    } else if (response.getCode() == 109){
+                                        Toast.makeText(BookChapterAddActivity.this, "Không tìm thấy sách được chọn", Toast.LENGTH_SHORT).show();
+                                    } else if (response.getCode() == 107) {
+                                        Toast.makeText(BookChapterAddActivity.this, "Số chương bị trùng", Toast.LENGTH_SHORT).show();
+                                    } else if (response.getCode() == 108) {
+                                        Toast.makeText(BookChapterAddActivity.this, "data truyền bị lỗi", Toast.LENGTH_SHORT).show();
+                                    }  else if (response.getCode() == 100) {
+                                        Toast.makeText(BookChapterAddActivity.this, "Thêm chương thành công", Toast.LENGTH_SHORT).show();
+                                        binding.chapterNumberEt.setText("");
+                                        binding.chapterNameEt.setText("");
+                                        binding.chapterContentEt.setText("");
+                                    }
+                                }
 
-                        @Override
-                        public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                            Toast.makeText(BookChapterAddActivity.this, ""+t, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                                @Override
+                                public void onFailure(String errorMessage) {
+                                }
+                            });
                 }
             }
         });
@@ -132,29 +126,24 @@ public class BookChapterAddActivity extends AppCompatActivity {
         }
     }
 
-    private void loadBooks(String userId) {
-        if (userId == null){
-            Toast.makeText(BookChapterAddActivity.this, "UserId null", Toast.LENGTH_SHORT).show();
-        } else {
-            books = new ArrayList<>();
-            bookApi.getBookByUserId(userId).enqueue(new Callback<GetBookResponse>() {
-                @Override
-                public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
-                    GetBookResponse responseBody = response.body();
-                    if (responseBody.getCode() == 106){
-                        Toast.makeText(BookChapterAddActivity.this, "Không tìm thấy user", Toast.LENGTH_SHORT).show();
-                    }
-                    if (responseBody.getCode() == 100){
-                        books = responseBody.getData();
-                    }
+    private void loadBooks() {
+        books = new ArrayList<>();
+        bookApi.getBookByUserId().enqueue(new RetrofitCallBack<GetBookResponse>() {
+            @Override
+            public void onSuccess(GetBookResponse response) {
+                if (response.getCode() == 106){
+                    Toast.makeText(BookChapterAddActivity.this, "Không tìm thấy user", Toast.LENGTH_SHORT).show();
                 }
+                if (response.getCode() == 100){
+                    books = response.getData();
+                }
+            }
 
-                @Override
-                public void onFailure(Call<GetBookResponse> call, Throwable t) {
-                    Toast.makeText(BookChapterAddActivity.this, ""+ t, Toast.LENGTH_LONG).show();
-                }
-            });
-        }
+            @Override
+            public void onFailure(String errorMessage) {
+
+            }
+        });
 
     }
 

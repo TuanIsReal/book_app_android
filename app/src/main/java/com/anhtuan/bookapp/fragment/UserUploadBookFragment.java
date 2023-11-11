@@ -3,11 +3,7 @@ package com.anhtuan.bookapp.fragment;
 import static android.app.Activity.RESULT_OK;
 
 import static com.anhtuan.bookapp.api.BookApi.bookApi;
-import static com.anhtuan.bookapp.api.BookRequestUpApi.bookRequestUpApi;
-
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -20,25 +16,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.activity.BookAddActivity;
 import com.anhtuan.bookapp.adapter.AdapterRejectUploadBook;
 import com.anhtuan.bookapp.adapter.AdapterRequestUploadBook;
 import com.anhtuan.bookapp.adapter.AdapterSuccessUploadBook;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.domain.Book;
-import com.anhtuan.bookapp.domain.BookRequestUp;
-import com.anhtuan.bookapp.response.GetBookResponse;
 import com.anhtuan.bookapp.response.GetRequestUploadBookResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class UserUploadBookFragment extends Fragment {
 
@@ -51,7 +40,6 @@ public class UserUploadBookFragment extends Fragment {
     RecyclerView successBooksRv, requestBooksRv, rejectBooksRv;
     List<Book> bookRequestList, bookRejectList;
     List<Book> bookSuccessList;
-    String userId;
     TextView requestUploadTv, successUploadTv, rejectUploadTv;
 
     public UserUploadBookFragment() {
@@ -64,8 +52,6 @@ public class UserUploadBookFragment extends Fragment {
         // Inflate the layout for this fragment
         WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
         view = inflater.inflate(R.layout.fragment_user_upload_book, container, false);
-        SharedPreferences sharedPreferences = view.getContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        userId = sharedPreferences.getString("userId","");
         initView();
 
         successUploadTv.setOnClickListener(new View.OnClickListener() {
@@ -130,13 +116,12 @@ public class UserUploadBookFragment extends Fragment {
 
     private void loadRequestUploadBook(){
         bookRequestList = new ArrayList<>();
-        bookApi.getRequestUploadBook(userId, Constant.StatusBookRequestUp.REQUEST).enqueue(new Callback<GetRequestUploadBookResponse>() {
+        bookApi.getRequestUploadBook(Constant.StatusBookRequestUp.REQUEST).enqueue(new RetrofitCallBack<GetRequestUploadBookResponse>() {
             @Override
-            public void onResponse(Call<GetRequestUploadBookResponse> call, Response<GetRequestUploadBookResponse> response) {
-                if (response.body() != null){
-                    GetRequestUploadBookResponse responseBody = response.body();
-                    if (responseBody.getCode() == 100){
-                        bookRequestList = responseBody.getData();
+            public void onSuccess(GetRequestUploadBookResponse response) {
+                if (response != null){
+                    if (response.getCode() == 100){
+                        bookRequestList = response.getData();
                         adapterRequestUploadBook = new AdapterRequestUploadBook(view.getContext(), bookRequestList);
                         requestBooksRv.setAdapter(adapterRequestUploadBook);
                     }
@@ -144,7 +129,7 @@ public class UserUploadBookFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<GetRequestUploadBookResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });
@@ -152,21 +137,20 @@ public class UserUploadBookFragment extends Fragment {
 
     private void loadSuccessUploadBook(){
         bookSuccessList = new ArrayList<>();
-        bookApi.getRequestUploadBook(userId, Constant.StatusBookRequestUp.ACCEPTED).enqueue(new Callback<GetRequestUploadBookResponse>() {
+        bookApi.getRequestUploadBook(Constant.StatusBookRequestUp.ACCEPTED).enqueue(new RetrofitCallBack<GetRequestUploadBookResponse>() {
             @Override
-            public void onResponse(Call<GetRequestUploadBookResponse> call, Response<GetRequestUploadBookResponse> response) {
-                if (response.body() != null){
-                    GetRequestUploadBookResponse responseBody = response.body();
-                    if (responseBody.getCode() == 100){
-                        bookSuccessList = responseBody.getData();
-                        adapterSuccessUploadBook = new AdapterSuccessUploadBook(view.getContext(), bookSuccessList, userId);
+            public void onSuccess(GetRequestUploadBookResponse response) {
+                if (response != null){
+                    if (response.getCode() == 100){
+                        bookSuccessList = response.getData();
+                        adapterSuccessUploadBook = new AdapterSuccessUploadBook(view.getContext(), bookSuccessList);
                         successBooksRv.setAdapter(adapterSuccessUploadBook);
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<GetRequestUploadBookResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });
@@ -174,13 +158,12 @@ public class UserUploadBookFragment extends Fragment {
 
     private void loadRejectUploadBook(){
         bookRejectList = new ArrayList<>();
-        bookApi.getRequestUploadBook(userId, Constant.StatusBookRequestUp.REJECTED).enqueue(new Callback<GetRequestUploadBookResponse>() {
+        bookApi.getRequestUploadBook(Constant.StatusBookRequestUp.REJECTED).enqueue(new RetrofitCallBack<GetRequestUploadBookResponse>() {
             @Override
-            public void onResponse(Call<GetRequestUploadBookResponse> call, Response<GetRequestUploadBookResponse> response) {
-                if (response.body() != null){
-                    GetRequestUploadBookResponse responseBody = response.body();
-                    if (responseBody.getCode() == 100){
-                        bookRejectList = responseBody.getData();
+            public void onSuccess(GetRequestUploadBookResponse response) {
+                if (response != null){
+                    if (response.getCode() == 100){
+                        bookRejectList = response.getData();
                         adapterRejectUploadBook = new AdapterRejectUploadBook(view.getContext(), bookRejectList);
                         rejectBooksRv.setAdapter(adapterRejectUploadBook);
                     }
@@ -188,10 +171,11 @@ public class UserUploadBookFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<GetRequestUploadBookResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });
+
     }
 
     @Override

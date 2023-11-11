@@ -23,20 +23,16 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import com.anhtuan.bookapp.R;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.common.RealPathUtil;
-import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityUpdateBookInfoBinding;
 import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.domain.Category;
-import com.anhtuan.bookapp.fragment.UserUploadBookFragment;
-import com.anhtuan.bookapp.request.AddBookRequest;
 import com.anhtuan.bookapp.request.UpdateBookRequest;
 import com.anhtuan.bookapp.response.CategoriesResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.anhtuan.bookapp.response.ViewBookResponse;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 
@@ -48,9 +44,6 @@ import java.util.Set;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class UpdateBookInfoActivity extends AppCompatActivity {
 
@@ -138,14 +131,13 @@ public class UpdateBookInfoActivity extends AppCompatActivity {
     }
 
     private void updateBook(UpdateBookRequest updateBookRequest) {
-        bookApi.updateBookInfo(updateBookRequest).enqueue(new Callback<NoDataResponse>() {
+        bookApi.updateBookInfo(updateBookRequest).enqueue(new RetrofitCallBack<NoDataResponse>() {
             @Override
-            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                NoDataResponse responseBody = response.body();
-                if (responseBody.getCode() == 109){
+            public void onSuccess(NoDataResponse response) {
+                if (response.getCode() == 109){
                     progressDialog.dismiss();
                     Toast.makeText(UpdateBookInfoActivity.this, "truyện không tồn tại", Toast.LENGTH_SHORT).show();
-                } else if (responseBody.getCode() == 100 && imageUri != null) {
+                } else if (response.getCode() == 100 && imageUri != null) {
                     updateBookImage(bookName);
                 } else {
                     progressDialog.dismiss();
@@ -155,7 +147,7 @@ public class UpdateBookInfoActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<NoDataResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
                 progressDialog.dismiss();
             }
         });
@@ -186,17 +178,16 @@ public class UpdateBookInfoActivity extends AppCompatActivity {
 
     private void loadBookCategories() {
         categories = new ArrayList<>();
-        categoryApi.getCategory().enqueue(new Callback<CategoriesResponse>() {
+        categoryApi.getCategory().enqueue(new RetrofitCallBack<CategoriesResponse>() {
             @Override
-            public void onResponse(Call<CategoriesResponse> call, Response<CategoriesResponse> response) {
-                CategoriesResponse categoriesResponse = response.body();
-                if (categoriesResponse.getCode() == 100){
-                    categories = categoriesResponse.getData();
+            public void onSuccess(CategoriesResponse response) {
+                if (response.getCode() == 100){
+                    categories = response.getData();
                 }
             }
 
             @Override
-            public void onFailure(Call<CategoriesResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });
@@ -204,14 +195,13 @@ public class UpdateBookInfoActivity extends AppCompatActivity {
 
 
     private void loadBookInfo() {
-        bookApi.getBookById(bookId).enqueue(new Callback<ViewBookResponse>() {
+        bookApi.getBookById(bookId).enqueue(new RetrofitCallBack<ViewBookResponse>() {
             @Override
-            public void onResponse(Call<ViewBookResponse> call, Response<ViewBookResponse> response) {
-                ViewBookResponse responseBody = response.body();
-                if (responseBody.getCode() == 109) {
+            public void onSuccess(ViewBookResponse response) {
+                if (response.getCode() == 109) {
                     Toast.makeText(UpdateBookInfoActivity.this, "Sách không tồn tại", Toast.LENGTH_SHORT).show();
-                } else if (responseBody.getCode() == 100) {
-                    Book book = responseBody.getData();
+                } else if (response.getCode() == 100) {
+                    Book book = response.getData();
                     binding.bookNameEt.setText(book.getBookName());
                     binding.introductionEt.setText(book.getIntroduction());
                     binding.priceEt.setText(String.valueOf(book.getBookPrice()));
@@ -221,7 +211,7 @@ public class UpdateBookInfoActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ViewBookResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });
@@ -284,28 +274,24 @@ public class UpdateBookInfoActivity extends AppCompatActivity {
                             RequestBody bookNameRB = RequestBody.create(MediaType.parse("multipart/form-data"), bookName);
                             RequestBody image = RequestBody.create(MediaType.parse("image/jpeg"), stream.toByteArray());
                             MultipartBody.Part multipartBodyImage = MultipartBody.Part.createFormData("image", "", image);
-                            stfApi.updateBookImage(bookNameRB, multipartBodyImage).enqueue(new Callback<NoDataResponse>() {
+                            stfApi.updateBookImage(bookNameRB, multipartBodyImage).enqueue(new RetrofitCallBack<NoDataResponse>() {
                                 @Override
-                                public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
+                                public void onSuccess(NoDataResponse response) {
                                     progressDialog.dismiss();
-                                    NoDataResponse responseBody = response.body();
-                                    if (responseBody == null) {
+                                    if (response == null) {
                                         Toast.makeText(UpdateBookInfoActivity.this, "Call Api lỗi", Toast.LENGTH_SHORT).show();
-                                    } else if (responseBody.getCode() == 109) {
+                                    } else if (response.getCode() == 109) {
                                         Toast.makeText(UpdateBookInfoActivity.this, "Không tìm thấy sách được chọn", Toast.LENGTH_SHORT).show();
-                                    } else if (responseBody.getCode() == 108) {
+                                    } else if (response.getCode() == 108) {
                                         Toast.makeText(UpdateBookInfoActivity.this, "File ảnh load lên server lỗi", Toast.LENGTH_SHORT).show();
-                                    } else if (responseBody.getCode() == 100) {
+                                    } else if (response.getCode() == 100) {
                                         finish();
-                                    } else {
-                                        Toast.makeText(UpdateBookInfoActivity.this, "Lỗi không xác định", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
                                 @Override
-                                public void onFailure(Call<NoDataResponse> call, Throwable t) {
+                                public void onFailure(String errorMessage) {
                                     progressDialog.dismiss();
-                                    Toast.makeText(UpdateBookInfoActivity.this, "Lỗi call API:" + t, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }

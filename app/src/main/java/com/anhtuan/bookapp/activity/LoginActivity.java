@@ -1,6 +1,6 @@
 package com.anhtuan.bookapp.activity;
 
-import static com.anhtuan.bookapp.api.BookChapterApi.bookChapterApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.NonNull;
@@ -8,9 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -18,12 +16,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.anhtuan.bookapp.R;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
+import com.anhtuan.bookapp.common.AccountManager;
 import com.anhtuan.bookapp.common.ApiAddress;
+import com.anhtuan.bookapp.common.TokenManager;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityLoginBinding;
-import com.anhtuan.bookapp.domain.BannedWord;
 import com.anhtuan.bookapp.request.GoogleLoginRequest;
-import com.anhtuan.bookapp.response.GetBannedWordResponse;
 import com.anhtuan.bookapp.response.LoginData;
 import com.anhtuan.bookapp.response.LoginResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
@@ -60,11 +59,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
-
-    // [START declare_auth]
     private FirebaseAuth mAuth;
-    // [END declare_auth]
-    SharedPreferences sharedPreferences;
 
     private GoogleSignInClient mGoogleSignInClient;
     @Override
@@ -73,8 +68,6 @@ public class LoginActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Xin chờ");
@@ -134,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUser() {
         progressDialog.setMessage("Đang đăng nhập...");
         progressDialog.show();
-        userApi.login(email, password, new ApiAddress().getIPAddress()).enqueue(new Callback<LoginResponse>() {
+        unAuthApi.login(email, password, new ApiAddress().getIPAddress()).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 progressDialog.setMessage("Đang kiểm tra...");
@@ -147,15 +140,11 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Mật khẩu chưa đúng", Toast.LENGTH_SHORT).show();
                 } else if (loginResponse.getCode() == 100) {
                     LoginData loginData = (LoginData) loginResponse.getData();
-                    SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("userId", "a");
-                    editor.putInt("userRole", loginData.getRole());
-                    editor.putString("theme", "light");
-                    editor.apply();
+                    AccountManager.getInstance().saveAccount(email, password);
+                    TokenManager.getInstance().saveToken(loginData.getToken(), loginData.getRefreshToken());
                     int role = loginData.getRole();
                     progressDialog.dismiss();
-                    sendDeviceToken("b", role);
+                    sendDeviceToken(role);
                 } else {
                     progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Đăng nhập không thành công", Toast.LENGTH_SHORT).show();
@@ -171,49 +160,38 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void sendDeviceToken(String userId, int role){
-        Log.d("---sendDeviceToken", "---");
+    private void sendDeviceToken(int role){
             FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if (!task.isSuccessful()){
-                    Log.d("Token LOG--", "No Token");
-                }
-
-                String token = task.getResult();
-                Log.d("---Token", token);
-                userApi.loginDevice(userId, token).enqueue(new Callback<NoDataResponse>() {
-                    @Override
-                    public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                        if (response.body() != null){
-                            NoDataResponse responseBody = response.body();
-                            if (responseBody.getCode() == 106){
-
-                            } else if (responseBody.getCode() == 100) {
-                                if (role == 2){
-                                    Log.d("---Start ", "Admin activity");
+                @Override
+                public void onComplete(@NonNull Task<String> task) {
+                    String token = task.getResult();
+                    userApi.loginDevice(token).enqueue(new RetrofitCallBack<NoDataResponse>() {
+                        @Override
+                        public void onSuccess(NoDataResponse response) {
+                            if (response != null && response.getCode() == 100) {
+                                if (role == 2) {
                                     startActivity(new Intent(LoginActivity.this, DashboardAdminActivity.class));
-                                }
-                                else {
-                                    Log.d("---Start ", "User activity");
+                                    finish();
+                                } else {
                                     startActivity(new Intent(LoginActivity.this, DashboardUserActivity.class));
+                                    finish();
                                 }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                        if (role == 2){
-                            startActivity(new Intent(LoginActivity.this, DashboardAdminActivity.class));
+                        @Override
+                        public void onFailure(String errorMessage) {
+                            if (role == 2) {
+                                startActivity(new Intent(LoginActivity.this, DashboardAdminActivity.class));
+                                finish();
+                            } else {
+                                startActivity(new Intent(LoginActivity.this, DashboardUserActivity.class));
+                                finish();
+                            }
                         }
-                        else {
-                            startActivity(new Intent(LoginActivity.this, DashboardUserActivity.class));
-                        }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
     }
 
     private void onLoginGoogle(){
@@ -229,6 +207,7 @@ public class LoginActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         mAuth = FirebaseAuth.getInstance();
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -261,21 +240,17 @@ public class LoginActivity extends AppCompatActivity {
                         FirebaseUser user = mAuth.getCurrentUser();
                         Toast.makeText(LoginActivity.this,"Login Success ",Toast.LENGTH_SHORT).show();
                         GoogleLoginRequest request=new GoogleLoginRequest(user.getEmail(),"",user.getDisplayName(),new ApiAddress().getIPAddress(), user.getPhotoUrl().toString());
-                        userApi.loginGoogle(request).enqueue(new Callback<>() {
+                        unAuthApi.loginGoogle(request).enqueue(new Callback<>() {
                             @Override
                             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
 
                                     if (response.body() != null && response.body().getCode() == 100) {
                                         RegisterData registerData = response.body().getData();
-                                        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putString("userId", registerData.getUserId());
-                                        editor.putInt("userRole", registerData.getRole());
-                                        editor.putString("theme", "light");
-                                        editor.apply();
+                                        AccountManager.getInstance().saveAccount(email, "");
+                                        TokenManager.getInstance().saveToken(registerData.getToken(), registerData.getRefreshToken());
                                         int role = registerData.getRole();
                                         mGoogleSignInClient.signOut();
-                                        sendDeviceToken(registerData.getUserId(), role);
+                                        sendDeviceToken(role);
                                     }
                             }
                             @Override
@@ -295,7 +270,7 @@ public class LoginActivity extends AppCompatActivity {
     private void actionForgotPassword(){
         progressDialog.setMessage("Đang kiểm tra...");
         progressDialog.show();
-        userApi.forgotPassword(email).enqueue(new Callback<NoDataResponse>() {
+        unAuthApi.forgotPassword(email).enqueue(new Callback<NoDataResponse>() {
             @Override
             public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
                 progressDialog.dismiss();

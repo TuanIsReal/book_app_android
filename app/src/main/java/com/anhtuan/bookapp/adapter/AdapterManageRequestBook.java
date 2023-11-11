@@ -11,19 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.databinding.RowManageBookRequestBinding;
 import com.anhtuan.bookapp.domain.Book;
-import com.anhtuan.bookapp.domain.BookRequestUp;
 import com.anhtuan.bookapp.response.GetUsernameResponse;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AdapterManageRequestBook extends RecyclerView.Adapter<AdapterManageRequestBook.HolderManageRequestBook>{
     public Context context;
@@ -57,16 +50,16 @@ public class AdapterManageRequestBook extends RecyclerView.Adapter<AdapterManage
         List<String> category = book.getBookCategory();
 
         holder.bookNameTv.setText(bookName);
-        userApi.getUsername(author).enqueue(new Callback<GetUsernameResponse>() {
+        userApi.getUsername(author).enqueue(new RetrofitCallBack<GetUsernameResponse>() {
             @Override
-            public void onResponse(Call<GetUsernameResponse> call, Response<GetUsernameResponse> response) {
-                if (response.body().getCode() == 100){
-                    holder.authorTv.setText(response.body().getData());
+            public void onSuccess(GetUsernameResponse response) {
+                if (response.getCode() == 100){
+                    holder.authorTv.setText(response.getData());
                 }
             }
 
             @Override
-            public void onFailure(Call<GetUsernameResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });

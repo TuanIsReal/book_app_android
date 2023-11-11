@@ -5,7 +5,6 @@ import java.util.List;
 
 public class AddBookRequest {
     private String bookName;
-    private String author;
     private String introduction;
     private String bookImage;
     private ArrayList<String> bookCategory;
@@ -15,9 +14,8 @@ public class AddBookRequest {
     public AddBookRequest() {
     }
 
-    public AddBookRequest(String bookName, String author, String introduction, String bookImage, ArrayList<String> bookCategory, int bookPrice, int freeChapter) {
+    public AddBookRequest(String bookName, String introduction, String bookImage, ArrayList<String> bookCategory, int bookPrice, int freeChapter) {
         this.bookName = bookName;
-        this.author = author;
         this.introduction = introduction;
         this.bookImage = bookImage;
         this.bookCategory = bookCategory;

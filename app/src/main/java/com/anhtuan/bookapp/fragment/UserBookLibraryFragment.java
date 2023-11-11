@@ -1,6 +1,5 @@
 package com.anhtuan.bookapp.fragment;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.core.view.WindowCompat;
@@ -18,10 +17,7 @@ import com.google.android.material.tabs.TabLayout;
 
 public class UserBookLibraryFragment extends Fragment {
 
-    String userId;
-
-    public UserBookLibraryFragment(String userId) {
-        this.userId = userId;
+    public UserBookLibraryFragment() {
     }
 
     @Override
@@ -35,7 +31,7 @@ public class UserBookLibraryFragment extends Fragment {
 
         tab = view.findViewById(R.id.tab);
         viewPager = view.findViewById(R.id.viewPager);
-        AdapterUserBookLibrary adapter = new AdapterUserBookLibrary(getChildFragmentManager(), 2, userId);
+        AdapterUserBookLibrary adapter = new AdapterUserBookLibrary(getChildFragmentManager(), 2);
         viewPager.setAdapter(adapter);
         tab.setupWithViewPager(viewPager);
 

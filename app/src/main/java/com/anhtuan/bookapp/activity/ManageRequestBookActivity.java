@@ -1,7 +1,6 @@
 package com.anhtuan.bookapp.activity;
 
 import static com.anhtuan.bookapp.api.BookApi.bookApi;
-import static com.anhtuan.bookapp.api.BookRequestUpApi.bookRequestUpApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.Nullable;
@@ -9,26 +8,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import com.anhtuan.bookapp.adapter.AdapterManageRequestBook;
-import com.anhtuan.bookapp.config.Constant;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
+import com.anhtuan.bookapp.common.AccountManager;
+import com.anhtuan.bookapp.common.TokenManager;
 import com.anhtuan.bookapp.databinding.ActivityManageRequestBookBinding;
 import com.anhtuan.bookapp.domain.Book;
-import com.anhtuan.bookapp.domain.BookRequestUp;
 import com.anhtuan.bookapp.response.GetRequestUploadBookResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ManageRequestBookActivity extends AppCompatActivity implements AdapterManageRequestBook.ManageRequestBookListener {
 
@@ -46,9 +40,6 @@ public class ManageRequestBookActivity extends AppCompatActivity implements Adap
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityManageRequestBookBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId","");
-
         loadRequestUploadBook();
 
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -60,7 +51,7 @@ public class ManageRequestBookActivity extends AppCompatActivity implements Adap
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logout(sharedPreferences, userId);
+                logout();
             }
         });
 
@@ -90,22 +81,20 @@ public class ManageRequestBookActivity extends AppCompatActivity implements Adap
     }
 
     private void loadRequestUploadBook() {
-        bookApi.getAllRequestUploadBook().enqueue(new Callback<GetRequestUploadBookResponse>() {
+        bookApi.getAllRequestUploadBook().enqueue(new RetrofitCallBack<GetRequestUploadBookResponse>() {
             @Override
-            public void onResponse(Call<GetRequestUploadBookResponse> call, Response<GetRequestUploadBookResponse> response) {
-                binding.swipeRefresh.setRefreshing(false);
-                if (response.body() != null){
-                    GetRequestUploadBookResponse responseBody = response.body();
-                    if (responseBody.getCode() == 100){
-                        bookRequestUpList = responseBody.getData();
+            public void onSuccess(GetRequestUploadBookResponse response) {
+                if (response != null){
+                    if (response.getCode() == 100){
+                        bookRequestUpList = response.getData();
                         loadBookRequestUpBookRecycleView();
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<GetRequestUploadBookResponse> call, Throwable t) {
-                binding.swipeRefresh.setRefreshing(false);
+            public void onFailure(String errorMessage) {
+
             }
         });
     }
@@ -136,21 +125,19 @@ public class ManageRequestBookActivity extends AppCompatActivity implements Adap
         }
     }
 
-    private void logout(SharedPreferences sharedPreferences, String userId){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("userId", "");
-        editor.apply();
-
-        userApi.logout(userId).enqueue(new Callback<NoDataResponse>() {
+    private void logout(){
+        userApi.logout().enqueue(new RetrofitCallBack<NoDataResponse>() {
             @Override
-            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                finish();
+            public void onSuccess(NoDataResponse response) {
+                TokenManager.getInstance().deleteToken();
+                AccountManager.getInstance().logoutAccount();
                 startActivity(new Intent(ManageRequestBookActivity.this, MainActivity.class));
+                finish();
             }
 
             @Override
-            public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                Toast.makeText(ManageRequestBookActivity.this, ""+ t, Toast.LENGTH_LONG).show();
+            public void onFailure(String errorMessage) {
+
             }
         });
     }

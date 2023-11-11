@@ -1,6 +1,6 @@
 package com.anhtuan.bookapp.adapter;
 
-import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,10 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.anhtuan.bookapp.activity.ViewBookActivity;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ColumnMostReviewBookBinding;
@@ -21,9 +19,7 @@ import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.response.ImageResponse;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
-
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,7 +52,7 @@ public class AdapterMostReviewBook extends RecyclerView.Adapter<AdapterMostRevie
         holder.ratingBar.setRating((float) book.getStar());
 
         if (bookImage != null && !bookImage.isBlank()){
-            stfApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
+            unAuthApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
                 @Override
                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     if (response.body().getCode() == 100){

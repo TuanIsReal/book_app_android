@@ -11,11 +11,9 @@ import com.anhtuan.bookapp.fragment.UserUploadBookFragment;
 
 public class AdapterUserBookLibrary extends FragmentStatePagerAdapter {
     int numPage;
-    String userId;
-    public AdapterUserBookLibrary(@NonNull FragmentManager fm, int behavior, String userId) {
+    public AdapterUserBookLibrary(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
         numPage = behavior;
-        this.userId = userId;
     }
 
     @NonNull

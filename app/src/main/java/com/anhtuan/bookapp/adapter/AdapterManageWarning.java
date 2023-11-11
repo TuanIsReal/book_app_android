@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.databinding.RowWarningChapterBinding;
 import com.anhtuan.bookapp.domain.Book;
@@ -21,12 +21,7 @@ import com.anhtuan.bookapp.domain.WarningChapter;
 import com.anhtuan.bookapp.response.GetChapterResponse;
 import com.anhtuan.bookapp.response.GetUsernameResponse;
 import com.anhtuan.bookapp.response.ViewBookResponse;
-
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AdapterManageWarning extends RecyclerView.Adapter<AdapterManageWarning.HolderManageWarning>{
     public Context context;
@@ -49,49 +44,43 @@ public class AdapterManageWarning extends RecyclerView.Adapter<AdapterManageWarn
     public void onBindViewHolder(@NonNull HolderManageWarning holder, int position) {
         WarningChapter warningChapter = warningChapters.get(position);
 
-        bookChapterApi.getChapterInfo(warningChapter.getChapter()).enqueue(new Callback<GetChapterResponse>() {
+        bookChapterApi.getChapterInfo(warningChapter.getChapter()).enqueue(new RetrofitCallBack<GetChapterResponse>() {
             @Override
-            public void onResponse(Call<GetChapterResponse> call, Response<GetChapterResponse> response) {
-                if (response.body() != null && response.body().getCode() == 100){
-                    BookChapter bookChapter = response.body().getData();
+            public void onSuccess(GetChapterResponse response) {
+                if (response != null && response.getCode() == 100){
+                    BookChapter bookChapter = response.getData();
                     holder.chapterTv.setText("Chương " + String.valueOf(bookChapter.getChapterNumber()) + ": " + bookChapter.getChapterName());
 
-                    bookApi.getBookById(bookChapter.getBookId()).enqueue(new Callback<ViewBookResponse>() {
+                    bookApi.getBookById(bookChapter.getBookId()).enqueue(new RetrofitCallBack<ViewBookResponse>() {
                         @Override
-                        public void onResponse(Call<ViewBookResponse> call, Response<ViewBookResponse> response) {
-                            if (response.body() != null && response.body().getCode() == 100){
-                                Book book = response.body().getData();
+                        public void onSuccess(ViewBookResponse response) {
+                            if (response != null && response.getCode() == 100){
+                                Book book = response.getData();
                                 holder.bookNameTv.setText(book.getBookName());
                                 holder.categoryTv.setText(Utils.toStringCategory(book.getBookCategory()));
 
-                                userApi.getUsername(book.getAuthor()).enqueue(new Callback<GetUsernameResponse>() {
+                                userApi.getUsername(book.getAuthor()).enqueue(new RetrofitCallBack<GetUsernameResponse>() {
                                     @Override
-                                    public void onResponse(Call<GetUsernameResponse> call, Response<GetUsernameResponse> response) {
-                                        if (response.body().getCode() == 100){
-                                            holder.authorTv.setText(response.body().getData());
+                                    public void onSuccess(GetUsernameResponse response) {
+                                        if (response.getCode() == 100){
+                                            holder.authorTv.setText(response.getData());
                                         }
                                     }
 
                                     @Override
-                                    public void onFailure(Call<GetUsernameResponse> call, Throwable t) {
-
+                                    public void onFailure(String errorMessage) {
                                     }
                                 });
                             }
                         }
-
                         @Override
-                        public void onFailure(Call<ViewBookResponse> call, Throwable t) {
-
+                        public void onFailure(String errorMessage) {
                         }
                     });
-
                 }
             }
-
             @Override
-            public void onFailure(Call<GetChapterResponse> call, Throwable t) {
-
+            public void onFailure(String errorMessage) {
             }
         });
     }

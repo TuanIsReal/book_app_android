@@ -17,12 +17,12 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-public interface ReCommentApi {
-    Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
+public interface ReCommentApi extends BaseApi{
 
     ReCommentApi reCommentApi = new Retrofit.Builder()
             .baseUrl(Constant.IP_SERVER + "reComment/")
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(httpClient.build())
             .build()
             .create(ReCommentApi.class);
 

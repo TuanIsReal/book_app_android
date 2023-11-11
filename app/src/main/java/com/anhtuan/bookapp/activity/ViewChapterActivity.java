@@ -12,21 +12,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.Toast;
 import com.anhtuan.bookapp.R;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivityViewChapterBinding;
 import com.anhtuan.bookapp.domain.BookChapter;
 import com.anhtuan.bookapp.response.GetChapterContentResponse;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ViewChapterActivity extends AppCompatActivity {
     ActivityViewChapterBinding binding;
 
     int chapterNumber;
     String bookId;
-    String userId;
     boolean showBottomToolbar;
     String theme;
     public static final int REQUEST_CODE = 10006;
@@ -38,9 +34,8 @@ public class ViewChapterActivity extends AppCompatActivity {
         binding = ActivityViewChapterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("appInfo", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        userId = sharedPreferences.getString("userId","");
         theme = sharedPreferences.getString("theme", "light");
 
         changeTheme(theme);
@@ -151,7 +146,6 @@ public class ViewChapterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent1 = new Intent(ViewChapterActivity.this, ViewChapterListActivity.class);
                 intent1.putExtra("bookId", bookId);
-                intent1.putExtra("userId", userId);
                 startActivityForResult(intent1, REQUEST_CODE);
             }
         });
@@ -167,29 +161,27 @@ public class ViewChapterActivity extends AppCompatActivity {
     }
 
     private void loadContent() {
-        bookChapterApi.getChapterContent(userId, bookId, chapterNumber).enqueue(new Callback<GetChapterContentResponse>() {
+        bookChapterApi.getChapterContent(bookId, chapterNumber).enqueue(new RetrofitCallBack<GetChapterContentResponse>() {
             @Override
-            public void onResponse(Call<GetChapterContentResponse> call, Response<GetChapterContentResponse> response) {
+            public void onSuccess(GetChapterContentResponse response) {
                 binding.progressBar.setVisibility(View.GONE);
-                if (response.body() != null){
-                    GetChapterContentResponse responseBody = response.body();
-                    if (responseBody.getCode() == 106){
+                if (response != null){
+                    if (response.getCode() == 106){
                         binding.contentTv.setText("Không tìm thấy sách" + "\n \n \n \n \n \n \n \n \n \n" );
-                    } else if (responseBody.getCode() == 100) {
-                        BookChapter bookChapter = responseBody.getData();
+                    } else if (response.getCode() == 100) {
+                        BookChapter bookChapter = response.getData();
                         chapterNumber = bookChapter.getChapterNumber();
                         binding.charterTv.setText("Chương " + bookChapter.getChapterNumber() + ": " + bookChapter.getChapterName());
                         binding.contentTv.setText("\n" + bookChapter.getChapterContent()+ "\n \n \n \n \n \n \n \n \n \n" );
-                    } else if (responseBody.getCode() == 113) {
+                    } else if (response.getCode() == 113) {
                         openComment();
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<GetChapterContentResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
                 binding.progressBar.setVisibility(View.GONE);
-                Toast.makeText(ViewChapterActivity.this,""+t, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -213,19 +205,17 @@ public class ViewChapterActivity extends AppCompatActivity {
     private void openComment(){
         Intent intent = new Intent(ViewChapterActivity.this, ViewCommentActivity.class);
         intent.putExtra("bookId", bookId);
-        intent.putExtra("userId", userId);
         startActivity(intent);
     }
 
     private void nextChapter(){
         chapterNumber += 1;
-        bookChapterApi.getChapterContent(userId, bookId, chapterNumber).enqueue(new Callback<GetChapterContentResponse>() {
+        bookChapterApi.getChapterContent(bookId, chapterNumber).enqueue(new RetrofitCallBack<GetChapterContentResponse>() {
             @Override
-            public void onResponse(Call<GetChapterContentResponse> call, Response<GetChapterContentResponse> response) {
+            public void onSuccess(GetChapterContentResponse response) {
                 binding.progressBar.setVisibility(View.GONE);
-                if (response.body() != null){
-                    GetChapterContentResponse responseBody = response.body();
-                    if (responseBody.getCode() == 113) {
+                if (response != null){
+                    if (response.getCode() == 113) {
                         openComment();
                     } else {
                         Intent intent = new Intent(ViewChapterActivity.this, ViewChapterActivity.class);
@@ -238,12 +228,10 @@ public class ViewChapterActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<GetChapterContentResponse> call, Throwable t) {
-                binding.progressBar.setVisibility(View.GONE);
-                Toast.makeText(ViewChapterActivity.this,""+t, Toast.LENGTH_SHORT).show();
+            public void onFailure(String errorMessage) {
+
             }
         });
-
     }
 
     private void beforeChapter(){

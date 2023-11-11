@@ -4,7 +4,6 @@ import static com.anhtuan.bookapp.api.NotificationApi.notificationApi;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.activity.ViewBookActivity;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.databinding.RowNotificationBinding;
 import com.anhtuan.bookapp.domain.Notification;
 import com.anhtuan.bookapp.response.NoDataResponse;
-
 import java.util.List;
 import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AdapterNotification extends RecyclerView.Adapter<AdapterNotification.HolderNotification>{
     private Context context;
@@ -63,10 +58,10 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
             @Override
             public void onClick(View v) {
                 if (!isClick){
-                    notificationApi.clickNotification(notification.getId()).enqueue(new Callback<NoDataResponse>() {
+                    notificationApi.clickNotification(notification.getId()).enqueue(new RetrofitCallBack<NoDataResponse>() {
                         @Override
-                        public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                            if (response.body() != null && response.body().getCode() == 100){
+                        public void onSuccess(NoDataResponse response) {
+                            if (response != null && response.getCode() == 100){
                                 holder.contentRl.setBackgroundColor(context.getResources().getColor(R.color.white));
                                 notification.setClick(true);
                                 if (!Objects.isNull(bookId) && !bookId.isBlank()){
@@ -78,7 +73,7 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
                         }
 
                         @Override
-                        public void onFailure(Call<NoDataResponse> call, Throwable t) {
+                        public void onFailure(String errorMessage) {
 
                         }
                     });

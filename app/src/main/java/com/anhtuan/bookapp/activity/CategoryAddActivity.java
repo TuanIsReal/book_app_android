@@ -11,13 +11,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-import com.anhtuan.bookapp.api.CategoryApi;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivityCategoryAddBinding;
 import com.anhtuan.bookapp.response.NoDataResponse;
-import com.anhtuan.bookapp.retrofit.RetrofitService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class CategoryAddActivity extends AppCompatActivity {
 
@@ -65,26 +61,21 @@ public class CategoryAddActivity extends AppCompatActivity {
     private void addCategory() {
         progressDialog.setMessage("Đang thêm loại sách...");
         progressDialog.show();
-
-        categoryApi.addCategory(category).enqueue(new Callback<NoDataResponse>() {
+        categoryApi.addCategory(category).enqueue(new RetrofitCallBack<NoDataResponse>() {
             @Override
-            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                NoDataResponse addCategoryResponse = response.body();
-                if (addCategoryResponse.getCode() == 100){
+            public void onSuccess(NoDataResponse response) {
+                progressDialog.dismiss();
+                if (response.getCode() == 100){
                     binding.categoryEt.setText("");
-                    progressDialog.dismiss();
-                    Toast.makeText(CategoryAddActivity.this, "Thêm loại sách thành công", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    progressDialog.dismiss();
-                    Toast.makeText(CategoryAddActivity.this, "Tên loại sách đã tồn tại", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CategoryAddActivity.this, "Thêm loại truyện thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CategoryAddActivity.this, "Tên loại truyện đã tồn tại", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<NoDataResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
                 progressDialog.dismiss();
-                Toast.makeText(CategoryAddActivity.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

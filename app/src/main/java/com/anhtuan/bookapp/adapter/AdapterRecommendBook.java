@@ -1,6 +1,6 @@
 package com.anhtuan.bookapp.adapter;
 
-import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 
 import android.content.Context;
 import android.content.Intent;
@@ -55,7 +55,7 @@ public class AdapterRecommendBook extends RecyclerView.Adapter<AdapterRecommendB
         holder.recommendCategoryTv.setText(Utils.toStringCategory(book.getBookCategory()));
 
         if (bookImage != null && !bookImage.isBlank()){
-            stfApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
+            unAuthApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
                 @Override
                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     if (response.body().getCode() == 100){

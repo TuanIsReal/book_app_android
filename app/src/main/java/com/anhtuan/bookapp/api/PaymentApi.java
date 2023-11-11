@@ -14,12 +14,12 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-public interface PaymentApi {
-    Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
+public interface PaymentApi extends BaseApi{
 
     PaymentApi paymentApi = new Retrofit.Builder()
             .baseUrl(Constant.IP_SERVER + "payment/")
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(httpClient.build())
             .build()
             .create(PaymentApi.class);
 

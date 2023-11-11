@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.adapter.AdapterBookFilter;
 import com.anhtuan.bookapp.adapter.AdapterCategoryOption;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.common.PaginationScrollListener;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityListBookFilterBinding;
@@ -155,18 +156,18 @@ public class ListBookFilterActivity extends AppCompatActivity implements Adapter
 
     private void loadFirstOpen(){
         request = new GetBookFilterRequest(sortOption, order, statusOption, postOption, new ArrayList<>(), 1);
-        bookApi.getBookFilter(request).enqueue(new Callback<GetBookResponse>() {
+        bookApi.getBookFilter(request).enqueue(new RetrofitCallBack<GetBookResponse>() {
             @Override
-            public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
-                if (response.body() != null && response.body().getCode() == 100){
-                    listBookFilter = response.body().getData();
+            public void onSuccess(GetBookResponse response) {
+                if (response != null && response.getCode() == 100){
+                    listBookFilter = response.getData();
                     setBookRv();
                     loadCategory();
                 }
             }
 
             @Override
-            public void onFailure(Call<GetBookResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });
@@ -259,18 +260,18 @@ public class ListBookFilterActivity extends AppCompatActivity implements Adapter
 
     private void loadListBook(){
         currentPage = 1;
-        bookApi.getBookFilter(request).enqueue(new Callback<GetBookResponse>() {
+        bookApi.getBookFilter(request).enqueue(new RetrofitCallBack<GetBookResponse>() {
             @Override
-            public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
-                if (response.body() != null && response.body().getCode() == 100){
-                    listBookFilter = response.body().getData();
+            public void onSuccess(GetBookResponse response) {
+                if (response != null && response.getCode() == 100){
+                    listBookFilter = response.getData();
                     adapterBookFilter.setBooks(listBookFilter);
                     closeOption();
                 }
             }
 
             @Override
-            public void onFailure(Call<GetBookResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });
@@ -278,12 +279,12 @@ public class ListBookFilterActivity extends AppCompatActivity implements Adapter
 
     private void loadMoreBook(){
         request.setPage(currentPage);
-        bookApi.getBookFilter(request).enqueue(new Callback<GetBookResponse>() {
+        bookApi.getBookFilter(request).enqueue(new RetrofitCallBack<GetBookResponse>() {
             @Override
-            public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
+            public void onSuccess(GetBookResponse response) {
                 isLoading = false;
-                if (response.body() != null && response.body().getCode() == 100){
-                    List<Book> listBookMore = response.body().getData();
+                if (response != null && response.getCode() == 100){
+                    List<Book> listBookMore = response.getData();
                     if (Objects.isNull(listBookMore) || listBookMore.size() < 10){
                         isLastPage = true;
                     }
@@ -293,12 +294,12 @@ public class ListBookFilterActivity extends AppCompatActivity implements Adapter
             }
 
             @Override
-            public void onFailure(Call<GetBookResponse> call, Throwable t) {
-                isLoading = false;
+            public void onFailure(String errorMessage) {
+
             }
         });
     }
-///
+
     private void setBookRv(){
         binding.booksRv.setLayoutManager(manager);
         binding.booksRv.addItemDecoration(itemDecoration);
@@ -326,14 +327,13 @@ public class ListBookFilterActivity extends AppCompatActivity implements Adapter
         binding.booksRv.setAdapter(adapterBookFilter);
     }
 
-    ///
 
     private void loadCategory(){
-        categoryApi.getCategory().enqueue(new Callback<CategoriesResponse>() {
+        categoryApi.getCategory().enqueue(new RetrofitCallBack<CategoriesResponse>() {
             @Override
-            public void onResponse(Call<CategoriesResponse> call, Response<CategoriesResponse> response) {
-                if (response.body() != null && response.body().getCode() == 100){
-                    categoryList = response.body().getData();
+            public void onSuccess(CategoriesResponse response) {
+                if (response != null && response.getCode() == 100){
+                    categoryList = response.getData();
                     binding.optionBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -344,7 +344,7 @@ public class ListBookFilterActivity extends AppCompatActivity implements Adapter
             }
 
             @Override
-            public void onFailure(Call<CategoriesResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });

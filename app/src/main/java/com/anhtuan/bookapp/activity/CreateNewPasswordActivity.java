@@ -1,6 +1,6 @@
 package com.anhtuan.bookapp.activity;
 
-import static com.anhtuan.bookapp.api.UserApi.userApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,8 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-
-import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.databinding.ActivityCreateNewPasswordBinding;
 import com.anhtuan.bookapp.response.NoDataResponse;
 
@@ -27,7 +25,6 @@ public class CreateNewPasswordActivity extends AppCompatActivity {
 
     ActivityCreateNewPasswordBinding binding;
     String newPassword, confirmPassword, userId;
-    boolean authen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +54,7 @@ public class CreateNewPasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validateData()){
-                    userApi.createNewPassword(userId, newPassword).enqueue(new Callback<NoDataResponse>() {
+                    unAuthApi.createNewPassword(userId, newPassword).enqueue(new Callback<NoDataResponse>() {
                         @Override
                         public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
                             if (response.body() != null && response.body().getCode() == 100){

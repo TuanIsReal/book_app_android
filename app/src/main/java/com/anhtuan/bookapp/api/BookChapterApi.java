@@ -25,13 +25,12 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
 
-public interface BookChapterApi {
-
-    Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
+public interface BookChapterApi extends BaseApi{
 
     BookChapterApi bookChapterApi = new Retrofit.Builder()
             .baseUrl(Constant.IP_SERVER + "bookChapter/")
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(httpClient.build())
             .build()
             .create(BookChapterApi.class);
 
@@ -39,8 +38,7 @@ public interface BookChapterApi {
     Call<NoDataResponse> addChapter(@Body AddChapterRequest request);
 
     @GET("getChapterContent")
-    Call<GetChapterContentResponse> getChapterContent(@Query("userId") String userId,
-                                                      @Query("bookId") String bookId,
+    Call<GetChapterContentResponse> getChapterContent(@Query("bookId") String bookId,
                                                @Query("chapterNumber") int chapterNumber);
 
     @GET("getChapterInfo")
@@ -48,7 +46,4 @@ public interface BookChapterApi {
 
     @GET("getBookChapterList")
     Call<GetBookChapterListResponse> getBookChapterList(@Query("bookId") String bookId);
-
-    @GET("getBannedWord")
-    Call<GetBannedWordResponse> getBannedWord(@Query("version") int version);
 }

@@ -8,22 +8,14 @@ import androidx.core.view.WindowCompat;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
-
-import com.anhtuan.bookapp.R;
-import com.anhtuan.bookapp.adapter.AdapterBookAdmin;
 import com.anhtuan.bookapp.adapter.AdapterSearchBookUser;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivitySearchBookUserBinding;
 import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.response.SearchBookResponse;
 
 import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SearchBookUserActivity extends AppCompatActivity {
 
@@ -69,21 +61,18 @@ public class SearchBookUserActivity extends AppCompatActivity {
     }
 
     private void loadBooks(String text) {
-        bookApi.searchBook(text).enqueue(new Callback<SearchBookResponse>() {
+        bookApi.searchBook(text).enqueue(new RetrofitCallBack<SearchBookResponse>() {
             @Override
-            public void onResponse(Call<SearchBookResponse> call, Response<SearchBookResponse> response) {
-                SearchBookResponse searchBookResponse = response.body();
-                if (searchBookResponse.getCode() == 100){
-                    books = searchBookResponse.getData();
+            public void onSuccess(SearchBookResponse response) {
+                if (response.getCode() == 100){
+                    books = response.getData();
                     loadAdapter(books);
-                }else {
-                    Toast.makeText(SearchBookUserActivity.this, "Lỗi không xác định", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<SearchBookResponse> call, Throwable t) {
-                Toast.makeText(SearchBookUserActivity.this, ""+t, Toast.LENGTH_SHORT).show();
+            public void onFailure(String errorMessage) {
+
             }
         });
     }

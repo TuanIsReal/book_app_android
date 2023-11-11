@@ -11,15 +11,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.anhtuan.bookapp.R;
-import com.anhtuan.bookapp.databinding.ActivityBookChapterAddBinding;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivityChapterAddAdminBinding;
 import com.anhtuan.bookapp.request.AddChapterRequest;
 import com.anhtuan.bookapp.response.NoDataResponse;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ChapterAddAdminActivity extends AppCompatActivity {
 
@@ -61,32 +56,29 @@ public class ChapterAddAdminActivity extends AppCompatActivity {
                     progressDialog.setMessage("Đang thêm chapter...");
                     progressDialog.show();
                     bookChapterApi.addChapter(new AddChapterRequest(bookName, chapterNumber, chapterName, chapterContent.replaceAll("\\s+", " ")))
-                            .enqueue(new Callback<NoDataResponse>() {
+                            .enqueue(new RetrofitCallBack<NoDataResponse>() {
                                 @Override
-                                public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
+                                public void onSuccess(NoDataResponse response) {
                                     progressDialog.dismiss();
-                                    NoDataResponse responseBody = response.body();
-                                    if (responseBody == null){
+                                    if (response == null){
                                         Toast.makeText(ChapterAddAdminActivity.this, "Call Api lỗi", Toast.LENGTH_SHORT).show();
-                                    } else if (responseBody.getCode() == 109){
+                                    } else if (response.getCode() == 109){
                                         Toast.makeText(ChapterAddAdminActivity.this, "Không tìm thấy sách được chọn", Toast.LENGTH_SHORT).show();
-                                    } else if (responseBody.getCode() == 107) {
+                                    } else if (response.getCode() == 107) {
                                         Toast.makeText(ChapterAddAdminActivity.this, "Số chương bị trùng", Toast.LENGTH_SHORT).show();
-                                    } else if (responseBody.getCode() == 108) {
+                                    } else if (response.getCode() == 108) {
                                         Toast.makeText(ChapterAddAdminActivity.this, "data truyền bị lỗi", Toast.LENGTH_SHORT).show();
-                                    }  else if (responseBody.getCode() == 100) {
+                                    }  else if (response.getCode() == 100) {
                                         Toast.makeText(ChapterAddAdminActivity.this, "Thêm chương thành công", Toast.LENGTH_SHORT).show();
                                         binding.chapterNumberEt.setText("");
                                         binding.chapterNameEt.setText("");
                                         binding.chapterContentEt.setText("");
-                                    } else {
-                                        Toast.makeText(ChapterAddAdminActivity.this, "Lỗi không xác định", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
                                 @Override
-                                public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                                    Toast.makeText(ChapterAddAdminActivity.this, ""+t, Toast.LENGTH_SHORT).show();
+                                public void onFailure(String errorMessage) {
+
                                 }
                             });
                 }

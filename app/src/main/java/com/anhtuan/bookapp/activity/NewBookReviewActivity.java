@@ -14,6 +14,7 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.anhtuan.bookapp.R;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivityNewBookReviewBinding;
 import com.anhtuan.bookapp.request.AddBookReviewRequest;
 import com.anhtuan.bookapp.response.NoDataResponse;
@@ -25,7 +26,6 @@ import retrofit2.Response;
 public class NewBookReviewActivity extends AppCompatActivity {
 
     ActivityNewBookReviewBinding binding;
-    String userId;
     String bookId;
     double scoreReview;
     String reviewContent;
@@ -38,29 +38,27 @@ public class NewBookReviewActivity extends AppCompatActivity {
         binding = ActivityNewBookReviewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Intent intent = getIntent();
-        userId = intent.getStringExtra("userId");
         bookId = intent.getStringExtra("bookId");
 
         binding.confirmTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (validateData()){
-                    AddBookReviewRequest request = new AddBookReviewRequest(bookId, userId, scoreReview, reviewContent);
-                    bookReviewApi.addBookReview(request).enqueue(new Callback<NoDataResponse>() {
+                    AddBookReviewRequest request = new AddBookReviewRequest(bookId, scoreReview, reviewContent);
+                    bookReviewApi.addBookReview(request).enqueue(new RetrofitCallBack<NoDataResponse>() {
                         @Override
-                        public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                            if (response.body() != null){
-                                NoDataResponse responseBody = response.body();
-                                if (responseBody.getCode() == 106){
+                        public void onSuccess(NoDataResponse response) {
+                            if (response != null){
+                                if (response.getCode() == 106){
                                     Toast.makeText(NewBookReviewActivity.this, "Không tìm thấy user", Toast.LENGTH_SHORT).show();
                                 }
-                                if (responseBody.getCode() == 118){
+                                if (response.getCode() == 118){
                                     Toast.makeText(NewBookReviewActivity.this, "Bạn đã từng đánh giá truyện rồi", Toast.LENGTH_SHORT).show();
                                 }
-                                if (responseBody.getCode() == 109){
+                                if (response.getCode() == 109){
                                     Toast.makeText(NewBookReviewActivity.this, "Không tìm thấy truyện", Toast.LENGTH_SHORT).show();
                                 }
-                                if (responseBody.getCode() == 100){
+                                if (response.getCode() == 100){
                                     Toast.makeText(NewBookReviewActivity.this, "Đánh giá truyện thành công", Toast.LENGTH_SHORT).show();
                                     setResult(RESULT_OK);
                                     finish();
@@ -69,8 +67,8 @@ public class NewBookReviewActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                            Toast.makeText(NewBookReviewActivity.this, ""+t, Toast.LENGTH_SHORT).show();
+                        public void onFailure(String errorMessage) {
+
                         }
                     });
                 }

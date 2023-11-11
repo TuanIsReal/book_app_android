@@ -5,35 +5,25 @@ import static com.anhtuan.bookapp.api.PurchasedBookApi.purchasedBookApi;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
-
-
-import com.anhtuan.bookapp.adapter.AdapterBookChapterList;
 import com.anhtuan.bookapp.adapter.AdapterViewChapterList;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivityViewChapterListBinding;
 import com.anhtuan.bookapp.domain.BookChapter;
 import com.anhtuan.bookapp.domain.PurchasedBook;
 import com.anhtuan.bookapp.response.GetBookChapterListResponse;
 import com.anhtuan.bookapp.response.GetPurchasedBookResponse;
-
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ViewChapterListActivity extends AppCompatActivity implements AdapterViewChapterList.BookChapterItemListener {
 
     ActivityViewChapterListBinding binding;
     List<BookChapter> bookChapters;
     AdapterViewChapterList adapterViewChapterList;
-    String userId;
     String bookId;
     int lastReadChapter;
     @Override
@@ -43,7 +33,6 @@ public class ViewChapterListActivity extends AppCompatActivity implements Adapte
         binding = ActivityViewChapterListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Intent intent = getIntent();
-        userId = intent.getStringExtra("userId");
         bookId = intent.getStringExtra("bookId");
 
         loadPurchasedBook();
@@ -58,17 +47,16 @@ public class ViewChapterListActivity extends AppCompatActivity implements Adapte
     }
 
     private void loadPurchasedBook(){
-        purchasedBookApi.getPurchasedBook(bookId, userId).enqueue(new Callback<GetPurchasedBookResponse>() {
+        purchasedBookApi.getPurchasedBook(bookId).enqueue(new RetrofitCallBack<GetPurchasedBookResponse>() {
             @Override
-            public void onResponse(Call<GetPurchasedBookResponse> call, Response<GetPurchasedBookResponse> response) {
+            public void onSuccess(GetPurchasedBookResponse response) {
                 if (response != null){
-                    GetPurchasedBookResponse responseBody = response.body();
-                    if (responseBody.getCode() == 106){
+                    if (response.getCode() == 106){
                         Toast.makeText(ViewChapterListActivity.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
-                    } else if (responseBody.getCode() == 112) {
+                    } else if (response.getCode() == 112) {
                         loadBookChapterList();
-                    } else if (responseBody.getCode() == 100) {
-                        PurchasedBook purchasedBook = responseBody.getData();
+                    } else if (response.getCode() == 100) {
+                        PurchasedBook purchasedBook = response.getData();
                         lastReadChapter = purchasedBook.getLastReadChapter();
                         loadBookChapterList();
                     }
@@ -76,23 +64,19 @@ public class ViewChapterListActivity extends AppCompatActivity implements Adapte
             }
 
             @Override
-            public void onFailure(Call<GetPurchasedBookResponse> call, Throwable t) {
-                Toast.makeText(ViewChapterListActivity.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
+            public void onFailure(String errorMessage) {
+
             }
         });
     }
 
     private void loadBookChapterList(){
-        bookChapterApi.getBookChapterList(bookId).enqueue(new Callback<GetBookChapterListResponse>() {
+        bookChapterApi.getBookChapterList(bookId).enqueue(new RetrofitCallBack<GetBookChapterListResponse>() {
             @Override
-            public void onResponse(Call<GetBookChapterListResponse> call, Response<GetBookChapterListResponse> response) {
-                if (response.body() != null){
-                    GetBookChapterListResponse responseBody = response.body();
-                    if (responseBody.getCode() == 106){
-
-                    }
-                    if (responseBody.getCode() == 100 && responseBody.getData() != null) {
-                        bookChapters = responseBody.getData();
+            public void onSuccess(GetBookChapterListResponse response) {
+                if (response != null){
+                    if (response.getCode() == 100 && response.getData() != null) {
+                        bookChapters = response.getData();
                         String chapterSize = String.valueOf(bookChapters.size());
                         binding.chapterNum.setText("(" + chapterSize +")");
                         adapterViewChapterList = new AdapterViewChapterList(ViewChapterListActivity.this, bookChapters, lastReadChapter);
@@ -103,8 +87,8 @@ public class ViewChapterListActivity extends AppCompatActivity implements Adapte
             }
 
             @Override
-            public void onFailure(Call<GetBookChapterListResponse> call, Throwable t) {
-                Toast.makeText(ViewChapterListActivity.this, "" +t, Toast.LENGTH_SHORT).show();
+            public void onFailure(String errorMessage) {
+
             }
         });
     }

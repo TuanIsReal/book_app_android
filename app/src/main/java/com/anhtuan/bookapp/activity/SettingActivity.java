@@ -6,8 +6,6 @@ import androidx.core.view.WindowCompat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
-import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.databinding.ActivitySettingBinding;
 
 public class SettingActivity extends AppCompatActivity {

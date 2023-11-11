@@ -8,10 +8,8 @@ import androidx.core.view.WindowCompat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -20,8 +18,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.common.RealPathUtil;
-import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityBookAddBinding;
 import com.anhtuan.bookapp.domain.Category;
 import com.anhtuan.bookapp.request.AddBookRequest;
@@ -30,13 +28,10 @@ import com.anhtuan.bookapp.response.NoDataResponse;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-
-import static com.anhtuan.bookapp.api.BookRequestUpApi.bookRequestUpApi;
 import static com.anhtuan.bookapp.api.CategoryApi.categoryApi;
 import static com.anhtuan.bookapp.api.STFApi.stfApi;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -45,9 +40,6 @@ import static com.anhtuan.bookapp.api.BookApi.bookApi;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class BookAddActivity extends AppCompatActivity {
 
@@ -73,10 +65,6 @@ public class BookAddActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityBookAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId","");
-        int userRole = sharedPreferences.getInt("userRole",1);
 
         progressDialog = new ProgressDialog(BookAddActivity.this);
 
@@ -116,9 +104,7 @@ public class BookAddActivity extends AppCompatActivity {
                     int bookPrice = Integer.parseInt(bookPriceString);
                     int freeChapter = Integer.parseInt(freeChapterString);
                     ArrayList<String> pickCategories = new ArrayList<>(pickedCategoriesSet);
-                    AddBookRequest addBookRequest = new AddBookRequest(bookName,userId,
-                            introduction, "", pickCategories, bookPrice, freeChapter);
-
+                    AddBookRequest addBookRequest = new AddBookRequest(bookName,introduction, "", pickCategories, bookPrice, freeChapter);
                     addBook(addBookRequest);
                 }
             }
@@ -129,20 +115,20 @@ public class BookAddActivity extends AppCompatActivity {
 
     private void loadBookCategories() {
         categories = new ArrayList<>();
-        categoryApi.getCategory().enqueue(new Callback<CategoriesResponse>() {
+        categoryApi.getCategory().enqueue(new RetrofitCallBack<CategoriesResponse>() {
             @Override
-            public void onResponse(Call<CategoriesResponse> call, Response<CategoriesResponse> response) {
-                CategoriesResponse categoriesResponse = response.body();
-                if (categoriesResponse.getCode() == 100){
-                    categories = categoriesResponse.getData();
+            public void onSuccess(CategoriesResponse response) {
+                if (response.getCode() == 100){
+                    categories = response.getData();
                 }
             }
 
             @Override
-            public void onFailure(Call<CategoriesResponse> call, Throwable t) {
-                Toast.makeText(BookAddActivity.this, ""+ t, Toast.LENGTH_LONG).show();
+            public void onFailure(String errorMessage) {
+
             }
         });
+
     }
 
     private void categoryPickDialog(){
@@ -227,18 +213,17 @@ public class BookAddActivity extends AppCompatActivity {
                             RequestBody bookNameRB = RequestBody.create(MediaType.parse("multipart/form-data"), bookName);
                             RequestBody image = RequestBody.create(MediaType.parse("image/jpeg"), stream.toByteArray());
                             MultipartBody.Part multipartBodyImage = MultipartBody.Part.createFormData("image", "", image);
-                            stfApi.updateBookImage(bookNameRB, multipartBodyImage).enqueue(new Callback<NoDataResponse>() {
+                            stfApi.updateBookImage(bookNameRB, multipartBodyImage).enqueue(new RetrofitCallBack<NoDataResponse>() {
                                 @Override
-                                public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
+                                public void onSuccess(NoDataResponse response) {
                                     progressDialog.dismiss();
-                                    NoDataResponse responseBody = response.body();
-                                    if (responseBody == null){
+                                    if (response == null){
                                         Toast.makeText(BookAddActivity.this, "Call Api lỗi", Toast.LENGTH_SHORT).show();
-                                    } else if (responseBody.getCode() == 109){
+                                    } else if (response.getCode() == 109){
                                         Toast.makeText(BookAddActivity.this, "Không tìm thấy sách được chọn", Toast.LENGTH_SHORT).show();
-                                    } else if (responseBody.getCode() == 108) {
+                                    } else if (response.getCode() == 108) {
                                         Toast.makeText(BookAddActivity.this, "File ảnh load lên server lỗi", Toast.LENGTH_SHORT).show();
-                                    }  else if (responseBody.getCode() == 100) {
+                                    }  else if (response.getCode() == 100) {
                                         setResult(RESULT_OK);
                                         finish();
                                     } else {
@@ -247,9 +232,8 @@ public class BookAddActivity extends AppCompatActivity {
                                 }
 
                                 @Override
-                                public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                                    progressDialog.dismiss();
-                                    Toast.makeText(BookAddActivity.this, "Lỗi call API:"+t, Toast.LENGTH_SHORT).show();
+                                public void onFailure(String errorMessage) {
+
                                 }
                             });
                         }
@@ -263,22 +247,21 @@ public class BookAddActivity extends AppCompatActivity {
     }
 
     private void addBook(AddBookRequest addBookRequest){
-        bookApi.addBook(addBookRequest).enqueue(new Callback<NoDataResponse>() {
+        bookApi.addBook(addBookRequest).enqueue(new RetrofitCallBack<NoDataResponse>() {
             @Override
-            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                NoDataResponse responseBody = response.body();
-                if (responseBody.getCode() == 105){
+            public void onSuccess(NoDataResponse response) {
+                if (response.getCode() == 105){
                     progressDialog.dismiss();
                     Toast.makeText(BookAddActivity.this, "Tên truyện đã tồn tại", Toast.LENGTH_SHORT).show();
                 }
-                if (responseBody.getCode() == 106){
+                if (response.getCode() == 106){
                     progressDialog.dismiss();
                     Toast.makeText(BookAddActivity.this, "UserId không tồn tại", Toast.LENGTH_SHORT).show();
                 }
-                if (responseBody.getCode() == 100 && imageUri != null){
+                if (response.getCode() == 100 && imageUri != null){
                     updateBookImage(bookName);
                 }
-                if (responseBody.getCode() == 100){
+                if (response.getCode() == 100){
                     progressDialog.dismiss();
                     Toast.makeText(BookAddActivity.this, "Thêm truyện thành công", Toast.LENGTH_SHORT).show();
                     setResult(RESULT_OK);
@@ -287,11 +270,12 @@ public class BookAddActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<NoDataResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
                 progressDialog.dismiss();
-                Toast.makeText(BookAddActivity.this, ""+ t, Toast.LENGTH_LONG).show();
+                Toast.makeText(BookAddActivity.this, errorMessage, Toast.LENGTH_LONG).show();
             }
         });
+
     }
 
     private void initData(){

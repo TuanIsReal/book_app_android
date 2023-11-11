@@ -7,20 +7,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.RowCategoryBinding;
 import com.anhtuan.bookapp.domain.Category;
 import com.anhtuan.bookapp.response.NoDataResponse;
-
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,18 +51,17 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.Holder
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                categoryApi.deleteCategory(id).enqueue(new Callback<NoDataResponse>() {
+                categoryApi.deleteCategory(id).enqueue(new RetrofitCallBack<NoDataResponse>() {
                     @Override
-                    public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
+                    public void onSuccess(NoDataResponse response) {
                         categories.remove(position);
-                        NoDataResponse deleteResponse = response.body();
-                        if (deleteResponse.getCode() == 100){
+                        if (response.getCode() == 100){
                             notifyDataSetChanged();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<NoDataResponse> call, Throwable t) {
+                    public void onFailure(String errorMessage) {
                     }
                 });
             }

@@ -17,31 +17,27 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-public interface PurchasedBookApi {
-    Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
+public interface PurchasedBookApi extends BaseApi{
 
     PurchasedBookApi purchasedBookApi = new Retrofit.Builder()
             .baseUrl(Constant.IP_SERVER + "purchasedBook/")
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(httpClient.build())
             .build()
             .create(PurchasedBookApi.class);
 
     @GET("getUserBookLibrary")
-    Call<GetUserBookLibraryResponse> getUserBookLibrary(@Query("userId") String userId);
+    Call<GetUserBookLibraryResponse> getUserBookLibrary();
 
     @GET("checkPurchasedBook")
-    Call<CheckPurchasedBookResponse> checkPurchasedBook(@Query("bookId") String bookId,
-                                                        @Query("userId") String userId);
+    Call<CheckPurchasedBookResponse> checkPurchasedBook(@Query("bookId") String bookId);
 
     @POST("buyBook")
-    Call<BaseResponse> buyBook(@Query("userId") String userId,
-                               @Query("bookId") String bookId);
+    Call<BaseResponse> buyBook(@Query("bookId") String bookId);
 
     @GET("getPurchasedBook")
-    Call<GetPurchasedBookResponse> getPurchasedBook(@Query("bookId") String bookId,
-                                                    @Query("userId") String userId);
+    Call<GetPurchasedBookResponse> getPurchasedBook(@Query("bookId") String bookId);
 
     @POST("unShowBook")
-    Call<NoDataResponse> unShowBook(@Query("bookId") String bookId,
-                                  @Query("userId") String userId);
+    Call<NoDataResponse> unShowBook(@Query("bookId") String bookId);
 }

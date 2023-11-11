@@ -6,30 +6,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import com.anhtuan.bookapp.adapter.AdapterBalanceChange;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivityBalanceChangeBinding;
 import com.anhtuan.bookapp.domain.TransactionHistory;
 import com.anhtuan.bookapp.response.GetBalanceChangeResponse;
 
 import java.util.List;
-import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class BalanceChangeActivity extends AppCompatActivity {
 
     ActivityBalanceChangeBinding binding;
     List<TransactionHistory>  transactionHistoryList;
     AdapterBalanceChange adapterBalanceChange;
-    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +30,6 @@ public class BalanceChangeActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityBalanceChangeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        userId = sharedPreferences.getString("userId","");
 
         loadTransactionHistory();
 
@@ -59,22 +49,23 @@ public class BalanceChangeActivity extends AppCompatActivity {
     }
 
     private void loadTransactionHistory() {
-        userApi.getBalanceChange(userId).enqueue(new Callback<GetBalanceChangeResponse>() {
+        userApi.getBalanceChange().enqueue(new RetrofitCallBack<GetBalanceChangeResponse>() {
             @Override
-            public void onResponse(Call<GetBalanceChangeResponse> call, Response<GetBalanceChangeResponse> response) {
+            public void onSuccess(GetBalanceChangeResponse response) {
                 binding.swipeRefresh.setRefreshing(false);
-                if (!Objects.isNull(response.body()) && response.body().getCode() == 100){
-                    transactionHistoryList = response.body().getData();
+                if (response.getCode() == 100){
+                    transactionHistoryList = response.getData();
                     adapterBalanceChange  = new AdapterBalanceChange(BalanceChangeActivity.this,  transactionHistoryList);
                     binding.balanceChangeRv.setAdapter(adapterBalanceChange);
                 }
             }
 
             @Override
-            public void onFailure(Call<GetBalanceChangeResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
                 binding.swipeRefresh.setRefreshing(false);
-                Toast.makeText(BalanceChangeActivity.this,""+t, Toast.LENGTH_SHORT).show();
+                Toast.makeText(BalanceChangeActivity.this,errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 }

@@ -1,20 +1,17 @@
 package com.anhtuan.bookapp.adapter;
 
-import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.RowReCommentBinding;
@@ -62,48 +59,45 @@ public class AdapterViewReComment extends RecyclerView.Adapter<AdapterViewReComm
         holder.timeCmt.setText(Utils.covertLongToTimeString(time - commentTime));
 
         if (author != null){
-            userApi.getUserInfo(author).enqueue(new Callback<GetUserInfoResponse>() {
+            userApi.getUserInfo(author).enqueue(new RetrofitCallBack<GetUserInfoResponse>() {
                 @Override
-                public void onResponse(Call<GetUserInfoResponse> call, Response<GetUserInfoResponse> response) {
-                    if (response.body() != null){
-                        if (response.body().getCode() == 100){
-                            user = response.body().getData();
-                            holder.nameTv.setText(user.getName());
-                            String imageName = user.getAvatarImage();
-                            Boolean isLoginGoogle = user.getGoogleLogin();
+                public void onSuccess(GetUserInfoResponse response) {
+                    if (response != null && response.getCode() == 100){
+                        user = response.getData();
+                        holder.nameTv.setText(user.getName());
+                        String imageName = user.getAvatarImage();
+                        Boolean isLoginGoogle = user.getGoogleLogin();
 
-                            if (!Objects.isNull(isLoginGoogle) && isLoginGoogle){
-                                Glide.with(context)
-                                        .load(imageName)
-                                        .into(holder.avatar);
+                        if (!Objects.isNull(isLoginGoogle) && isLoginGoogle){
+                            Glide.with(context)
+                                    .load(imageName)
+                                    .into(holder.avatar);
 
-                            }
+                        }
 
-                            if (imageName != null && Objects.isNull(isLoginGoogle)){
-                                stfApi.getThumbnail(user.getAvatarImage()).enqueue(new Callback<ImageResponse>() {
-                                    @Override
-                                    public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
-                                        if (response.body().getCode() == 100){
-                                            String path = Constant.IP_SERVER_IMAGE + response.body().getData();
-                                            Glide.with(context)
-                                                    .load(path)
-                                                    .into(holder.avatar);
-                                        }
+                        if (imageName != null && Objects.isNull(isLoginGoogle)){
+                            unAuthApi.getThumbnail(user.getAvatarImage()).enqueue(new Callback<ImageResponse>() {
+                                @Override
+                                public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
+                                    if (response.body().getCode() == 100){
+                                        String path = Constant.IP_SERVER_IMAGE + response.body().getData();
+                                        Glide.with(context)
+                                                .load(path)
+                                                .into(holder.avatar);
                                     }
+                                }
 
-                                    @Override
-                                    public void onFailure(Call<ImageResponse> call, Throwable t) {
-                                        Log.d("err", "err--fail");
-                                    }
-                                });
-                            }
+                                @Override
+                                public void onFailure(Call<ImageResponse> call, Throwable t) {
+                                }
+                            });
                         }
                     }
                 }
 
                 @Override
-                public void onFailure(Call<GetUserInfoResponse> call, Throwable t) {
-                    Toast.makeText(context, "" + t, Toast.LENGTH_SHORT).show();
+                public void onFailure(String errorMessage) {
+
                 }
             });
         }

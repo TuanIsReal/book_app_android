@@ -11,14 +11,12 @@ import com.anhtuan.bookapp.fragment.ViewBookReviewFragment;
 
 public class AdapterViewBook extends FragmentStatePagerAdapter {
     int numPage;
-    String userId;
     String bookId;
     String author;
     boolean isPurchased;
 
-    public AdapterViewBook(@NonNull FragmentManager fm, int behavior, String userId, String bookId, boolean isPurchased, String author) {
+    public AdapterViewBook(@NonNull FragmentManager fm, int behavior, String bookId, boolean isPurchased, String author) {
         super(fm, behavior);
-        this.userId = userId;
         this.bookId = bookId;
         this.isPurchased = isPurchased;
         this.author = author;
@@ -34,7 +32,7 @@ public class AdapterViewBook extends FragmentStatePagerAdapter {
             case 1:
                 return new ViewBookReviewFragment(bookId, isPurchased, author);
             case 2:
-                return new ViewBookChapterListFragment(bookId, userId);
+                return new ViewBookChapterListFragment(bookId);
             default:
                 return new ViewBookInfoFragment(bookId);
         }

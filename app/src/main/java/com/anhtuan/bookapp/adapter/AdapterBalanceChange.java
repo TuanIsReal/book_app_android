@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.RowBalanceChangeBinding;
 import com.anhtuan.bookapp.domain.TransactionHistory;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;

@@ -9,22 +9,14 @@ import androidx.core.view.WindowCompat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
-import com.anhtuan.bookapp.R;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivityAddPointBinding;
 import com.anhtuan.bookapp.request.PaymentRequest;
 import com.anhtuan.bookapp.response.CreatePaymentResponse;
 
-import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class AddPointActivity extends AppCompatActivity {
     public static final int REQUEST_CODE = 100006;
     ActivityAddPointBinding binding;
-    String userId;
     PaymentRequest request;
     String paymentUrl;
     Intent buyIntent;
@@ -36,11 +28,8 @@ public class AddPointActivity extends AppCompatActivity {
         binding = ActivityAddPointBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Intent intent = getIntent();
-        userId = intent.getStringExtra("userId");
 
         request = new PaymentRequest();
-        request.setUserId(userId);
         request.setDescription("addPoint");
 
         buyIntent = new Intent(this, TransactionWebViewActivity.class);
@@ -83,21 +72,21 @@ public class AddPointActivity extends AppCompatActivity {
 
     private void createPaymentUrl(int amount){
         request.setPoint(amount);
-        paymentApi.createPayment(request).enqueue(new Callback<CreatePaymentResponse>() {
+
+        paymentApi.createPayment(request).enqueue(new RetrofitCallBack<CreatePaymentResponse>() {
             @Override
-            public void onResponse(Call<CreatePaymentResponse> call, Response<CreatePaymentResponse> response) {
-                if (!Objects.isNull(response.body()) && response.body().getCode() == 100){
-                    paymentUrl = response.body().getData();
-                    buyIntent.putExtra("url", paymentUrl);
-                    startActivityForResult(buyIntent, REQUEST_CODE);
-                }
+            public void onSuccess(CreatePaymentResponse response) {
+                paymentUrl = response.getData();
+                buyIntent.putExtra("url", paymentUrl);
+                startActivityForResult(buyIntent, REQUEST_CODE);
             }
 
             @Override
-            public void onFailure(Call<CreatePaymentResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });
+
     }
 
     @Override

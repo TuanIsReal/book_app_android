@@ -26,13 +26,12 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
 
-public interface BookApi {
-
-    Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
+public interface BookApi extends BaseApi {
 
     BookApi bookApi = new Retrofit.Builder()
             .baseUrl(Constant.IP_SERVER + "book/")
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(httpClient.build())
             .build()
             .create(BookApi.class);
 
@@ -44,11 +43,10 @@ public interface BookApi {
                                             @Query("action") int action);
 
     @GET("getBookUp")
-    Call<GetBookResponse> getBookByUserId(@Query("userId") String userId);
+    Call<GetBookResponse> getBookByUserId();
 
     @GET("getRequestUploadBook")
-    Call<GetRequestUploadBookResponse> getRequestUploadBook(@Query("userId") String userId,
-                                                            @Query("status") int status);
+    Call<GetRequestUploadBookResponse> getRequestUploadBook(@Query("status") int status);
 
     @GET("searchBook")
     Call<SearchBookResponse> searchBook(@Query("text") String text);

@@ -1,7 +1,7 @@
 package com.anhtuan.bookapp.activity;
 
 import static com.anhtuan.bookapp.api.BookApi.bookApi;
-import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityReactUploadBookBinding;
 import com.anhtuan.bookapp.domain.Book;
@@ -50,16 +51,16 @@ public class ReactUploadBookActivity extends AppCompatActivity {
     private void loadBookRequestUpInfo() {
 
         binding.bookName.setText(bookRequestUp.getBookName());
-        userApi.getUsername(bookRequestUp.getAuthor()).enqueue(new Callback<GetUsernameResponse>() {
+        userApi.getUsername(bookRequestUp.getAuthor()).enqueue(new RetrofitCallBack<GetUsernameResponse>() {
             @Override
-            public void onResponse(Call<GetUsernameResponse> call, Response<GetUsernameResponse> response) {
-                if (response.body().getCode() == 100){
-                    binding.author.setText(response.body().getData());
+            public void onSuccess(GetUsernameResponse response) {
+                if (response.getCode() == 100){
+                    binding.author.setText(response.getData());
                 }
             }
 
             @Override
-            public void onFailure(Call<GetUsernameResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });
@@ -98,7 +99,8 @@ public class ReactUploadBookActivity extends AppCompatActivity {
     }
 
     private void loadBookImage() {
-        stfApi.getBookImage(bookRequestUp.getBookImage()).enqueue(new Callback<ImageResponse>() {
+
+        unAuthApi.getBookImage(bookRequestUp.getBookImage()).enqueue(new Callback<ImageResponse>() {
             @Override
             public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                 binding.progressBar.setVisibility(View.GONE);
@@ -119,26 +121,25 @@ public class ReactUploadBookActivity extends AppCompatActivity {
     }
 
     private void reactBookRequestUp(int action){
-        bookApi.reactBookRequestUp(bookRequestUp.getId(), action).enqueue(new Callback<NoDataResponse>() {
+
+        bookApi.reactBookRequestUp(bookRequestUp.getId(), action).enqueue(new RetrofitCallBack<NoDataResponse>() {
             @Override
-            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                if (response.body() != null){
-                    NoDataResponse responseBody = response.body();
-                    if (responseBody.getCode() == 109) {
-                        Toast.makeText(ReactUploadBookActivity.this, "Truyện không tồn tại", Toast.LENGTH_SHORT).show();
-                    } else if (responseBody.getCode() == 100) {
-                        Intent intent = new Intent();
-                        intent.putExtra("action", action);
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
+            public void onSuccess(NoDataResponse response) {
+                if (response.getCode() == 109) {
+                    Toast.makeText(ReactUploadBookActivity.this, "Truyện không tồn tại", Toast.LENGTH_SHORT).show();
+                } else if (response.getCode() == 100) {
+                    Intent intent = new Intent();
+                    intent.putExtra("action", action);
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
             }
 
             @Override
-            public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                Toast.makeText(ReactUploadBookActivity.this, "" + t, Toast.LENGTH_SHORT).show();
+            public void onFailure(String errorMessage) {
+                Toast.makeText(ReactUploadBookActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 }

@@ -7,15 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
-
-import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.adapter.AdapterManageWarning;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
+import com.anhtuan.bookapp.common.AccountManager;
+import com.anhtuan.bookapp.common.TokenManager;
 import com.anhtuan.bookapp.databinding.ActivityManageWarningBinding;
 import com.anhtuan.bookapp.domain.WarningChapter;
 import com.anhtuan.bookapp.response.GetWarningListResponse;
@@ -23,9 +21,6 @@ import com.anhtuan.bookapp.response.NoDataResponse;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ManageWarningActivity extends AppCompatActivity {
 
@@ -40,9 +35,6 @@ public class ManageWarningActivity extends AppCompatActivity {
         binding = ActivityManageWarningBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId","");
-
         loadWarningChapter();
 
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -55,7 +47,7 @@ public class ManageWarningActivity extends AppCompatActivity {
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logout(sharedPreferences, userId);
+                logout();
             }
         });
 
@@ -93,22 +85,21 @@ public class ManageWarningActivity extends AppCompatActivity {
     }
 
     private void loadWarningChapter() {
-        warningApi.getWarningList().enqueue(new Callback<GetWarningListResponse>() {
+        warningApi.getWarningList().enqueue(new RetrofitCallBack<GetWarningListResponse>() {
             @Override
-            public void onResponse(Call<GetWarningListResponse> call, Response<GetWarningListResponse> response) {
+            public void onSuccess(GetWarningListResponse response) {
                 binding.swipeRefresh.setRefreshing(false);
-                if (response.body() != null){
-                    GetWarningListResponse responseBody = response.body();
-                    if (responseBody.getCode() == 100){
-                        warningChapterList = responseBody.getData();
+                if (response != null){
+                    if (response.getCode() == 100){
+                        warningChapterList = response.getData();
                         loadWarningChapterRecycleView();
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<GetWarningListResponse> call, Throwable t) {
-                binding.swipeRefresh.setRefreshing(false);
+            public void onFailure(String errorMessage) {
+
             }
         });
     }
@@ -119,21 +110,19 @@ public class ManageWarningActivity extends AppCompatActivity {
     }
 
 
-    private void logout(SharedPreferences sharedPreferences, String userId){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("userId", "");
-        editor.apply();
-
-        userApi.logout(userId).enqueue(new Callback<NoDataResponse>() {
+    private void logout(){
+        userApi.logout().enqueue(new RetrofitCallBack<NoDataResponse>() {
             @Override
-            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                finish();
+            public void onSuccess(NoDataResponse response) {
+                TokenManager.getInstance().deleteToken();
+                AccountManager.getInstance().logoutAccount();
                 startActivity(new Intent(ManageWarningActivity.this, MainActivity.class));
+                finish();
             }
 
             @Override
-            public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                Toast.makeText(ManageWarningActivity.this, ""+ t, Toast.LENGTH_LONG).show();
+            public void onFailure(String errorMessage) {
+
             }
         });
     }

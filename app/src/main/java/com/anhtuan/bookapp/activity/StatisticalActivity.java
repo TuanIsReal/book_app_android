@@ -5,20 +5,14 @@ import static com.anhtuan.bookapp.api.UserApi.userApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
-
-import com.anhtuan.bookapp.R;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
+import com.anhtuan.bookapp.common.AccountManager;
+import com.anhtuan.bookapp.common.TokenManager;
 import com.anhtuan.bookapp.databinding.ActivityStatisticalBinding;
 import com.anhtuan.bookapp.response.NoDataResponse;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class StatisticalActivity extends AppCompatActivity {
     ActivityStatisticalBinding binding;
@@ -29,8 +23,6 @@ public class StatisticalActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityStatisticalBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId","");
 
         binding.incomeWriterTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +71,7 @@ public class StatisticalActivity extends AppCompatActivity {
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logout(sharedPreferences, userId);
+                logout();
             }
         });
 
@@ -108,21 +100,19 @@ public class StatisticalActivity extends AppCompatActivity {
         });
     }
 
-    private void logout(SharedPreferences sharedPreferences, String userId){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("userId", "");
-        editor.apply();
-
-        userApi.logout(userId).enqueue(new Callback<NoDataResponse>() {
+    private void logout(){
+        userApi.logout().enqueue(new RetrofitCallBack<NoDataResponse>() {
             @Override
-            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                finish();
+            public void onSuccess(NoDataResponse response) {
+                TokenManager.getInstance().deleteToken();
+                AccountManager.getInstance().logoutAccount();
                 startActivity(new Intent(StatisticalActivity.this, MainActivity.class));
+                finish();
             }
 
             @Override
-            public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                Toast.makeText(StatisticalActivity.this, ""+ t, Toast.LENGTH_LONG).show();
+            public void onFailure(String errorMessage) {
+
             }
         });
     }

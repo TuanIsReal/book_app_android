@@ -6,13 +6,10 @@ import androidx.core.view.WindowCompat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.databinding.ActivityTransactionWebViewBinding;
 
 public class TransactionWebViewActivity extends AppCompatActivity {

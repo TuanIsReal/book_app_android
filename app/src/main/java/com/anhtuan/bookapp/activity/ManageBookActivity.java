@@ -7,28 +7,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
-
-import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.adapter.AdapterBookAdmin;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
+import com.anhtuan.bookapp.common.AccountManager;
+import com.anhtuan.bookapp.common.TokenManager;
 import com.anhtuan.bookapp.databinding.ActivityManageBookBinding;
 import com.anhtuan.bookapp.domain.Book;
-import com.anhtuan.bookapp.response.GetUserInfoResponse;
+import com.anhtuan.bookapp.response.CheckUserInfoResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.anhtuan.bookapp.response.SearchBookResponse;
 
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ManageBookActivity extends AppCompatActivity {
 
@@ -48,10 +44,7 @@ public class ManageBookActivity extends AppCompatActivity {
         binding = ActivityManageBookBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId","");
-
-        loadTitle(userId);
+        loadTitle();
         loadBooks(text);
 
         binding.searchEt.addTextChangedListener(new TextWatcher() {
@@ -101,7 +94,7 @@ public class ManageBookActivity extends AppCompatActivity {
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logout(sharedPreferences, userId);
+                logout();
             }
         });
 
@@ -123,63 +116,50 @@ public class ManageBookActivity extends AppCompatActivity {
     }
 
     private void loadBooks(String text) {
-        bookApi.searchBook(text).enqueue(new Callback<SearchBookResponse>() {
+        bookApi.searchBook(text).enqueue(new RetrofitCallBack<SearchBookResponse>() {
             @Override
-            public void onResponse(Call<SearchBookResponse> call, Response<SearchBookResponse> response) {
-                binding.swipeRefresh.setRefreshing(false);
-                SearchBookResponse searchBookResponse = response.body();
-                if (searchBookResponse.getCode() == 100){
-                    books = searchBookResponse.getData();
+            public void onSuccess(SearchBookResponse response) {
+                if (response.getCode() == 100){
+                    books = response.getData();
                     adapterBookAdmin = new AdapterBookAdmin(ManageBookActivity.this, books);
                     binding.booksRv.setAdapter(adapterBookAdmin);
-                }else {
-                    Toast.makeText(ManageBookActivity.this, "Lỗi không xác định", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<SearchBookResponse> call, Throwable t) {
-                binding.swipeRefresh.setRefreshing(false);
-                Toast.makeText(ManageBookActivity.this, ""+t, Toast.LENGTH_SHORT).show();
+            public void onFailure(String errorMessage) {
+
             }
         });
     }
 
-    private void loadTitle(String userId) {
-        if (userId.equals("")){
-            binding.subTitileTv.setText("UserId null");
-        }
-        else {
-            userApi.getUserInfo(userId).enqueue(new Callback<GetUserInfoResponse>() {
-                @Override
-                public void onResponse(Call<GetUserInfoResponse> call, Response<GetUserInfoResponse> response) {
-                    GetUserInfoResponse getUserInfoResponse = response.body();
-                    binding.subTitileTv.setText(getUserInfoResponse.getData().getName());
-                }
-
-                @Override
-                public void onFailure(Call<GetUserInfoResponse> call, Throwable t) {
-                    Toast.makeText(ManageBookActivity.this, ""+ t, Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-    }
-
-    private void logout(SharedPreferences sharedPreferences, String userId){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("userId", "");
-        editor.apply();
-
-        userApi.logout(userId).enqueue(new Callback<NoDataResponse>() {
+    private void loadTitle() {
+        userApi.checkUserInfo().enqueue(new RetrofitCallBack<CheckUserInfoResponse>() {
             @Override
-            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                finish();
-                startActivity(new Intent(ManageBookActivity.this, MainActivity.class));
+            public void onSuccess(CheckUserInfoResponse response) {
+                binding.subTitileTv.setText(response.getData().getName());
             }
 
             @Override
-            public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                Toast.makeText(ManageBookActivity.this, ""+ t, Toast.LENGTH_LONG).show();
+            public void onFailure(String errorMessage) {
+
+            }
+        });
+    }
+
+    private void logout(){
+        userApi.logout().enqueue(new RetrofitCallBack<NoDataResponse>() {
+            @Override
+            public void onSuccess(NoDataResponse response) {
+                TokenManager.getInstance().deleteToken();
+                AccountManager.getInstance().logoutAccount();
+                startActivity(new Intent(ManageBookActivity.this, MainActivity.class));
+                finish();
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+
             }
         });
     }

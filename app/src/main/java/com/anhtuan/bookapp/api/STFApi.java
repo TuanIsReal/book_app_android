@@ -18,12 +18,12 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
 
-public interface STFApi {
-    Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
+public interface STFApi extends BaseApi{
 
     STFApi stfApi = new Retrofit.Builder()
             .baseUrl(Constant.IP_SERVER + "stf/")
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(httpClient.build())
             .build()
             .create(STFApi.class);
 
@@ -32,17 +32,4 @@ public interface STFApi {
     Call<NoDataResponse> updateBookImage(@Part("bookName") RequestBody bookName,
                                          @Part MultipartBody.Part image);
 
-    @Multipart
-    @POST("updateAvatarImage")
-    Call<NoDataResponse> updateAvatarImage(@Part("userId") RequestBody userId,
-                                           @Part MultipartBody.Part image);
-
-    @GET("getBookImage")
-    Call<ImageResponse> getBookImage(@Query("imageName") String imageName);
-
-    @GET("getAvatar")
-    Call<ImageResponse> getAvatar(@Query("imageName") String imageName);
-
-    @GET("getThumbnail")
-    Call<ImageResponse> getThumbnail(@Query("thumbnailName") String thumbnailName);
 }

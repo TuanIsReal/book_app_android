@@ -1,10 +1,9 @@
 package com.anhtuan.bookapp.adapter;
 
-import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,7 @@ public class AdapterViewBookInfo extends RecyclerView.Adapter<AdapterViewBookInf
         holder.bookNameTv.setText(bookName);
         holder.categoriesTv.setText(Utils.toStringCategory(category));
         if (bookImage != null){
-            stfApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
+            unAuthApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
                 @Override
                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     if (response.body().getCode() == 100){
@@ -70,7 +69,6 @@ public class AdapterViewBookInfo extends RecyclerView.Adapter<AdapterViewBookInf
 
                 @Override
                 public void onFailure(Call<ImageResponse> call, Throwable t) {
-                    Log.d("err", "err--"+t);
                 }
             });
 

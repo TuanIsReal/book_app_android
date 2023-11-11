@@ -1,6 +1,6 @@
 package com.anhtuan.bookapp.activity;
 
-import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.NonNull;
@@ -10,39 +10,34 @@ import androidx.core.view.WindowCompat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
-import com.anhtuan.bookapp.api.UserApi;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
+import com.anhtuan.bookapp.common.AccountManager;
 import com.anhtuan.bookapp.common.ApiAddress;
 import com.anhtuan.bookapp.common.RealPathUtil;
+import com.anhtuan.bookapp.common.TokenManager;
 import com.anhtuan.bookapp.databinding.ActivityRegisterBinding;
 import com.anhtuan.bookapp.request.RegisterRequest;
 import com.anhtuan.bookapp.response.RegisterData;
 import com.anhtuan.bookapp.response.RegisterResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
-import com.anhtuan.bookapp.retrofit.RetrofitService;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -116,7 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog.setMessage("Đang kiểm tra tài khoản...");
         progressDialog.show();
 
-        userApi.checkExistUser(email).enqueue(new Callback<NoDataResponse>() {
+        unAuthApi.checkExistUser(email).enqueue(new Callback<NoDataResponse>() {
             @Override
             public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
                 NoDataResponse responseCheck = response.body();
@@ -143,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog.setMessage("Đang đăng ký tài khoản...");
         progressDialog.show();
 
-        userApi.register(new RegisterRequest(email, password, name, new ApiAddress().getIPAddress())).enqueue(new Callback<RegisterResponse>() {
+        unAuthApi.register(new RegisterRequest(email, password, name, new ApiAddress().getIPAddress())).enqueue(new Callback<RegisterResponse>() {
             @Override
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                 RegisterResponse registerResponse = response.body();
@@ -151,15 +146,13 @@ public class RegisterActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                     Toast.makeText(RegisterActivity.this, "Đăng ký không thành công", Toast.LENGTH_SHORT).show();
                 } else {
-                    RegisterData registerData = (RegisterData) registerResponse.getData();
-                    SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("userId", registerData.getUserId());
-                    editor.apply();
+                    RegisterData registerData = registerResponse.getData();
+                    AccountManager.getInstance().saveAccount(email, "");
+                    TokenManager.getInstance().saveToken(registerData.getToken(), registerData.getRefreshToken());
                     if (imageUri != null){
-                        updateAvatarImage(registerData.getUserId(), registerData.getRole());
+                        updateAvatarImage(registerData.getRole());
                     } else {
-                        sendDeviceToken(registerData.getUserId(), registerData.getRole());
+                        sendDeviceToken(registerData.getRole());
                     }
                 }
             }
@@ -214,7 +207,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void updateAvatarImage(String userId, int role){
+    private void updateAvatarImage(int role){
         try {
             String realImagePath = RealPathUtil.copyFileToInternal(RegisterActivity.this, imageUri);
             Glide.with(this)
@@ -225,10 +218,9 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
                             resource.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-                            RequestBody userIdRB = RequestBody.create(MediaType.parse("multipart/form-data"), userId);
                             RequestBody image = RequestBody.create(MediaType.parse("multipart/form-data"), stream.toByteArray());
                             MultipartBody.Part multipartBodyImage = MultipartBody.Part.createFormData("image", "", image);
-                            stfApi.updateAvatarImage(userIdRB, multipartBodyImage).enqueue(new Callback<NoDataResponse>() {
+                            unAuthApi.updateAvatarImage(multipartBodyImage).enqueue(new Callback<NoDataResponse>() {
                                 @Override
                                 public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
                                     progressDialog.dismiss();
@@ -240,7 +232,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     } else if (responseBody.getCode() == 108) {
                                         Toast.makeText(RegisterActivity.this, "File ảnh load lên server lỗi", Toast.LENGTH_SHORT).show();
                                     }  else if (responseBody.getCode() == 100) {
-                                        sendDeviceToken(userId, role);
+                                        sendDeviceToken(role);
                                     } else {
                                         Toast.makeText(RegisterActivity.this, "Lỗi không xác định", Toast.LENGTH_SHORT).show();
                                     }
@@ -261,36 +253,37 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void sendDeviceToken(String userId, int role){
+    private void sendDeviceToken(int role){
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
                 String token = task.getResult();
-                userApi.loginDevice(userId, token).enqueue(new Callback<NoDataResponse>() {
+                userApi.loginDevice(token).enqueue(new RetrofitCallBack<NoDataResponse>() {
                     @Override
-                    public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                        if (response.body() != null){
-                            NoDataResponse responseBody = response.body();
-                            if (responseBody.getCode() == 106){
-
-                            } else if (responseBody.getCode() == 100) {
+                    public void onSuccess(NoDataResponse response) {
+                        if (response != null){
+                            if (response.getCode() == 100) {
                                 if (role == 2){
                                     startActivity(new Intent(RegisterActivity.this, DashboardAdminActivity.class));
+                                    finish();
                                 }
                                 else {
                                     startActivity(new Intent(RegisterActivity.this, DashboardUserActivity.class));
+                                    finish();
                                 }
                             }
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<NoDataResponse> call, Throwable t) {
+                    public void onFailure(String errorMessage) {
                         if (role == 2){
                             startActivity(new Intent(RegisterActivity.this, DashboardAdminActivity.class));
+                            finish();
                         }
                         else {
                             startActivity(new Intent(RegisterActivity.this, DashboardUserActivity.class));
+                            finish();
                         }
                     }
                 });

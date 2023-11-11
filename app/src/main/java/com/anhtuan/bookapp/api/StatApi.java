@@ -14,18 +14,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-public interface StatApi {
-    Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
+public interface StatApi extends BaseApi{
 
     StatApi statApi = new Retrofit.Builder()
             .baseUrl(Constant.IP_SERVER + "stat/")
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(httpClient.build())
             .build()
             .create(StatApi.class);
 
     @POST("incomeMember")
-    Call<IncomeMemberResponse> incomeMember(@Query("userId") String userId,
-                                            @Query("startDate") String startDate,
+    Call<IncomeMemberResponse> incomeMember(@Query("startDate") String startDate,
                                             @Query("endDate") String endDate);
 
     @POST("rankingUser")

@@ -1,5 +1,6 @@
 package com.anhtuan.bookapp.activity;
 
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,7 +50,7 @@ public class AuthenVerifyCodeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (validateData()){
                     request.setCode(verifyCode);
-                    userApi.authenVerifyCode(request).enqueue(new Callback<AuthenVerifyCodeResponse>() {
+                    unAuthApi.authenVerifyCode(request).enqueue(new Callback<AuthenVerifyCodeResponse>() {
                         @Override
                         public void onResponse(Call<AuthenVerifyCodeResponse> call, Response<AuthenVerifyCodeResponse> response) {
                             if (response.body().getCode() == 121){
@@ -78,7 +79,7 @@ public class AuthenVerifyCodeActivity extends AppCompatActivity {
                 if (!iSendAgain){
                     iSendAgain = true;
                     binding.sendAgainBtn.setText("Đang gửi");
-                    userApi.forgotPassword(email).enqueue(new Callback<NoDataResponse>() {
+                    unAuthApi.forgotPassword(email).enqueue(new Callback<NoDataResponse>() {
                         @Override
                         public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
                             if (!Objects.isNull(response.body())){

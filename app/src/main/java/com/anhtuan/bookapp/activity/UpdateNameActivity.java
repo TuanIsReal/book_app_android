@@ -5,24 +5,17 @@ import static com.anhtuan.bookapp.api.UserApi.userApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-
-import com.anhtuan.bookapp.R;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivityUpdateNameBinding;
 import com.anhtuan.bookapp.response.NoDataResponse;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class UpdateNameActivity extends AppCompatActivity {
 
     ActivityUpdateNameBinding binding;
-    String name, password, userId;
+    String name, password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,29 +23,26 @@ public class UpdateNameActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityUpdateNameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId","");
-
 
         binding.confirmBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (validateData()){
-                    userApi.updateName(userId, password, name).enqueue(new Callback<NoDataResponse>() {
+                    userApi.updateName(password, name).enqueue(new RetrofitCallBack<NoDataResponse>() {
                         @Override
-                        public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                            if (response.body() != null && response.body().getCode() == 100){
+                        public void onSuccess(NoDataResponse response) {
+                            if (response != null && response.getCode() == 100){
                                 Toast.makeText(UpdateNameActivity.this, "Đổi tên thành công", Toast.LENGTH_SHORT).show();
                                 onBackPressed();
                             }
 
-                            if (response.body() != null && response.body().getCode() == 106){
+                            if (response != null && response.getCode() == 123){
                                 Toast.makeText(UpdateNameActivity.this, "Mật khẩu không đúng", Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<NoDataResponse> call, Throwable t) {
+                        public void onFailure(String errorMessage) {
 
                         }
                     });

@@ -9,10 +9,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
-
-import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.adapter.AdapterViewComment;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivityViewCommentBinding;
 import com.anhtuan.bookapp.domain.Comment;
 import com.anhtuan.bookapp.request.AddCommentRequest;
@@ -22,17 +20,12 @@ import com.anhtuan.bookapp.response.NoDataResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class ViewCommentActivity extends AppCompatActivity {
 
     ActivityViewCommentBinding binding;
     List<Comment> commentList;
     AdapterViewComment adapterViewComment;
     String bookId;
-    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +35,6 @@ public class ViewCommentActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         Intent intent = getIntent();
         bookId = intent.getStringExtra("bookId");
-        userId = intent.getStringExtra("userId");
         commentList = new ArrayList<>();
 
         loadCommentList();
@@ -52,18 +44,19 @@ public class ViewCommentActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String commentContent = binding.cmtContent.getText().toString().trim();
                 if (!commentContent.isBlank()){
-                    AddCommentRequest request = new AddCommentRequest(bookId, userId, commentContent);
-                    commentApi.addComment(request).enqueue(new Callback<NoDataResponse>() {
+                    AddCommentRequest request = new AddCommentRequest(bookId, commentContent);
+                    commentApi.addComment(request).enqueue(new RetrofitCallBack<NoDataResponse>() {
                         @Override
-                        public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                            if (response.body() != null && response.body().getCode() == 100){
+                        public void onSuccess(NoDataResponse response) {
+                            if (response != null && response.getCode() == 100){
                                 binding.cmtContent.setText("");
                                 loadCommentList();
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<NoDataResponse> call, Throwable t) {
+                        public void onFailure(String errorMessage) {
+
                         }
                     });
                 }
@@ -86,13 +79,13 @@ public class ViewCommentActivity extends AppCompatActivity {
     }
 
     private void loadCommentList() {
-        commentApi.getCommentList(bookId).enqueue(new Callback<GetCommentListResponse>() {
+        commentApi.getCommentList(bookId).enqueue(new RetrofitCallBack<GetCommentListResponse>() {
             @Override
-            public void onResponse(Call<GetCommentListResponse> call, Response<GetCommentListResponse> response) {
+            public void onSuccess(GetCommentListResponse response) {
                 binding.swipeRefresh.setRefreshing(false);
-                if (response.body() != null){
-                    if (response.body().getCode() == 100){
-                        commentList = response.body().getData();
+                if (response != null){
+                    if (response.getCode() == 100){
+                        commentList = response.getData();
                         adapterViewComment = new AdapterViewComment(ViewCommentActivity.this, commentList);
                         binding.cmtList.setAdapter(adapterViewComment);
                     }
@@ -100,9 +93,8 @@ public class ViewCommentActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<GetCommentListResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
                 binding.swipeRefresh.setRefreshing(false);
-                Toast.makeText(ViewCommentActivity.this, "" + t, Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anhtuan.bookapp.R;
-import com.anhtuan.bookapp.databinding.RowBookChapterBinding;
 import com.anhtuan.bookapp.databinding.RowBookChapterListBinding;
 import com.anhtuan.bookapp.domain.BookChapter;
 

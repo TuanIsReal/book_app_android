@@ -13,12 +13,9 @@ import com.anhtuan.bookapp.fragment.UserBookLibraryFragment;
 public class AdapterViewDashboardUser extends FragmentStatePagerAdapter {
 
     int numPage;
-
-    String userId;
-    public AdapterViewDashboardUser(@NonNull FragmentManager fm, int behavior, String userId) {
+    public AdapterViewDashboardUser(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
         numPage = behavior;
-        this.userId = userId;
     }
 
     @NonNull
@@ -28,7 +25,7 @@ public class AdapterViewDashboardUser extends FragmentStatePagerAdapter {
             case 0:
                 return new HomeFragment();
             case 1:
-                return new UserBookLibraryFragment(userId);
+                return new UserBookLibraryFragment();
             case 2:
                 return new NotificationFragment();
             case 3:

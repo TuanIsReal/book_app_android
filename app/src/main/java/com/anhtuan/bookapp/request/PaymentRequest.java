@@ -1,19 +1,10 @@
 package com.anhtuan.bookapp.request;
 
 public class PaymentRequest {
-    String userId;
     int point;
     String description;
 
     public PaymentRequest() {
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public int getPoint() {

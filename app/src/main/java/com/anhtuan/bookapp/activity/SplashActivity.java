@@ -1,7 +1,6 @@
 package com.anhtuan.bookapp.activity;
 
-import static com.anhtuan.bookapp.api.AuthApi.authApi;
-import static com.anhtuan.bookapp.api.BookChapterApi.bookChapterApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.NonNull;
@@ -16,26 +15,22 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.View;
+import android.widget.Toast;
 
 import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.api.RetrofitCallBack;
-import com.anhtuan.bookapp.api.UserApi;
 import com.anhtuan.bookapp.common.AccountManager;
 import com.anhtuan.bookapp.common.ApiAddress;
 import com.anhtuan.bookapp.common.TokenManager;
 import com.anhtuan.bookapp.domain.BannedWord;
 import com.anhtuan.bookapp.response.CheckLoggedResponse;
+import com.anhtuan.bookapp.response.CheckUserInfoResponse;
 import com.anhtuan.bookapp.response.GetBannedWordResponse;
-import com.anhtuan.bookapp.response.GetUserInfoResponse;
 import com.anhtuan.bookapp.domain.User;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.anhtuan.bookapp.response.PingResponse;
-import com.anhtuan.bookapp.retrofit.RetrofitService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.File;
@@ -48,7 +43,6 @@ import retrofit2.Response;
 
 public class SplashActivity extends AppCompatActivity {
 
-//    private FirebaseAuth firebaseAuth;
     private static final int MY_REQUEST_CODE = 20000;
     int bannedVersion;
     SharedPreferences sharedPreferences;
@@ -58,97 +52,92 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_splash);
+        sharedPreferences = getSharedPreferences("appInfo", Context.MODE_PRIVATE);
 //        requestPermission();
-        AccountManager.getInstance().saveAccount("gvbchatbot@gmail.com", null);
-        TokenManager.getInstance().saveToken("12jk54b", "feefef");
 
-        authApi.ping().enqueue(new RetrofitCallBack<PingResponse>() {
+        unAuthApi.ping().enqueue(new RetrofitCallBack<PingResponse>() {
             @Override
             public void onSuccess(PingResponse response) {
-                if (response != null && response.getCode() == 100){
-                    Log.d("PING", "PONG");
-                }else {
-                    Log.d("PING", "Fail");
-                }
+                openApp();
             }
 
             @Override
             public void onFailure(String errorMessage) {
-                Log.d("PING ERROR", errorMessage);
+                Toast.makeText(SplashActivity.this, "Server hệ thống đang bảo trì!!! Xin bạn thông cảm và quay lại app sau", Toast.LENGTH_SHORT).show();
             }
         });
 
+
+    }
+
+    private void openApp(){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                checkLogged();
-                sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-                String userId = sharedPreferences.getString("userId","");
                 bannedVersion = sharedPreferences.getInt("bannedVersion",1);
                 getBannedWord();
-                if (userId.isBlank()){
-                    finish();
+                String email = AccountManager.getInstance().getEmail();
+                if (email == null || email.isBlank() || email.equals("")){
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    finish();
                 }
                 else {
-                    autoLogin(userId);
-//                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    autoLogin();
                 }
             }
         }, 1000);
     }
 
-    private void autoLogin(String userId){
+    private void autoLogin(){
 
-        userApi.getUserInfo(userId).enqueue(new Callback<GetUserInfoResponse>() {
+        userApi.checkUserInfo().enqueue(new RetrofitCallBack<CheckUserInfoResponse>() {
             @Override
-            public void onResponse(Call<GetUserInfoResponse> call, Response<GetUserInfoResponse> response) {
-                if (response.body().getCode() == 106){
+            public void onSuccess(CheckUserInfoResponse response) {
+                if (response.getCode() == 106){
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     finish();
                 } else {
-                    GetUserInfoResponse userInfoResponse = response.body();
-                    int role = userInfoResponse.getData().getRole();
-                    sendDeviceToken(userId, role);
+                    int role = response.getData().getRole();
+                    sendDeviceToken(role);
                 }
             }
 
             @Override
-            public void onFailure(Call<GetUserInfoResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
+                TokenManager.getInstance().deleteToken();
+                AccountManager.getInstance().logoutAccount();
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 finish();
             }
         });
     }
 
-    private void sendDeviceToken(String userId, int role){
+    private void sendDeviceToken(int role){
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
 
                 String token = task.getResult();
-                userApi.loginDevice(userId, token).enqueue(new Callback<NoDataResponse>() {
-                    @Override
-                    public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
-                        if (response.body() != null){
-                            NoDataResponse responseBody = response.body();
-                            if (responseBody.getCode() == 106){
 
-                            } else if (responseBody.getCode() == 100) {
-                                if (role == 2){
-                                    startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
-                                    finish();
-                                }
-                                else {
-                                    startActivity(new Intent(SplashActivity.this, DashboardUserActivity.class));
-                                    finish();
-                                }
+                userApi.loginDevice(token).enqueue(new RetrofitCallBack<NoDataResponse>() {
+                    @Override
+                    public void onSuccess(NoDataResponse response) {
+                        if (response.getCode() == 106){
+
+                        } else if (response.getCode() == 100) {
+                            if (role == 2){
+                                startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
+                                finish();
+                            }
+                            else {
+                                startActivity(new Intent(SplashActivity.this, DashboardUserActivity.class));
+                                finish();
                             }
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<NoDataResponse> call, Throwable t) {
+                    public void onFailure(String errorMessage) {
                         if (role == 2){
                             startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
                             finish();
@@ -159,44 +148,11 @@ public class SplashActivity extends AppCompatActivity {
                         }
                     }
                 });
-            }
-        });
-    }
-
-    private void checkLogged(){
-        String ip = new ApiAddress().getIPAddress();
-
-        userApi.checkUserLogged(ip).enqueue(new Callback<CheckLoggedResponse>() {
-            @Override
-            public void onResponse(Call<CheckLoggedResponse> call, Response<CheckLoggedResponse> response) {
-                CheckLoggedResponse checkResponse = response.body();
-                if (checkResponse.getCode() == 100){
-                    User user = checkResponse.getData();
-                    SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("userId", user.getId());
-                    editor.apply();
-                    if (user.getRole() == 1){
-                        startActivity(new Intent(SplashActivity.this, DashboardUserActivity.class));
-                        finish();
-                    }
-                    if (user.getRole() == 2){
-                        startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
-                        finish();
-                    }
-                }
-                else {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                    finish();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CheckLoggedResponse> call, Throwable t) {
 
             }
         });
     }
+
 
     private void requestPermission(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
@@ -212,7 +168,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void getBannedWord() {
-        bookChapterApi.getBannedWord(bannedVersion).enqueue(new Callback<GetBannedWordResponse>() {
+        unAuthApi.getBannedWord(bannedVersion).enqueue(new Callback<GetBannedWordResponse>() {
             @Override
             public void onResponse(Call<GetBannedWordResponse> call, Response<GetBannedWordResponse> response) {
                 if (response.body() == null || response.body().getCode() == 98){

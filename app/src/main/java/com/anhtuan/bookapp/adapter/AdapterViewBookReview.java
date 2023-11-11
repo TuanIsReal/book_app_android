@@ -1,6 +1,6 @@
 package com.anhtuan.bookapp.adapter;
 
-import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.RowBookReviewBinding;
@@ -21,13 +22,10 @@ import com.anhtuan.bookapp.domain.User;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
 import com.anhtuan.bookapp.response.ImageResponse;
 import com.bumptech.glide.Glide;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -61,12 +59,11 @@ public class AdapterViewBookReview extends RecyclerView.Adapter<AdapterViewBookR
         holder.ratingBar.setRating((float) reviewStar);
         holder.reviewContent.setText(reviewContent);
         holder.timeReview.setText(Utils.covertLongToTimeString(System.currentTimeMillis() - reviewTime));
-
-        userApi.getUserInfo(author).enqueue(new Callback<GetUserInfoResponse>() {
+        userApi.getUserInfo(author).enqueue(new RetrofitCallBack<GetUserInfoResponse>() {
             @Override
-            public void onResponse(Call<GetUserInfoResponse> call, Response<GetUserInfoResponse> response) {
-                if (response.body() != null && response.body().getCode() == 100){
-                    User user = response.body().getData();
+            public void onSuccess(GetUserInfoResponse response) {
+                if (response != null && response.getCode() == 100){
+                    User user = response.getData();
                     holder.nameTv.setText(user.getName());
                     String imageName = user.getAvatarImage();
                     Boolean isLoginGoogle = user.getGoogleLogin();
@@ -79,7 +76,7 @@ public class AdapterViewBookReview extends RecyclerView.Adapter<AdapterViewBookR
                     }
 
                     if (imageName != null && Objects.isNull(isLoginGoogle)){
-                        stfApi.getThumbnail(user.getAvatarImage()).enqueue(new Callback<ImageResponse>() {
+                        unAuthApi.getThumbnail(user.getAvatarImage()).enqueue(new Callback<ImageResponse>() {
                             @Override
                             public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                                 if (response.body().getCode() == 100){
@@ -100,7 +97,7 @@ public class AdapterViewBookReview extends RecyclerView.Adapter<AdapterViewBookR
             }
 
             @Override
-            public void onFailure(Call<GetUserInfoResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });

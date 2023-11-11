@@ -18,12 +18,12 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-public interface CommentApi {
-    Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
+public interface CommentApi extends BaseApi{
 
     CommentApi commentApi = new Retrofit.Builder()
             .baseUrl(Constant.IP_SERVER + "comment/")
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(httpClient.build())
             .build()
             .create(CommentApi.class);
 

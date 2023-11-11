@@ -1,6 +1,6 @@
 package com.anhtuan.bookapp.adapter;
 
-import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import android.content.Context;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.anhtuan.bookapp.activity.ViewBookActivity;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.RowBookUserBinding;
@@ -24,10 +25,8 @@ import com.anhtuan.bookapp.response.GetUsernameResponse;
 import com.anhtuan.bookapp.response.ImageResponse;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -66,16 +65,16 @@ public class AdapterSearchBookUser extends RecyclerView.Adapter<AdapterSearchBoo
 
         //
         holder.bookNameTv.setText(bookName);
-        userApi.getUsername(author).enqueue(new Callback<GetUsernameResponse>() {
+        userApi.getUsername(author).enqueue(new RetrofitCallBack<GetUsernameResponse>() {
             @Override
-            public void onResponse(Call<GetUsernameResponse> call, Response<GetUsernameResponse> response) {
-                if (response.body().getCode() == 100){
-                    holder.authorTv.setText(response.body().getData());
+            public void onSuccess(GetUsernameResponse response) {
+                if (response.getCode() == 100){
+                    holder.authorTv.setText(response.getData());
                 }
             }
 
             @Override
-            public void onFailure(Call<GetUsernameResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });
@@ -88,7 +87,7 @@ public class AdapterSearchBookUser extends RecyclerView.Adapter<AdapterSearchBoo
         if (bookImage.isBlank()){
             holder.progressBar.setVisibility(View.GONE);
         } else {
-            stfApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
+            unAuthApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
                 @Override
                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     holder.progressBar.setVisibility(View.GONE);

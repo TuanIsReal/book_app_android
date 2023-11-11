@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.adapter.AdapterRankingUser;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivityStatisticalDetailBinding;
 import com.anhtuan.bookapp.response.RankingBookResponse;
 import com.anhtuan.bookapp.response.RankingUserResponse;
@@ -56,40 +57,36 @@ public class StatisticalDetailActivity extends AppCompatActivity {
 
     private void loadDataRanking() {
         if (typeRanking < 4){
-            statApi.getRankingUser(typeRanking).enqueue(new Callback<RankingUserResponse>() {
+            statApi.getRankingUser(typeRanking).enqueue(new RetrofitCallBack<RankingUserResponse>() {
                 @Override
-                public void onResponse(Call<RankingUserResponse> call, Response<RankingUserResponse> response) {
+                public void onSuccess(RankingUserResponse response) {
                     binding.swipeRefresh.setRefreshing(false);
-                    if (response.body() != null && response.body().getCode() == 100){
-                        rankingData = (Map<String, Double>) response.body().getData();
-                        for (String key : rankingData.keySet()) {
-                            Log.d("stat userID", key);
-                            Log.d("stat count", String.valueOf(rankingData.get(key)));
-                        }
+                    if (response != null && response.getCode() == 100){
+                        rankingData = response.getData();
                         adapterRankingUser = new AdapterRankingUser(StatisticalDetailActivity.this, rankingData, 1);
                         binding.rankList.setAdapter(adapterRankingUser);
                     }
                 }
 
                 @Override
-                public void onFailure(Call<RankingUserResponse> call, Throwable t) {
+                public void onFailure(String errorMessage) {
                     binding.swipeRefresh.setRefreshing(false);
                 }
             });
         } else {
-            statApi.getRankingBook().enqueue(new Callback<RankingBookResponse>() {
+            statApi.getRankingBook().enqueue(new RetrofitCallBack<RankingBookResponse>() {
                 @Override
-                public void onResponse(Call<RankingBookResponse> call, Response<RankingBookResponse> response) {
+                public void onSuccess(RankingBookResponse response) {
                     binding.swipeRefresh.setRefreshing(false);
-                    if (response.body() != null && response.body().getCode() == 100){
-                        rankingData = (Map<String, Double>) response.body().getData();
+                    if (response != null && response.getCode() == 100){
+                        rankingData = response.getData();
                         adapterRankingUser = new AdapterRankingUser(StatisticalDetailActivity.this, rankingData, 2);
                         binding.rankList.setAdapter(adapterRankingUser);
                     }
                 }
 
                 @Override
-                public void onFailure(Call<RankingBookResponse> call, Throwable t) {
+                public void onFailure(String errorMessage) {
                     binding.swipeRefresh.setRefreshing(false);
                 }
             });

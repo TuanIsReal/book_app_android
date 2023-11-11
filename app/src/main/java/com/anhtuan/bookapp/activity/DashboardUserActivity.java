@@ -1,18 +1,15 @@
 package com.anhtuan.bookapp.activity;
 
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.anhtuan.bookapp.R;
@@ -34,11 +31,7 @@ public class DashboardUserActivity extends AppCompatActivity {
         binding = ActivityDashboardUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId","");
-
-
-        AdapterViewDashboardUser adapterDashboardUser = new AdapterViewDashboardUser(getSupportFragmentManager(), 4, userId);
+        AdapterViewDashboardUser adapterDashboardUser = new AdapterViewDashboardUser(getSupportFragmentManager(), 4);
         binding.viewPager.setAdapter(adapterDashboardUser);
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

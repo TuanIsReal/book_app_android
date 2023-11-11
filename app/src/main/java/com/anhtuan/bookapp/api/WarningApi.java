@@ -13,12 +13,12 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-public interface WarningApi {
-    Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
+public interface WarningApi extends BaseApi{
 
     WarningApi warningApi = new Retrofit.Builder()
             .baseUrl(Constant.IP_SERVER + "warning/")
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(httpClient.build())
             .build()
             .create(WarningApi.class);
 

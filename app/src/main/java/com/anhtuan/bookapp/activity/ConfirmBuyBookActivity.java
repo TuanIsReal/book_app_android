@@ -10,18 +10,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.databinding.ActivityConfirmBuyBookBinding;
 import com.anhtuan.bookapp.response.BaseResponse;
-import com.anhtuan.bookapp.response.GetUserInfoResponse;
+import com.anhtuan.bookapp.response.CheckUserInfoResponse;
 import com.anhtuan.bookapp.response.GetUsernameResponse;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ConfirmBuyBookActivity extends AppCompatActivity {
 
-    String userId;
     String bookId;
     String bookName;
     String author;
@@ -35,23 +32,22 @@ public class ConfirmBuyBookActivity extends AppCompatActivity {
         binding = ActivityConfirmBuyBookBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Intent intent = getIntent();
-        userId = intent.getStringExtra("userId");
         bookId = intent.getStringExtra("bookId");
         bookName = intent.getStringExtra("bookName");
         author = intent.getStringExtra("author");
         price = intent.getIntExtra("price", 0);
 
         binding.bookName.setText(bookName);
-        userApi.getUsername(author).enqueue(new Callback<GetUsernameResponse>() {
+        userApi.getUsername(author).enqueue(new RetrofitCallBack<GetUsernameResponse>() {
             @Override
-            public void onResponse(Call<GetUsernameResponse> call, Response<GetUsernameResponse> response) {
-                if (response.body().getCode() == 100){
-                    binding.author.setText(response.body().getData());
+            public void onSuccess(GetUsernameResponse response) {
+                if (response.getCode() == 100){
+                    binding.author.setText(response.getData());
                 }
             }
 
             @Override
-            public void onFailure(Call<GetUsernameResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });
@@ -65,54 +61,49 @@ public class ConfirmBuyBookActivity extends AppCompatActivity {
             }
         });
 
-        if (userId != null){
-            userApi.getUserInfo(userId).enqueue(new Callback<GetUserInfoResponse>() {
-                @Override
-                public void onResponse(Call<GetUserInfoResponse> call, Response<GetUserInfoResponse> response) {
-                    if (response != null){
-                        GetUserInfoResponse responseBody = response.body();
-                        if (responseBody.getCode() == 100){
-                            balance = responseBody.getData().getPoint();
-                            binding.balanceNum.setText(String.valueOf(balance));
-                            binding.confirmBtn.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (balance < price){
-                                        Toast.makeText(ConfirmBuyBookActivity.this, "Số dư không đủ", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        buyBook();
-                                    }
-                                }
-                            });
-                        } else if (responseBody.getCode() == 106) {
-                            binding.confirmTv.setText("Lấy thông tin người dùng bị lỗi");
+        userApi.checkUserInfo().enqueue(new RetrofitCallBack<CheckUserInfoResponse>() {
+            @Override
+            public void onSuccess(CheckUserInfoResponse response) {
+                if (response.getCode() == 100){
+                    balance = response.getData().getPoint();
+                    binding.balanceNum.setText(String.valueOf(balance));
+                    binding.confirmBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (balance < price){
+                                Toast.makeText(ConfirmBuyBookActivity.this, "Số dư không đủ", Toast.LENGTH_SHORT).show();
+                            } else {
+                                buyBook();
+                            }
                         }
-                    }
+                    });
+                } else if (response.getCode() == 106) {
+                    binding.confirmTv.setText("Lấy thông tin người dùng bị lỗi");
                 }
+            }
 
-                @Override
-                public void onFailure(Call<GetUserInfoResponse> call, Throwable t) {
-                    Toast.makeText(ConfirmBuyBookActivity.this, ""+t, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+            @Override
+            public void onFailure(String errorMessage) {
+
+            }
+        });
+
     }
 
     private void buyBook(){
-        purchasedBookApi.buyBook(userId, bookId).enqueue(new Callback<BaseResponse>() {
+        purchasedBookApi.buyBook(bookId).enqueue(new RetrofitCallBack<BaseResponse>() {
             @Override
-            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+            public void onSuccess(BaseResponse response) {
                 if (response != null){
-                    BaseResponse responseBody = response.body();
-                    if (responseBody.getCode() == 106){
+                    if (response.getCode() == 106){
                         Toast.makeText(ConfirmBuyBookActivity.this, "Lấy thông tin người dùng bị lỗi", Toast.LENGTH_SHORT).show();
-                    } else if (responseBody.getCode() == 109) {
+                    } else if (response.getCode() == 109) {
                         Toast.makeText(ConfirmBuyBookActivity.this, "Lấy thông tin sách bị lỗi", Toast.LENGTH_SHORT).show();
-                    } else if (responseBody.getCode() == 112) {
+                    } else if (response.getCode() == 112) {
                         Toast.makeText(ConfirmBuyBookActivity.this, "Sách đã mua", Toast.LENGTH_SHORT).show();
-                    } else if (responseBody.getCode() == 111) {
+                    } else if (response.getCode() == 111) {
                         Toast.makeText(ConfirmBuyBookActivity.this, "Số dư không đủ", Toast.LENGTH_SHORT).show();
-                    } else if (responseBody.getCode() == 100) {
+                    } else if (response.getCode() == 100) {
                         Toast.makeText(ConfirmBuyBookActivity.this, "Mua thành công", Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
@@ -121,8 +112,8 @@ public class ConfirmBuyBookActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<BaseResponse> call, Throwable t) {
-                Toast.makeText(ConfirmBuyBookActivity.this, ""+t, Toast.LENGTH_SHORT).show();
+            public void onFailure(String errorMessage) {
+
             }
         });
     }

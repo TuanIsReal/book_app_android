@@ -2,22 +2,20 @@ package com.anhtuan.bookapp.activity;
 
 import static com.anhtuan.bookapp.api.BookApi.bookApi;
 import static com.anhtuan.bookapp.api.PurchasedBookApi.purchasedBookApi;
-import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
-
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.anhtuan.bookapp.adapter.AdapterViewBook;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityViewBookBinding;
 import com.anhtuan.bookapp.domain.Book;
@@ -52,7 +50,6 @@ public class ViewBookActivity extends AppCompatActivity {
     int price;
     AdapterViewBook adapterViewBook;
     public String bookId;
-    String userId;
     boolean isPurchased = false;
     int chapterNumber = 1;
 
@@ -66,10 +63,6 @@ public class ViewBookActivity extends AppCompatActivity {
         Intent intent = getIntent();
         bookId = intent.getStringExtra("bookId");
 
-        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        userId = sharedPreferences.getString("userId","");
-
-
         binding.returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,12 +74,11 @@ public class ViewBookActivity extends AppCompatActivity {
         if (bookId == null){
             Toast.makeText(this, "Lấy thông tin sách bị lỗi", Toast.LENGTH_SHORT).show();
         } else {
-            purchasedBookApi.checkPurchasedBook(bookId, userId).enqueue(new Callback<CheckPurchasedBookResponse>() {
+            purchasedBookApi.checkPurchasedBook(bookId).enqueue(new RetrofitCallBack<CheckPurchasedBookResponse>() {
                 @Override
-                public void onResponse(Call<CheckPurchasedBookResponse> call, Response<CheckPurchasedBookResponse> response) {
-                    CheckPurchasedBookResponse responseBody = response.body();
-                    if (responseBody.getCode() == 100){
-                        if (responseBody.getData() == 1) {
+                public void onSuccess(CheckPurchasedBookResponse response) {
+                    if (response.getCode() == 100){
+                        if (response.getData() == 1) {
                             isPurchased = true;
                         }
                         setVisiButton();
@@ -97,18 +89,14 @@ public class ViewBookActivity extends AppCompatActivity {
                                 openBookChapter();
                             }
                         });
-                    } else {
-                        Toast.makeText(ViewBookActivity.this, "Loi khong xac dinh", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
-                public void onFailure(Call<CheckPurchasedBookResponse> call, Throwable t) {
-                    Toast.makeText(ViewBookActivity.this, "" + t, Toast.LENGTH_SHORT).show();
+                public void onFailure(String errorMessage) {
+
                 }
             });
-
-
         }
 
     }
@@ -117,23 +105,23 @@ public class ViewBookActivity extends AppCompatActivity {
     private void setBookInfo(){
         binding.bookNameTv.setText(bookName);
         binding.categoriesTv.setText(categories);
-        userApi.getUsername(author).enqueue(new Callback<GetUsernameResponse>() {
+        userApi.getUsername(author).enqueue(new RetrofitCallBack<GetUsernameResponse>() {
             @Override
-            public void onResponse(Call<GetUsernameResponse> call, Response<GetUsernameResponse> response) {
-                if (response.body().getCode() == 100){
-                    binding.authorTv.setText("Tác giả: " + response.body().getData());
+            public void onSuccess(GetUsernameResponse response) {
+                if (response.getCode() == 100){
+                    binding.authorTv.setText("Tác giả: " + response.getData());
                 }
             }
 
             @Override
-            public void onFailure(Call<GetUsernameResponse> call, Throwable t) {
-
+            public void onFailure(String errorMessage) {
             }
         });
+
         binding.starTv.setText(star);
         binding.priceTv.setText(String.valueOf(price));
         if (imageName != null){
-            stfApi.getBookImage(imageName).enqueue(new Callback<ImageResponse>() {
+            unAuthApi.getBookImage(imageName).enqueue(new Callback<ImageResponse>() {
                 @Override
                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     if (response.body().getCode() == 100){
@@ -162,14 +150,13 @@ public class ViewBookActivity extends AppCompatActivity {
     }
 
     private void getBookInfo(){
-        bookApi.getBookById(bookId).enqueue(new Callback<ViewBookResponse>() {
+        bookApi.getBookById(bookId).enqueue(new RetrofitCallBack<ViewBookResponse>() {
             @Override
-            public void onResponse(Call<ViewBookResponse> call, Response<ViewBookResponse> response) {
-                ViewBookResponse responseBody = response.body();
-                if (responseBody.getCode() == 109){
+            public void onSuccess(ViewBookResponse response) {
+                if (response.getCode() == 109){
                     Toast.makeText(ViewBookActivity.this, "Sach khong ton tai", Toast.LENGTH_SHORT).show();
-                } else if (responseBody.getCode() == 100) {
-                    Book book = responseBody.getData();
+                } else if (response.getCode() == 100) {
+                    Book book = response.getData();
                     bookName = book.getBookName();
                     categories = toStringCategory(book.getBookCategory());
                     author = book.getAuthor();
@@ -177,7 +164,7 @@ public class ViewBookActivity extends AppCompatActivity {
                     introduction = book.getIntroduction();
                     imageName = book.getBookImage();
                     price = book.getBookPrice();
-                    adapterViewBook = new AdapterViewBook(getSupportFragmentManager(), 3, userId, bookId, isPurchased, author);
+                    adapterViewBook = new AdapterViewBook(getSupportFragmentManager(), 3, bookId, isPurchased, author);
                     binding.viewPager.setAdapter(adapterViewBook);
                     binding.tab.setupWithViewPager(binding.viewPager);
                     binding.buyBookBtn.setOnClickListener(new View.OnClickListener() {
@@ -191,16 +178,14 @@ public class ViewBookActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ViewBookResponse> call, Throwable t) {
-                Toast.makeText(ViewBookActivity.this, ""+t, Toast.LENGTH_SHORT).show();
-            }
+            public void onFailure(String errorMessage) {
 
+            }
         });
     }
 
     private void buyBook(){
         Intent intent = new Intent(ViewBookActivity.this, ConfirmBuyBookActivity.class);
-        intent.putExtra("userId", userId);
         intent.putExtra("bookId", bookId);
         intent.putExtra("bookName", bookName);
         intent.putExtra("author", author);
@@ -231,17 +216,16 @@ public class ViewBookActivity extends AppCompatActivity {
     }
 
     private void openBookChapter(){
-        purchasedBookApi.getPurchasedBook(bookId, userId).enqueue(new Callback<GetPurchasedBookResponse>() {
+        purchasedBookApi.getPurchasedBook(bookId).enqueue(new RetrofitCallBack<GetPurchasedBookResponse>() {
             @Override
-            public void onResponse(Call<GetPurchasedBookResponse> call, Response<GetPurchasedBookResponse> response) {
+            public void onSuccess(GetPurchasedBookResponse response) {
                 if (response != null){
-                    GetPurchasedBookResponse responseBody = response.body();
-                    if (responseBody.getCode() == 106){
+                    if (response.getCode() == 106){
                         Toast.makeText(ViewBookActivity.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
-                    } else if (responseBody.getCode() == 112) {
+                    } else if (response.getCode() == 112) {
                         Toast.makeText(ViewBookActivity.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
-                    } else if (responseBody.getCode() == 100) {
-                        PurchasedBook purchasedBook = responseBody.getData();
+                    } else if (response.getCode() == 100) {
+                        PurchasedBook purchasedBook = response.getData();
                         chapterNumber = purchasedBook.getLastReadChapter();
                         Intent intent = new Intent(ViewBookActivity.this, ViewChapterActivity.class);
                         intent.putExtra("bookId", bookId);
@@ -252,8 +236,8 @@ public class ViewBookActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<GetPurchasedBookResponse> call, Throwable t) {
-                Toast.makeText(ViewBookActivity.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
+            public void onFailure(String errorMessage) {
+
             }
         });
     }

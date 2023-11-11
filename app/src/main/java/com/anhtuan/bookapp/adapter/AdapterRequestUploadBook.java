@@ -1,7 +1,6 @@
 package com.anhtuan.bookapp.adapter;
 
-import static com.anhtuan.bookapp.api.STFApi.stfApi;
-
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,7 +60,7 @@ public class AdapterRequestUploadBook extends RecyclerView.Adapter<AdapterReques
         holder.categoryTv.setText(Utils.toStringCategory(category));
 
         if (bookImage != null){
-            stfApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
+            unAuthApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
                 @Override
                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     holder.progressBar.setVisibility(View.GONE);

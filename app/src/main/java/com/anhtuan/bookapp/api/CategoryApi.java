@@ -14,13 +14,12 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-public interface CategoryApi {
-
-    Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
+public interface CategoryApi extends BaseApi{
 
     CategoryApi categoryApi = new Retrofit.Builder()
             .baseUrl(Constant.IP_SERVER + "category/")
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(httpClient.build())
             .build()
             .create(CategoryApi.class);
 

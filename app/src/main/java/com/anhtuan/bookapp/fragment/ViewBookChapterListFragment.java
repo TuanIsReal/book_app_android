@@ -3,7 +3,6 @@ package com.anhtuan.bookapp.fragment;
 import static com.anhtuan.bookapp.api.BookChapterApi.bookChapterApi;
 import static com.anhtuan.bookapp.api.PurchasedBookApi.purchasedBookApi;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -19,20 +18,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anhtuan.bookapp.R;
-import com.anhtuan.bookapp.activity.ViewBookActivity;
 import com.anhtuan.bookapp.activity.ViewChapterActivity;
 import com.anhtuan.bookapp.adapter.AdapterBookChapterList;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.domain.BookChapter;
 import com.anhtuan.bookapp.domain.PurchasedBook;
-import com.anhtuan.bookapp.response.CheckPurchasedBookResponse;
 import com.anhtuan.bookapp.response.GetBookChapterListResponse;
 import com.anhtuan.bookapp.response.GetPurchasedBookResponse;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class ViewBookChapterListFragment extends Fragment implements AdapterBookChapterList.BookChapterItemListener{
@@ -42,14 +36,12 @@ public class ViewBookChapterListFragment extends Fragment implements AdapterBook
     RecyclerView bookChaptersRv;
     List<BookChapter> bookChapters;
     AdapterBookChapterList adapterBookChapterList;
-    String userId;
     View view;
     int lastReadChapter;
     SwipeRefreshLayout swipeRefresh;
 
-    public ViewBookChapterListFragment(String bookId, String userId) {
+    public ViewBookChapterListFragment(String bookId) {
         this.bookId = bookId;
-        this.userId = userId;
     }
 
 
@@ -75,42 +67,39 @@ public class ViewBookChapterListFragment extends Fragment implements AdapterBook
     }
 
     private void loadPurchasedBook(){
-        purchasedBookApi.getPurchasedBook(bookId, userId).enqueue(new Callback<GetPurchasedBookResponse>() {
+        purchasedBookApi.getPurchasedBook(bookId).enqueue(new RetrofitCallBack<GetPurchasedBookResponse>() {
             @Override
-            public void onResponse(Call<GetPurchasedBookResponse> call, Response<GetPurchasedBookResponse> response) {
+            public void onSuccess(GetPurchasedBookResponse response) {
                 if (response != null){
-                    GetPurchasedBookResponse responseBody = response.body();
-                    if (responseBody.getCode() == 106){
+                    if (response.getCode() == 106){
                         Toast.makeText(view.getContext(), "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
-                    } else if (responseBody.getCode() == 120) {
+                    } else if (response.getCode() == 120) {
                         loadBookChapterList();
-                    } else if (responseBody.getCode() == 100) {
-                        PurchasedBook purchasedBook = responseBody.getData();
+                    } else if (response.getCode() == 100) {
+                        PurchasedBook purchasedBook = response.getData();
                         lastReadChapter = purchasedBook.getLastReadChapter();
                         loadBookChapterList();
                     }
+                    swipeRefresh.setRefreshing(false);
                 }
             }
 
             @Override
-            public void onFailure(Call<GetPurchasedBookResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
                 swipeRefresh.setRefreshing(false);
-                Toast.makeText(view.getContext(), "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void loadBookChapterList(){
-        bookChapterApi.getBookChapterList(bookId).enqueue(new Callback<GetBookChapterListResponse>() {
+        bookChapterApi.getBookChapterList(bookId).enqueue(new RetrofitCallBack<GetBookChapterListResponse>() {
             @Override
-            public void onResponse(Call<GetBookChapterListResponse> call, Response<GetBookChapterListResponse> response) {
-                swipeRefresh.setRefreshing(false);
-                if (response.body() != null){
-                    GetBookChapterListResponse responseBody = response.body();
-                    if (responseBody.getCode() == 106){
+            public void onSuccess(GetBookChapterListResponse response) {
+                if (response != null){
+                    if (response.getCode() == 106){
 
-                    } else if (responseBody.getCode() == 100) {
-                        bookChapters = responseBody.getData();
+                    } else if (response.getCode() == 100) {
+                        bookChapters = response.getData();
                         chapterNum.setText("(" + bookChapters.size() +")");
                         adapterBookChapterList = new AdapterBookChapterList(view.getContext(), bookChapters, lastReadChapter);
                         bookChaptersRv.setAdapter(adapterBookChapterList);
@@ -120,9 +109,8 @@ public class ViewBookChapterListFragment extends Fragment implements AdapterBook
             }
 
             @Override
-            public void onFailure(Call<GetBookChapterListResponse> call, Throwable t) {
-                swipeRefresh.setRefreshing(false);
-                Toast.makeText(view.getContext(), "" +t, Toast.LENGTH_SHORT).show();
+            public void onFailure(String errorMessage) {
+
             }
         });
     }
@@ -131,7 +119,6 @@ public class ViewBookChapterListFragment extends Fragment implements AdapterBook
     public void onItemClick(View view, int position) {
         int chapterNumber = bookChapters.get(position).getChapterNumber();
         Intent intent = new Intent(view.getContext(), ViewChapterActivity.class);
-        intent.putExtra("userId", userId);
         intent.putExtra("bookId", bookId);
         intent.putExtra("chapterNumber", chapterNumber);
         startActivity(intent);

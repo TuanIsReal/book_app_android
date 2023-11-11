@@ -1,7 +1,7 @@
 package com.anhtuan.bookapp.fragment;
 
 import static com.anhtuan.bookapp.api.BookApi.bookApi;
-import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +26,7 @@ import com.anhtuan.bookapp.adapter.AdapterMostBuyBook;
 import com.anhtuan.bookapp.adapter.AdapterMostReviewBook;
 import com.anhtuan.bookapp.adapter.AdapterNewBook;
 import com.anhtuan.bookapp.adapter.AdapterRecommendBook;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.domain.Book;
@@ -158,12 +159,11 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
     }
 
     private void loadNewBook() {
-
-        bookApi.getBookHome(Constant.TYPE_FILTER.NEW_BOOK, 8).enqueue(new Callback<GetBookResponse>() {
+        bookApi.getBookHome(Constant.TYPE_FILTER.NEW_BOOK, 8).enqueue(new RetrofitCallBack<GetBookResponse>() {
             @Override
-            public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
-                if (response.body() != null && response.body().getCode() == 100){
-                    newBookList = response.body().getData();
+            public void onSuccess(GetBookResponse response) {
+                if (response != null && response.getCode() == 100){
+                    newBookList = response.getData();
                     if (newBookList.size() > 0){
                         setNewBookInfo(newBookList.get(0));
                     }
@@ -176,7 +176,7 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
             }
 
             @Override
-            public void onFailure(Call<GetBookResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });
@@ -197,7 +197,7 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
         ratingBarNew.setRating((float) book.getStar());
 
         if (book.getBookImage() != null && !book.getBookImage().isBlank()){
-            stfApi.getThumbnail(book.getBookImage()).enqueue(new Callback<ImageResponse>() {
+            unAuthApi.getThumbnail(book.getBookImage()).enqueue(new Callback<ImageResponse>() {
                 @Override
                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                     if (response.body().getCode() == 100){
@@ -220,11 +220,11 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
     }
 
     private void loadRecommendBook(){
-        bookApi.getBookHome(Constant.TYPE_FILTER.RECOMMEND_BOOK, 6).enqueue(new Callback<GetBookResponse>() {
+        bookApi.getBookHome(Constant.TYPE_FILTER.RECOMMEND_BOOK, 6).enqueue(new RetrofitCallBack<GetBookResponse>() {
             @Override
-            public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
-                if (response.body() != null && response.body().getCode() == 100){
-                    recommendBookList = response.body().getData();
+            public void onSuccess(GetBookResponse response) {
+                if (response != null && response.getCode() == 100){
+                    recommendBookList = response.getData();
                     adapterRecommendBook = new AdapterRecommendBook(view.getContext(), recommendBookList);
                     recommendBooksRv.setAdapter(adapterRecommendBook);
                     loadMostBuyBook();
@@ -233,18 +233,18 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
             }
 
             @Override
-            public void onFailure(Call<GetBookResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });
     }
 
     private void loadMostBuyBook(){
-        bookApi.getBookHome(Constant.TYPE_FILTER.MOST_BUY, 6).enqueue(new Callback<GetBookResponse>() {
+        bookApi.getBookHome(Constant.TYPE_FILTER.MOST_BUY, 6).enqueue(new RetrofitCallBack<GetBookResponse>() {
             @Override
-            public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
-                if (response.body() != null && response.body().getCode() == 100){
-                    mostBuyBookList = response.body().getData();
+            public void onSuccess(GetBookResponse response) {
+                if (response != null && response.getCode() == 100){
+                    mostBuyBookList = response.getData();
                     adapterMostBuyBook = new AdapterMostBuyBook(view.getContext(), mostBuyBookList);
                     mostBuyRv.setAdapter(adapterMostBuyBook);
                     loadMostReviewBook();
@@ -252,18 +252,18 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
             }
 
             @Override
-            public void onFailure(Call<GetBookResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });
     }
 
     private void loadMostReviewBook(){
-        bookApi.getBookHome(Constant.TYPE_FILTER.MOST_REVIEW, 6).enqueue(new Callback<GetBookResponse>() {
+        bookApi.getBookHome(Constant.TYPE_FILTER.MOST_REVIEW, 6).enqueue(new RetrofitCallBack<GetBookResponse>() {
             @Override
-            public void onResponse(Call<GetBookResponse> call, Response<GetBookResponse> response) {
-                if (response.body() != null && response.body().getCode() == 100){
-                    mostReviewBook = response.body().getData();
+            public void onSuccess(GetBookResponse response) {
+                if (response != null && response.getCode() == 100){
+                    mostReviewBook = response.getData();
                     adapterMostReviewBook = new AdapterMostReviewBook(view.getContext(), mostReviewBook);
                     mostReviewRv.setAdapter(adapterMostReviewBook);
 
@@ -271,7 +271,7 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
             }
 
             @Override
-            public void onFailure(Call<GetBookResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });

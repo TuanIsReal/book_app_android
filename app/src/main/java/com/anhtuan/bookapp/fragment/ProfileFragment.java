@@ -1,32 +1,32 @@
 package com.anhtuan.bookapp.fragment;
 
-import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.activity.AddPointActivity;
 import com.anhtuan.bookapp.activity.BalanceChangeActivity;
 import com.anhtuan.bookapp.activity.IncomeActivity;
 import com.anhtuan.bookapp.activity.MainActivity;
 import com.anhtuan.bookapp.activity.SettingActivity;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
+import com.anhtuan.bookapp.common.AccountManager;
+import com.anhtuan.bookapp.common.TokenManager;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.domain.User;
-import com.anhtuan.bookapp.response.GetUserInfoResponse;
+import com.anhtuan.bookapp.response.CheckUserInfoResponse;
 import com.anhtuan.bookapp.response.ImageResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 import com.bumptech.glide.Glide;
@@ -40,8 +40,6 @@ import retrofit2.Response;
 
 
 public class ProfileFragment extends Fragment {
-
-    String userId;
     ImageButton reloadBtn;
     Button buyPointBtn;
     TextView nameTv, pointTv, logoutTv, settingTv, incomeTv, changeTv;
@@ -59,15 +57,13 @@ public class ProfileFragment extends Fragment {
         WindowCompat.setDecorFitsSystemWindows(getActivity().getWindow(), false);
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         initView();
-        sharedPreferences = view.getContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        userId = sharedPreferences.getString("userId","");
 
         loadUser();
 
         logoutTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logout(view.getContext(), userId);
+                logout();
             }
         });
 
@@ -82,7 +78,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(view.getContext(), AddPointActivity.class);
-                intent.putExtra("userId",userId);
                 view.getContext().startActivity(intent);
             }
         });
@@ -126,33 +121,29 @@ public class ProfileFragment extends Fragment {
         changeTv = view.findViewById(R.id.changeTv);
     }
 
-    private void logout(Context context, String userId){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("userId", "");
-        editor.putString("role", "");
-        editor.apply();
-
-        userApi.logout(userId).enqueue(new Callback<NoDataResponse>() {
+    private void logout(){
+        userApi.logout().enqueue(new RetrofitCallBack<NoDataResponse>() {
             @Override
-            public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
+            public void onSuccess(NoDataResponse response) {
+                TokenManager.getInstance().deleteToken();
+                AccountManager.getInstance().logoutAccount();
+                startActivity(new Intent(getActivity(), MainActivity.class));
                 getActivity().finish();
-                startActivity(new Intent(context, MainActivity.class));
             }
 
             @Override
-            public void onFailure(Call<NoDataResponse> call, Throwable t) {
-                Toast.makeText(context, ""+ t, Toast.LENGTH_SHORT).show();
+            public void onFailure(String errorMessage) {
+
             }
         });
     }
 
     private void loadUser(){
-        userApi.getUserInfo(userId).enqueue(new Callback<GetUserInfoResponse>() {
+        userApi.checkUserInfo().enqueue(new RetrofitCallBack<CheckUserInfoResponse>() {
             @Override
-            public void onResponse(Call<GetUserInfoResponse> call, Response<GetUserInfoResponse> response) {
-                GetUserInfoResponse responseBody = response.body();
-                if (responseBody.getCode() == 100){
-                    User user = responseBody.getData();
+            public void onSuccess(CheckUserInfoResponse response) {
+                if (response.getCode()  == 100){
+                    User user = response.getData();
                     nameTv.setText(user.getName());
                     pointTv.setText(""+user.getPoint());
                     String imageName = user.getAvatarImage();
@@ -167,7 +158,7 @@ public class ProfileFragment extends Fragment {
                     }
 
                     if (imageName != null && Objects.isNull(isLoginGoogle)){
-                        stfApi.getAvatar(imageName).enqueue(new Callback<ImageResponse>() {
+                        unAuthApi.getAvatar(imageName).enqueue(new Callback<ImageResponse>() {
                             @Override
                             public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                                 if (response.body().getCode() == 100){
@@ -180,7 +171,6 @@ public class ProfileFragment extends Fragment {
 
                             @Override
                             public void onFailure(Call<ImageResponse> call, Throwable t) {
-                                Log.d("err", "err--fail");
                             }
                         });
                     }
@@ -188,7 +178,7 @@ public class ProfileFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<GetUserInfoResponse> call, Throwable t) {
+            public void onFailure(String errorMessage) {
 
             }
         });

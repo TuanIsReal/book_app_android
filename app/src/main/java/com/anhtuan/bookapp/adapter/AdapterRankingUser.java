@@ -1,20 +1,18 @@
 package com.anhtuan.bookapp.adapter;
 
 import static com.anhtuan.bookapp.api.BookApi.bookApi;
-import static com.anhtuan.bookapp.api.STFApi.stfApi;
+import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.RowUserRankingBinding;
 import com.anhtuan.bookapp.domain.Book;
@@ -57,18 +55,18 @@ public class AdapterRankingUser extends RecyclerView.Adapter<AdapterRankingUser.
         holder.rankTv.setText(String.valueOf(position + 1));
         holder.bodyTv.setText(String.valueOf(value) + " Point");
         if (type == 1) {
-            userApi.getUserInfo(key).enqueue(new Callback<GetUserInfoResponse>() {
+            userApi.getUserInfo(key).enqueue(new RetrofitCallBack<GetUserInfoResponse>() {
                 @Override
-                public void onResponse(Call<GetUserInfoResponse> call, Response<GetUserInfoResponse> response) {
-                    if (response.body().getCode() == 100) {
-                        User user = response.body().getData();
+                public void onSuccess(GetUserInfoResponse response) {
+                    if (response.getCode() == 100) {
+                        User user = response.getData();
                         holder.nameTv.setText(user.getName());
                         String imageName = user.getAvatarImage();
                         Boolean isLoginGoogle = user.getGoogleLogin();
                         if (imageName != null && isLoginGoogle != null && isLoginGoogle) {
                             Glide.with(context).load(imageName).into(holder.avatar);
                         } else if (imageName != null) {
-                            stfApi.getThumbnail(imageName).enqueue(new Callback<ImageResponse>() {
+                            unAuthApi.getThumbnail(imageName).enqueue(new Callback<ImageResponse>() {
                                 @Override
                                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                                     if (response.body().getCode() == 100) {
@@ -89,20 +87,20 @@ public class AdapterRankingUser extends RecyclerView.Adapter<AdapterRankingUser.
                 }
 
                 @Override
-                public void onFailure(Call<GetUserInfoResponse> call, Throwable t) {
+                public void onFailure(String errorMessage) {
 
                 }
             });
         } else {
-            bookApi.getBookById(key).enqueue(new Callback<ViewBookResponse>() {
+            bookApi.getBookById(key).enqueue(new RetrofitCallBack<ViewBookResponse>() {
                 @Override
-                public void onResponse(Call<ViewBookResponse> call, Response<ViewBookResponse> response) {
-                    if (response.body().getCode() == 100) {
-                        Book book = response.body().getData();
+                public void onSuccess(ViewBookResponse response) {
+                    if (response.getCode() == 100) {
+                        Book book = response.getData();
                         holder.nameTv.setText(book.getBookName());
                         String imageName = book.getBookImage();
                         if (imageName != null) {
-                            stfApi.getThumbnail(imageName).enqueue(new Callback<ImageResponse>() {
+                            unAuthApi.getThumbnail(imageName).enqueue(new Callback<ImageResponse>() {
                                 @Override
                                 public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
                                     if (response.body().getCode() == 100) {
@@ -124,7 +122,7 @@ public class AdapterRankingUser extends RecyclerView.Adapter<AdapterRankingUser.
                 }
 
                 @Override
-                public void onFailure(Call<ViewBookResponse> call, Throwable t) {
+                public void onFailure(String errorMessage) {
 
                 }
             });
