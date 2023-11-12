@@ -1,5 +1,6 @@
 package com.anhtuan.bookapp.activity;
 
+import static com.anhtuan.bookapp.api.STFApi.stfApi;
 import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
@@ -220,28 +221,30 @@ public class RegisterActivity extends AppCompatActivity {
                             resource.compress(Bitmap.CompressFormat.JPEG, 50, stream);
                             RequestBody image = RequestBody.create(MediaType.parse("multipart/form-data"), stream.toByteArray());
                             MultipartBody.Part multipartBodyImage = MultipartBody.Part.createFormData("image", "", image);
-                            unAuthApi.updateAvatarImage(multipartBodyImage).enqueue(new Callback<NoDataResponse>() {
+                            stfApi.updateAvatarImage(multipartBodyImage).enqueue(new RetrofitCallBack<NoDataResponse>() {
                                 @Override
-                                public void onResponse(Call<NoDataResponse> call, Response<NoDataResponse> response) {
+                                public void onSuccess(NoDataResponse response) {
                                     progressDialog.dismiss();
-                                    NoDataResponse responseBody = response.body();
-                                    if (responseBody == null){
+                                    if (response == null){
+                                        sendDeviceToken(role);
                                         Toast.makeText(RegisterActivity.this, "Call Api lỗi", Toast.LENGTH_SHORT).show();
-                                    } else if (responseBody.getCode() == 106){
+                                    } else if (response.getCode() == 106){
+                                        sendDeviceToken(role);
                                         Toast.makeText(RegisterActivity.this, "Không tìm user được chọn", Toast.LENGTH_SHORT).show();
-                                    } else if (responseBody.getCode() == 108) {
+                                    } else if (response.getCode() == 108) {
+                                        sendDeviceToken(role);
                                         Toast.makeText(RegisterActivity.this, "File ảnh load lên server lỗi", Toast.LENGTH_SHORT).show();
-                                    }  else if (responseBody.getCode() == 100) {
+                                    }  else if (response.getCode() == 100) {
                                         sendDeviceToken(role);
                                     } else {
+                                        sendDeviceToken(role);
                                         Toast.makeText(RegisterActivity.this, "Lỗi không xác định", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
                                 @Override
-                                public void onFailure(Call<NoDataResponse> call, Throwable t) {
+                                public void onFailure(String errorMessage) {
                                     progressDialog.dismiss();
-                                    Toast.makeText(RegisterActivity.this, "Lỗi call API:"+t, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }

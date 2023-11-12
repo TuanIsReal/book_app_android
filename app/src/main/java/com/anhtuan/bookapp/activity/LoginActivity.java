@@ -132,12 +132,12 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 progressDialog.setMessage("Đang kiểm tra...");
                 LoginResponse loginResponse = response.body();
-                if (loginResponse.getCode() == 102) {
-                    progressDialog.dismiss();
-                    Toast.makeText(LoginActivity.this, "Email không tồn tại trên hệ thống", Toast.LENGTH_SHORT).show();
-                } else if (loginResponse.getCode() == 123) {
+                if (response.code() == 403) {
                     progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Mật khẩu chưa đúng", Toast.LENGTH_SHORT).show();
+                } else if (response.body().getCode() == 102) {
+                    progressDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, "Email không tồn tại trên hệ thống", Toast.LENGTH_SHORT).show();
                 } else if (loginResponse.getCode() == 100) {
                     LoginData loginData = (LoginData) loginResponse.getData();
                     AccountManager.getInstance().saveAccount(email, password);
@@ -242,19 +242,19 @@ public class LoginActivity extends AppCompatActivity {
                         GoogleLoginRequest request=new GoogleLoginRequest(user.getEmail(),"",user.getDisplayName(),new ApiAddress().getIPAddress(), user.getPhotoUrl().toString());
                         unAuthApi.loginGoogle(request).enqueue(new Callback<>() {
                             @Override
-                            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
 
                                     if (response.body() != null && response.body().getCode() == 100) {
-                                        RegisterData registerData = response.body().getData();
-                                        AccountManager.getInstance().saveAccount(email, "");
-                                        TokenManager.getInstance().saveToken(registerData.getToken(), registerData.getRefreshToken());
-                                        int role = registerData.getRole();
+                                        LoginData loginData = response.body().getData();
+                                        AccountManager.getInstance().saveAccount(user.getEmail(), "");
+                                        TokenManager.getInstance().saveToken(loginData.getToken(), loginData.getRefreshToken());
+                                        int role = loginData.getRole();
                                         mGoogleSignInClient.signOut();
                                         sendDeviceToken(role);
                                     }
                             }
                             @Override
-                            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                            public void onFailure(Call<LoginResponse> call, Throwable t) {
 
                             }
                         });

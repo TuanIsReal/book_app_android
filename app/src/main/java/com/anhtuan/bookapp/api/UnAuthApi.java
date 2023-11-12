@@ -52,7 +52,7 @@ public interface UnAuthApi {
     Call<RegisterResponse> register(@Body RegisterRequest registerRequest);
 
     @POST("user/google-login")
-    Call<RegisterResponse> loginGoogle(@Body GoogleLoginRequest googleLoginRequest);
+    Call<LoginResponse> loginGoogle(@Body GoogleLoginRequest googleLoginRequest);
 
     @GET("user/checkExistUser")
     Call<NoDataResponse> checkExistUser(@Query("email") String email);
@@ -76,10 +76,6 @@ public interface UnAuthApi {
 
     @GET("stf/getThumbnail")
     Call<ImageResponse> getThumbnail(@Query("thumbnailName") String thumbnailName);
-
-    @Multipart
-    @POST("stf/updateAvatarImage")
-    Call<NoDataResponse> updateAvatarImage(@Part MultipartBody.Part image);
 
     @GET("bookChapter/getBannedWord")
     Call<GetBannedWordResponse> getBannedWord(@Query("version") int version);

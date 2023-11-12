@@ -1,16 +1,13 @@
 package com.anhtuan.bookapp.config;
 
 public class Constant {
-    public static final String IP_SERVER = "http://192.168.1.9:8080/";
-    public static final String IP_SERVER_IMAGE = "http://192.168.1.9";
-    public static final String JPG = ".jpg";
+    public static final String IP_SERVER = "http://13.236.116.219:8080/";   //release
+    public static final String IP_SERVER_IMAGE = "http://13.236.116.219:9000";  //release
 
-    //ip Hai
-//    public static final String IP_SERVER = "http://192.168.43.143:8080/";
-    //ip cau
-//    public static final String IP_SERVER = "http://192.168.90.197:8080/";
-    // ip tuan
-//    public static final String IP_SERVER = "http://192.168.130.143:8080/";
+//    public static final String IP_SERVER = "http://192.168.1.9:8080/";   //local
+//    public static final String IP_SERVER_IMAGE = "http://192.168.1.9";  //local
+
+    public static final String JPG = ".jpg";
 
     public static final long A_DAY = 86400000;
 

@@ -36,11 +36,11 @@ public class TokenManager {
     }
 
     public String getToken() {
-        return preferences.getString(TOKEN, null);
+        return preferences.getString(TOKEN, "");
     }
 
     public String getRefreshToken() {
-        return preferences.getString(REFRESH_TOKEN, null);
+        return preferences.getString(REFRESH_TOKEN, "");
     }
 
     public void deleteToken() {
