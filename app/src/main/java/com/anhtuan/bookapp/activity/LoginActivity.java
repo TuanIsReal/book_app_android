@@ -132,7 +132,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 progressDialog.setMessage("Đang kiểm tra...");
                 LoginResponse loginResponse = response.body();
-                if (response.code() == 403) {
+                if (response.body() != null && response.body().getCode() == 122) {
+                    progressDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, "Tài khoản của bạn đã bị khóa!!! Liên hệ admin để có thêm thông tin", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 403) {
                     progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Mật khẩu chưa đúng", Toast.LENGTH_SHORT).show();
                 } else if (response.body().getCode() == 102) {
@@ -211,18 +214,12 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
-                Log.d(TAG, "code " + account.getIdToken());
             } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e);
             }
         }
     }
@@ -233,24 +230,22 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithCredential:success");
-
 
                         FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(LoginActivity.this,"Login Success ",Toast.LENGTH_SHORT).show();
                         GoogleLoginRequest request=new GoogleLoginRequest(user.getEmail(),"",user.getDisplayName(),new ApiAddress().getIPAddress(), user.getPhotoUrl().toString());
                         unAuthApi.loginGoogle(request).enqueue(new Callback<>() {
                             @Override
                             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
 
-                                    if (response.body() != null && response.body().getCode() == 100) {
-                                        LoginData loginData = response.body().getData();
-                                        AccountManager.getInstance().saveAccount(user.getEmail(), "");
-                                        TokenManager.getInstance().saveToken(loginData.getToken(), loginData.getRefreshToken());
-                                        int role = loginData.getRole();
-                                        mGoogleSignInClient.signOut();
-                                        sendDeviceToken(role);
+                                if (response.body() != null && response.code() == 122) {
+                                    Toast.makeText(LoginActivity.this, "Tài khoản của bạn đã bị khóa!!! Liên hệ admin để có thêm thông tin", Toast.LENGTH_SHORT).show();
+                                } else if (response.body() != null && response.body().getCode() == 100) {
+                                    LoginData loginData = response.body().getData();
+                                    AccountManager.getInstance().saveAccount(user.getEmail(), "");
+                                    TokenManager.getInstance().saveToken(loginData.getToken(), loginData.getRefreshToken());
+                                    int role = loginData.getRole();
+                                    mGoogleSignInClient.signOut();
+                                    sendDeviceToken(role);
                                     }
                             }
                             @Override

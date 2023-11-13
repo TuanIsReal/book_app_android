@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.anhtuan.bookapp.api.RetrofitCallBack;
+import com.anhtuan.bookapp.common.AccountManager;
+import com.anhtuan.bookapp.common.TokenManager;
 import com.anhtuan.bookapp.databinding.ActivityConfirmBuyBookBinding;
 import com.anhtuan.bookapp.response.BaseResponse;
 import com.anhtuan.bookapp.response.CheckUserInfoResponse;
@@ -64,7 +66,12 @@ public class ConfirmBuyBookActivity extends AppCompatActivity {
         userApi.checkUserInfo().enqueue(new RetrofitCallBack<CheckUserInfoResponse>() {
             @Override
             public void onSuccess(CheckUserInfoResponse response) {
-                if (response.getCode() == 100){
+                if (response.getCode() == 122){
+                    AccountManager.getInstance().logoutAccount();
+                    TokenManager.getInstance().deleteToken();
+                    startActivity(new Intent(ConfirmBuyBookActivity.this, MainActivity.class));
+                    finish();
+                } else if (response.getCode() == 100){
                     balance = response.getData().getPoint();
                     binding.balanceNum.setText(String.valueOf(balance));
                     binding.confirmBtn.setOnClickListener(new View.OnClickListener() {

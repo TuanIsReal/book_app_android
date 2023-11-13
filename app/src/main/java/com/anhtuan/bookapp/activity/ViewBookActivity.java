@@ -16,11 +16,14 @@ import android.widget.Toast;
 
 import com.anhtuan.bookapp.adapter.AdapterViewBook;
 import com.anhtuan.bookapp.api.RetrofitCallBack;
+import com.anhtuan.bookapp.common.AccountManager;
+import com.anhtuan.bookapp.common.TokenManager;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.ActivityViewBookBinding;
 import com.anhtuan.bookapp.domain.Book;
 import com.anhtuan.bookapp.domain.PurchasedBook;
 import com.anhtuan.bookapp.response.CheckPurchasedBookResponse;
+import com.anhtuan.bookapp.response.CheckUserInfoResponse;
 import com.anhtuan.bookapp.response.GetPurchasedBookResponse;
 import com.anhtuan.bookapp.response.GetUsernameResponse;
 import com.anhtuan.bookapp.response.ImageResponse;
@@ -62,6 +65,22 @@ public class ViewBookActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         bookId = intent.getStringExtra("bookId");
+
+        userApi.checkUserInfo().enqueue(new RetrofitCallBack<CheckUserInfoResponse>() {
+            @Override
+            public void onSuccess(CheckUserInfoResponse response) {
+                if (response.getCode() == 122 || response.getCode() == 106){
+                    AccountManager.getInstance().logoutAccount();
+                    TokenManager.getInstance().deleteToken();
+                    startActivity(new Intent(ViewBookActivity.this, MainActivity.class));
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+            }
+        });
 
         binding.returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override

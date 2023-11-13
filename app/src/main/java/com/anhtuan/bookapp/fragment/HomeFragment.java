@@ -2,6 +2,7 @@ package com.anhtuan.bookapp.fragment;
 
 import static com.anhtuan.bookapp.api.BookApi.bookApi;
 import static com.anhtuan.bookapp.api.UnAuthApi.unAuthApi;
+import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,16 +21,21 @@ import android.widget.TextView;
 
 import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.activity.ListBookFilterActivity;
+import com.anhtuan.bookapp.activity.MainActivity;
 import com.anhtuan.bookapp.activity.SearchBookUserActivity;
+import com.anhtuan.bookapp.activity.SplashActivity;
 import com.anhtuan.bookapp.activity.ViewBookActivity;
 import com.anhtuan.bookapp.adapter.AdapterMostBuyBook;
 import com.anhtuan.bookapp.adapter.AdapterMostReviewBook;
 import com.anhtuan.bookapp.adapter.AdapterNewBook;
 import com.anhtuan.bookapp.adapter.AdapterRecommendBook;
 import com.anhtuan.bookapp.api.RetrofitCallBack;
+import com.anhtuan.bookapp.common.AccountManager;
+import com.anhtuan.bookapp.common.TokenManager;
 import com.anhtuan.bookapp.common.Utils;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.domain.Book;
+import com.anhtuan.bookapp.response.CheckUserInfoResponse;
 import com.anhtuan.bookapp.response.GetBookResponse;
 import com.anhtuan.bookapp.response.ImageResponse;
 import com.bumptech.glide.Glide;
@@ -68,10 +74,25 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
         view = inflater.inflate(R.layout.fragment_home, container, false);
         initView();
 
+        userApi.checkUserInfo().enqueue(new RetrofitCallBack<CheckUserInfoResponse>() {
+            @Override
+            public void onSuccess(CheckUserInfoResponse response) {
+                if (response.getCode() == 122 || response.getCode() == 106){
+                    AccountManager.getInstance().logoutAccount();
+                    TokenManager.getInstance().deleteToken();
+                    Intent intent = new Intent(view.getContext(), MainActivity.class);
+                    view.getContext().startActivity(intent);
+                    getActivity().finish();
+                }
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+            }
+        });
+
         newBook = new Book();
         loadNewBook();
-
-
 
         searchBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,5 +1,8 @@
 package com.anhtuan.bookapp.fragment;
 
+import static com.anhtuan.bookapp.api.UserApi.userApi;
+
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.core.view.WindowCompat;
@@ -10,7 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.anhtuan.bookapp.R;
+import com.anhtuan.bookapp.activity.MainActivity;
 import com.anhtuan.bookapp.adapter.AdapterUserBookLibrary;
+import com.anhtuan.bookapp.api.RetrofitCallBack;
+import com.anhtuan.bookapp.common.AccountManager;
+import com.anhtuan.bookapp.common.TokenManager;
+import com.anhtuan.bookapp.response.CheckUserInfoResponse;
 import com.google.android.material.tabs.TabLayout;
 
 
@@ -34,6 +42,23 @@ public class UserBookLibraryFragment extends Fragment {
         AdapterUserBookLibrary adapter = new AdapterUserBookLibrary(getChildFragmentManager(), 2);
         viewPager.setAdapter(adapter);
         tab.setupWithViewPager(viewPager);
+
+        userApi.checkUserInfo().enqueue(new RetrofitCallBack<CheckUserInfoResponse>() {
+            @Override
+            public void onSuccess(CheckUserInfoResponse response) {
+                if (response.getCode() == 122 || response.getCode() == 106){
+                    AccountManager.getInstance().logoutAccount();
+                    TokenManager.getInstance().deleteToken();
+                    Intent intent = new Intent(view.getContext(), MainActivity.class);
+                    view.getContext().startActivity(intent);
+                    getActivity().finish();
+                }
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+            }
+        });
 
         return view;
     }

@@ -21,6 +21,7 @@ import com.anhtuan.bookapp.activity.BalanceChangeActivity;
 import com.anhtuan.bookapp.activity.IncomeActivity;
 import com.anhtuan.bookapp.activity.MainActivity;
 import com.anhtuan.bookapp.activity.SettingActivity;
+import com.anhtuan.bookapp.activity.SplashActivity;
 import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.common.AccountManager;
 import com.anhtuan.bookapp.common.TokenManager;
@@ -142,7 +143,14 @@ public class ProfileFragment extends Fragment {
         userApi.checkUserInfo().enqueue(new RetrofitCallBack<CheckUserInfoResponse>() {
             @Override
             public void onSuccess(CheckUserInfoResponse response) {
-                if (response.getCode()  == 100){
+                if (response.getCode() == 122){
+                    AccountManager.getInstance().logoutAccount();
+                    TokenManager.getInstance().deleteToken();
+                    Intent intent = new Intent(view.getContext(), MainActivity.class);
+                    view.getContext().startActivity(intent);
+                    getActivity().finish();
+
+                } else if (response.getCode() == 100){
                     User user = response.getData();
                     nameTv.setText(user.getName());
                     pointTv.setText(""+user.getPoint());

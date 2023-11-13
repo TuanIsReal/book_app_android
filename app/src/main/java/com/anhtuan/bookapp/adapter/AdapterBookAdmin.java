@@ -108,7 +108,6 @@ public class AdapterBookAdmin extends RecyclerView.Adapter<AdapterBookAdmin.Hold
                 @Override
                 public void onFailure(Call<ImageResponse> call, Throwable t) {
                     holder.progressBar.setVisibility(View.GONE);
-                    Log.d("err", "err--fail");
                 }
             });
         }

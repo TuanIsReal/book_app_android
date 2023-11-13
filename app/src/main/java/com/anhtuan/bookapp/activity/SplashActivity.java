@@ -90,7 +90,9 @@ public class SplashActivity extends AppCompatActivity {
         userApi.checkUserInfo().enqueue(new RetrofitCallBack<CheckUserInfoResponse>() {
             @Override
             public void onSuccess(CheckUserInfoResponse response) {
-                if (response.getCode() == 106){
+                if (response.getCode() == 122 || response.getCode() == 106){
+                    AccountManager.getInstance().logoutAccount();
+                    TokenManager.getInstance().deleteToken();
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     finish();
                 } else {
