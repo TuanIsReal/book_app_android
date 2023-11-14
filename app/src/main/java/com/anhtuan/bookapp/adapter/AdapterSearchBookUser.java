@@ -63,51 +63,23 @@ public class AdapterSearchBookUser extends RecyclerView.Adapter<AdapterSearchBoo
         long time = book.getUploadTime();
         List<String> category = book.getBookCategory();
 
-        //
         holder.bookNameTv.setText(bookName);
-        userApi.getUsername(author).enqueue(new RetrofitCallBack<GetUsernameResponse>() {
-            @Override
-            public void onSuccess(GetUsernameResponse response) {
-                if (response.getCode() == 100){
-                    holder.authorTv.setText(response.getData());
-                }
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-
-            }
-        });
+        holder.authorTv.setText(author);
         holder.priceTv.setText(Integer.toString(price));
         holder.starTv.setText(Double.toString(star));
         holder.dateTv.setText(Utils.covertLongToTimeString(System.currentTimeMillis() - time));
         holder.categoryTv.setText(Utils.toStringCategory(category));
         String bookImage = book.getBookImage();
 
-        if (bookImage.isBlank()){
-            holder.progressBar.setVisibility(View.GONE);
-        } else {
-            unAuthApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
-                @Override
-                public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
-                    holder.progressBar.setVisibility(View.GONE);
-                    if (response.body().getCode() == 100){
-                        String path = Constant.IP_SERVER_IMAGE + response.body().getData();
-                        Glide.with(context)
-                                .load(path)
-                                .signature(new ObjectKey(path))
-                                .into(holder.imageView);
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<ImageResponse> call, Throwable t) {
-                    holder.progressBar.setVisibility(View.GONE);
-                    Log.d("err", "err--fail");
-                }
-            });
+        if (!bookImage.isBlank()){
+            String path = Constant.IP_SERVER_IMAGE + bookImage;
+            Glide.with(context)
+                    .load(path)
+                    .signature(new ObjectKey(path))
+                    .into(holder.imageView);
         }
+
+        holder.progressBar.setVisibility(View.GONE);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

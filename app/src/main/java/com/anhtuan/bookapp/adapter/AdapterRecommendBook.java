@@ -34,8 +34,7 @@ public class AdapterRecommendBook extends RecyclerView.Adapter<AdapterRecommendB
     public ColumnRecommendBookBinding binding;
 
 
-    public AdapterRecommendBook(Context context, List<Book> bookList) {
-        this.context = context;
+    public AdapterRecommendBook(List<Book> bookList) {
         this.bookList = bookList;
     }
 
@@ -43,6 +42,7 @@ public class AdapterRecommendBook extends RecyclerView.Adapter<AdapterRecommendB
     @NonNull
     @Override
     public HolderRecommendBook onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        this.context = parent.getContext();
         binding = ColumnRecommendBookBinding.inflate(LayoutInflater.from(context), parent, false);
         return new HolderRecommendBook(binding.getRoot());
     }
@@ -55,23 +55,11 @@ public class AdapterRecommendBook extends RecyclerView.Adapter<AdapterRecommendB
         holder.recommendCategoryTv.setText(Utils.toStringCategory(book.getBookCategory()));
 
         if (bookImage != null && !bookImage.isBlank()){
-            unAuthApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
-                @Override
-                public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
-                    if (response.body().getCode() == 100){
-                        String path = Constant.IP_SERVER_IMAGE + response.body().getData();
-                        Glide.with(context)
-                                .load(path)
-                                .signature(new ObjectKey(path))
-                                .into(holder.recommendImageIv);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ImageResponse> call, Throwable t) {
-
-                }
-            });
+            String path = Constant.IP_SERVER_IMAGE + bookImage;
+            Glide.with(context)
+                    .load(path)
+                    .signature(new ObjectKey(path))
+                    .into(holder.recommendImageIv);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

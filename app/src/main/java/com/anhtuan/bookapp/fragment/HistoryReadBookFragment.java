@@ -63,7 +63,7 @@ public class HistoryReadBookFragment extends Fragment {
                     Toast.makeText(view.getContext(), "user khong ton tai", Toast.LENGTH_SHORT).show();
                 } else if (response.getCode() == 100) {
                     bookList = response.getData();
-                    adapter = new AdapterHistoryReadBook(view.getContext(), bookList);
+                    adapter = new AdapterHistoryReadBook(bookList);
                     booksRv.setAdapter(adapter);
                 }
             }

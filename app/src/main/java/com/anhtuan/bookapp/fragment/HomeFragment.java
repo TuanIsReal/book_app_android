@@ -188,7 +188,7 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
                     if (newBookList.size() > 0){
                         setNewBookInfo(newBookList.get(0));
                     }
-                    adapterNewBook = new AdapterNewBook(view.getContext(), newBookList);
+                    adapterNewBook = new AdapterNewBook(newBookList);
                     newBookRv.setAdapter(adapterNewBook);
                     adapterNewBook.setNewBookListener(HomeFragment.this);
 
@@ -218,23 +218,11 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
         ratingBarNew.setRating((float) book.getStar());
 
         if (book.getBookImage() != null && !book.getBookImage().isBlank()){
-            unAuthApi.getThumbnail(book.getBookImage()).enqueue(new Callback<ImageResponse>() {
-                @Override
-                public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
-                    if (response.body().getCode() == 100){
-                        String path = Constant.IP_SERVER_IMAGE + response.body().getData();
-                        Glide.with(view.getContext())
-                                .load(path)
-                                .signature(new ObjectKey(path))
-                                .into(imageBookNew);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ImageResponse> call, Throwable t) {
-
-                }
-            });
+            String path = Constant.IP_SERVER_IMAGE + book.getBookImage();
+            Glide.with(view.getContext())
+                    .load(path)
+                    .signature(new ObjectKey(path))
+                    .into(imageBookNew);
         } else {
             imageBookNew.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.logo));
         }
@@ -246,7 +234,7 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
             public void onSuccess(GetBookResponse response) {
                 if (response != null && response.getCode() == 100){
                     recommendBookList = response.getData();
-                    adapterRecommendBook = new AdapterRecommendBook(view.getContext(), recommendBookList);
+                    adapterRecommendBook = new AdapterRecommendBook(recommendBookList);
                     recommendBooksRv.setAdapter(adapterRecommendBook);
                     loadMostBuyBook();
 
@@ -266,7 +254,7 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
             public void onSuccess(GetBookResponse response) {
                 if (response != null && response.getCode() == 100){
                     mostBuyBookList = response.getData();
-                    adapterMostBuyBook = new AdapterMostBuyBook(view.getContext(), mostBuyBookList);
+                    adapterMostBuyBook = new AdapterMostBuyBook(mostBuyBookList);
                     mostBuyRv.setAdapter(adapterMostBuyBook);
                     loadMostReviewBook();
                 }
@@ -285,7 +273,7 @@ public class HomeFragment extends Fragment implements AdapterNewBook.NewBookList
             public void onSuccess(GetBookResponse response) {
                 if (response != null && response.getCode() == 100){
                     mostReviewBook = response.getData();
-                    adapterMostReviewBook = new AdapterMostReviewBook(view.getContext(), mostReviewBook);
+                    adapterMostReviewBook = new AdapterMostReviewBook(mostReviewBook);
                     mostReviewRv.setAdapter(adapterMostReviewBook);
 
                 }

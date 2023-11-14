@@ -39,14 +39,14 @@ public class AdapterHistoryReadBook extends RecyclerView.Adapter<AdapterHistoryR
     public List<UserBookLibrary> bookList;
     public RowUserBookLibraryBinding binding;
 
-    public AdapterHistoryReadBook(Context context, List<UserBookLibrary> bookList) {
-        this.context = context;
+    public AdapterHistoryReadBook(List<UserBookLibrary> bookList) {
         this.bookList = bookList;
     }
 
     @NonNull
     @Override
     public HolderHistoryReadBookLibrary onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        this.context = parent.getContext();
         binding = RowUserBookLibraryBinding.inflate(LayoutInflater.from(context), parent, false);
         return new HolderHistoryReadBookLibrary(binding.getRoot());
     }
@@ -63,29 +63,15 @@ public class AdapterHistoryReadBook extends RecyclerView.Adapter<AdapterHistoryR
         holder.bookNameTv.setText(bookName);
         holder.lastReadTv.setText("Đã đọc " + lastRead + "/" + totalChapter);
 
-        if (bookImage.isBlank()){
-            holder.progressBar.setVisibility(View.GONE);
-        } else {
-            unAuthApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
-                @Override
-                public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
-                    holder.progressBar.setVisibility(View.GONE);
-                    if (response.body().getCode() == 100){
-                        String path = Constant.IP_SERVER_IMAGE + response.body().getData();
-                        Glide.with(context)
-                                .load(path)
-                                .signature(new ObjectKey(path))
-                                .into(holder.imageView);
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<ImageResponse> call, Throwable t) {
-                    holder.progressBar.setVisibility(View.GONE);
-                }
-            });
+        if (!bookImage.isBlank()){
+            String path = Constant.IP_SERVER_IMAGE + bookImage;
+            Glide.with(context)
+                    .load(path)
+                    .signature(new ObjectKey(path))
+                    .into(holder.imageView);
         }
+
+        holder.progressBar.setVisibility(View.GONE);
 
         holder.unShowBtn.setOnClickListener(new View.OnClickListener() {
             @Override

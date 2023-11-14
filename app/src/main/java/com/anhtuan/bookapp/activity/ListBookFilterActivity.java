@@ -323,7 +323,7 @@ public class ListBookFilterActivity extends AppCompatActivity implements Adapter
             }
         });
 
-        adapterBookFilter = new AdapterBookFilter(ListBookFilterActivity.this, listBookFilter);
+        adapterBookFilter = new AdapterBookFilter(listBookFilter);
         binding.booksRv.setAdapter(adapterBookFilter);
     }
 

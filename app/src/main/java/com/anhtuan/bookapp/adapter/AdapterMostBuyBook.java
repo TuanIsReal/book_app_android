@@ -30,8 +30,7 @@ public class AdapterMostBuyBook extends RecyclerView.Adapter<AdapterMostBuyBook.
     public ColumnMostBuyBookBinding binding;
 
 
-    public AdapterMostBuyBook(Context context, List<Book> bookList) {
-        this.context = context;
+    public AdapterMostBuyBook(List<Book> bookList) {
         this.bookList = bookList;
     }
 
@@ -39,6 +38,7 @@ public class AdapterMostBuyBook extends RecyclerView.Adapter<AdapterMostBuyBook.
     @NonNull
     @Override
     public HolderMostBuyBook onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        this.context = parent.getContext();
         binding = ColumnMostBuyBookBinding.inflate(LayoutInflater.from(context), parent, false);
         return new HolderMostBuyBook(binding.getRoot());
     }
@@ -51,23 +51,11 @@ public class AdapterMostBuyBook extends RecyclerView.Adapter<AdapterMostBuyBook.
         holder.purchaseNumber.setText(String.valueOf(book.getTotalPurchased()));
 
         if (bookImage != null && !bookImage.isBlank()){
-            unAuthApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
-                @Override
-                public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
-                    if (response.body().getCode() == 100){
-                        String path = Constant.IP_SERVER_IMAGE + response.body().getData();
-                        Glide.with(context)
-                                .load(path)
-                                .signature(new ObjectKey(path))
-                                .into(holder.bookImage);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ImageResponse> call, Throwable t) {
-
-                }
-            });
+            String path = Constant.IP_SERVER_IMAGE + bookImage;
+            Glide.with(context)
+                    .load(path)
+                    .signature(new ObjectKey(path))
+                    .into(holder.bookImage);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
