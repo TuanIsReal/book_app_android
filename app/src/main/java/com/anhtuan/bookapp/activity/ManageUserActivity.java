@@ -1,6 +1,5 @@
 package com.anhtuan.bookapp.activity;
 
-import static com.anhtuan.bookapp.api.BookApi.bookApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,40 +11,30 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Toast;
-import com.anhtuan.bookapp.adapter.AdapterBookAdmin;
+
+import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.common.AccountManager;
 import com.anhtuan.bookapp.common.TokenManager;
-import com.anhtuan.bookapp.databinding.ActivityManageBookBinding;
-import com.anhtuan.bookapp.domain.Book;
-import com.anhtuan.bookapp.response.CheckUserInfoResponse;
+import com.anhtuan.bookapp.databinding.ActivityManageUserBinding;
+import com.anhtuan.bookapp.domain.User;
 import com.anhtuan.bookapp.response.NoDataResponse;
-import com.anhtuan.bookapp.response.SearchBookResponse;
+import com.anhtuan.bookapp.response.SearchUserResponse;
 
-import java.util.ArrayList;
+import java.util.List;
 
+public class ManageUserActivity extends AppCompatActivity {
 
-public class ManageBookActivity extends AppCompatActivity {
-
-    private ActivityManageBookBinding binding;
-
-    private ArrayList<Book> books;
-
-    private AdapterBookAdmin adapterBookAdmin;
-    public static final long TIME_INTERVAL = 3000;
-    long backPressed;
+    ActivityManageUserBinding binding;
+    List<User> users;
     String text = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        binding = ActivityManageBookBinding.inflate(getLayoutInflater());
+        binding = ActivityManageUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        loadTitle();
-        loadBooks(text);
 
         binding.searchEt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -60,7 +49,7 @@ public class ManageBookActivity extends AppCompatActivity {
                 } else {
                     text = "";
                 }
-                loadBooks(text);
+                loadUsers(text);
             }
 
             @Override
@@ -72,22 +61,15 @@ public class ManageBookActivity extends AppCompatActivity {
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadBooks(text);
+                loadUsers(text);
             }
         });
 
         binding.manageCategoryTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ManageBookActivity.this, DashboardAdminActivity.class));
+                startActivity(new Intent(ManageUserActivity.this, DashboardAdminActivity.class));
                 finish();
-            }
-        });
-
-        binding.addBookBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ManageBookActivity.this, BookAddActivity.class));
             }
         });
 
@@ -101,7 +83,7 @@ public class ManageBookActivity extends AppCompatActivity {
         binding.manageRequestTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ManageBookActivity.this, ManageRequestBookActivity.class));
+                startActivity(new Intent(ManageUserActivity.this, ManageRequestBookActivity.class));
                 finish();
             }
         });
@@ -109,44 +91,31 @@ public class ManageBookActivity extends AppCompatActivity {
         binding.manageStatTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ManageBookActivity.this, StatisticalActivity.class));
+                startActivity(new Intent(ManageUserActivity.this, StatisticalActivity.class));
                 finish();
             }
         });
     }
 
-    private void loadBooks(String text) {
-        bookApi.searchBook(text).enqueue(new RetrofitCallBack<SearchBookResponse>() {
+    private void loadUsers(String text) {
+        userApi.searchUser(text).enqueue(new RetrofitCallBack<SearchUserResponse>() {
             @Override
-            public void onSuccess(SearchBookResponse response) {
+            public void onSuccess(SearchUserResponse response) {
                 binding.swipeRefresh.setRefreshing(false);
-                if (response.getCode() == 100){
-                    books = response.getData();
-                    adapterBookAdmin = new AdapterBookAdmin(books);
-                    binding.booksRv.setAdapter(adapterBookAdmin);
+                if (response != null) {
+                    if (response.getCode() == 100) {
+                        users = response.getData();
+                    }
                 }
             }
 
             @Override
             public void onFailure(String errorMessage) {
-                binding.swipeRefresh.setRefreshing(false);
-            }
-        });
-    }
-
-    private void loadTitle() {
-        userApi.checkUserInfo().enqueue(new RetrofitCallBack<CheckUserInfoResponse>() {
-            @Override
-            public void onSuccess(CheckUserInfoResponse response) {
-                binding.subTitileTv.setText(response.getData().getName());
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
 
             }
         });
     }
+
 
     private void logout(){
         userApi.logout().enqueue(new RetrofitCallBack<NoDataResponse>() {
@@ -154,7 +123,7 @@ public class ManageBookActivity extends AppCompatActivity {
             public void onSuccess(NoDataResponse response) {
                 TokenManager.getInstance().deleteToken();
                 AccountManager.getInstance().logoutAccount();
-                startActivity(new Intent(ManageBookActivity.this, MainActivity.class));
+                startActivity(new Intent(ManageUserActivity.this, MainActivity.class));
                 finish();
             }
 
@@ -163,16 +132,5 @@ public class ManageBookActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (backPressed + TIME_INTERVAL > System.currentTimeMillis()){
-            super.onBackPressed();
-            return;
-        } else {
-            Toast.makeText(ManageBookActivity.this, "Quay lại lần nữa để thoát", Toast.LENGTH_SHORT).show();
-        }
-        backPressed = System.currentTimeMillis();
     }
 }

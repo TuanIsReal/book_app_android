@@ -1,6 +1,8 @@
 package com.anhtuan.bookapp.domain;
 
-public class BookChapter {
+import java.io.Serializable;
+
+public class BookChapter implements Serializable {
     private String id;
 
     private String bookId;

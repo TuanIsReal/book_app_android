@@ -92,6 +92,14 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
 
+        binding.manageUserTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(DashboardAdminActivity.this, ManageUserActivity.class));
+            }
+        });
+
         binding.manageStatTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

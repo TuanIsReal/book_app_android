@@ -13,6 +13,7 @@ import com.anhtuan.bookapp.response.GetUsernameResponse;
 import com.anhtuan.bookapp.response.LoginResponse;
 import com.anhtuan.bookapp.response.RegisterResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
+import com.anhtuan.bookapp.response.SearchUserResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -53,6 +54,9 @@ public interface UserApi extends BaseApi{
 
     @GET("checkUserLogged")
     Call<CheckLoggedResponse> checkUserLogged(@Query("ip") String ip);
+
+    @GET("searchUser")
+    Call<SearchUserResponse> searchUser(@Query("key") String key);
 
     @POST("updatePassword")
     Call<NoDataResponse> updatePassword(@Query("password") String password,

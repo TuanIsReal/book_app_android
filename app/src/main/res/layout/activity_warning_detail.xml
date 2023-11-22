@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.WarningDetailActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbarRl"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/blue">
+
+        <ImageButton
+            android:id="@+id/returnBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_back_white"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="10dp"
+            android:padding="10dp"
+            android:background="@android:color/transparent"/>
+
+        <TextView
+            android:id="@+id/toolbarTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:text="Chi tiết chương"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textSize="20dp"
+            android:gravity="center|center"/>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/contentSv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbarRl"
+        android:background="@color/white"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/bookNameCheckText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="5dp"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textSize="16dp"
+                android:text="Truyện tương đồng: "
+                android:maxLines="2"/>
+
+            <TextView
+                android:id="@+id/bookNameCheck"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:layout_toEndOf="@id/bookNameCheckText"
+                android:text=""
+                android:maxLines="2"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/chapterNameCheckText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/bookNameCheckText"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="5dp"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textSize="16dp"
+                android:text="Chương tương đồng: "
+                android:maxLines="2"/>
+
+            <TextView
+                android:id="@+id/chapterNameCheck"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:layout_below="@id/bookNameCheckText"
+                android:layout_toEndOf="@id/chapterNameCheckText"
+                android:text=""
+                android:maxLines="1"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/bookNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="5dp"
+                android:layout_below="@id/chapterNameCheck"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textSize="16dp"
+                android:text="Truyện kiểm tra: "
+                android:maxLines="2"/>
+
+            <TextView
+                android:id="@+id/bookName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:layout_below="@id/chapterNameCheck"
+                android:layout_toEndOf="@id/bookNameText"
+                android:text=""
+                android:maxLines="2"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/authorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/bookNameText"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="15dp"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textSize="16dp"
+                android:text="Tác giả: "
+                android:maxLines="2"/>
+
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:layout_below="@id/bookNameText"
+                android:layout_toEndOf="@id/authorText"
+                android:text=""
+                android:maxLines="1"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/chapterNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/authorText"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="15dp"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textSize="16dp"
+                android:text="Chương kiểm tra: "
+                android:maxLines="2"/>
+
+            <TextView
+                android:id="@+id/chapterName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:layout_below="@id/authorText"
+                android:layout_toEndOf="@id/chapterNameText"
+                android:text=""
+                android:maxLines="1"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/contentText"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chapterNameText"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="15dp"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:textSize="16dp"
+                android:text="Nội dung: "
+                android:maxLines="2"/>
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:textSize="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_below="@id/contentText"
+                android:layout_height="match_parent"
+                android:textIsSelectable="false"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/content"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="100dp">
+
+                <Button
+                    android:id="@+id/goodBtn"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_button2"
+                    android:text="Không vi phạm"
+                    android:layout_marginLeft="40dp"/>
+
+                <Button
+                    android:id="@+id/notGoodBtn"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_button5"
+                    android:layout_alignParentRight="true"
+                    android:text="Vi phạm"
+                    android:layout_marginRight="40dp"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

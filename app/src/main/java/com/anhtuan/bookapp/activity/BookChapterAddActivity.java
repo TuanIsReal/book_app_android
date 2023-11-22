@@ -98,7 +98,7 @@ public class BookChapterAddActivity extends AppCompatActivity {
                                     } else if (response.getCode() == 108) {
                                         Toast.makeText(BookChapterAddActivity.this, "data truyền bị lỗi", Toast.LENGTH_SHORT).show();
                                     }  else if (response.getCode() == 100) {
-                                        Toast.makeText(BookChapterAddActivity.this, "Thêm chương thành công", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(BookChapterAddActivity.this, "Đã yêu cầu thêm chương thành công", Toast.LENGTH_SHORT).show();
                                         binding.chapterNumberEt.setText("");
                                         binding.chapterNameEt.setText("");
                                         binding.chapterContentEt.setText("");

@@ -25,6 +25,12 @@
         android:windowFullscreen="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.WarningDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ManageUserActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ManageWarningActivity"
             android:exported="false" />
         <activity

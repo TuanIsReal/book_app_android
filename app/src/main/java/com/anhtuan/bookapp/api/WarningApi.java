@@ -26,6 +26,6 @@ public interface WarningApi extends BaseApi{
     Call<GetWarningListResponse> getWarningList();
 
     @POST("reactWarning")
-    Call<NoDataResponse> getBookImage(@Query("chapter") String chapter,
+    Call<NoDataResponse> reactWarning(@Query("chapter") String chapter,
                                       @Query("react") int react);
 }

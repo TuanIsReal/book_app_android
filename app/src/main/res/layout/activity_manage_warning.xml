@@ -42,38 +42,44 @@
             android:background="@android:color/transparent"/>
 
         <TextView
+        android:id="@+id/manageCategoryTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/subTitileTv"
+        android:layout_toEndOf="@id/manageBookTv"
+        android:layout_marginTop="5dp"
+        android:text="Loại sách"
+        android:textStyle="bold"
+        android:textSize="14dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/white"/>
+
+        <TextView
             android:id="@+id/manageBookTv"
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/subTitileTv"
-            android:layout_toEndOf="@id/manageCategoryTv"
+            android:layout_toEndOf="@id/manageUserTV"
+            android:layout_marginEnd="15dp"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp"
             android:text="Sách"
             android:textStyle="bold"
             android:textSize="14dp"
-            android:layout_marginBottom="10dp"
             android:textColor="@color/white"/>
 
         <TextView
-            android:id="@+id/manageCategoryTv"
-            android:layout_width="80dp"
+            android:id="@+id/manageUserTV"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/subTitileTv"
-            android:layout_toEndOf="@id/centerTV"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="20dp"
-            android:text="Loại sách"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_below="@id/subTitileTv"
+            android:layout_centerHorizontal="true"
+            android:text="Người dùng"
             android:textStyle="bold"
             android:textSize="14dp"
             android:textColor="@color/white"/>
-
-        <TextView
-            android:id="@+id/centerTV"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/subTitileTv"
-            android:layout_centerHorizontal="true"/>
 
         <TextView
             android:id="@+id/manageStatTv"
@@ -81,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/subTitileTv"
             android:layout_marginTop="5dp"
-            android:layout_toStartOf="@id/centerTV"
+            android:layout_toStartOf="@id/manageUserTV"
             android:text="Thống kê"
             android:textColor="@color/white"
             android:textSize="14dp"
@@ -89,7 +95,7 @@
 
         <TextView
             android:id="@+id/manageRequestTv"
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/subTitileTv"
             android:layout_marginTop="5dp"

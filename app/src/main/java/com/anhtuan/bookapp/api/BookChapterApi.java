@@ -41,6 +41,9 @@ public interface BookChapterApi extends BaseApi{
     Call<GetChapterContentResponse> getChapterContent(@Query("bookId") String bookId,
                                                @Query("chapterNumber") int chapterNumber);
 
+    @GET("getChapterContentById")
+    Call<GetChapterContentResponse> getChapterContentById(@Query("chapterId") String chapterId);
+
     @GET("getChapterInfo")
     Call<GetChapterResponse> getChapterInfo(@Query("chapterId") String chapterId);
 

@@ -41,16 +41,15 @@ public class AdapterBookAdmin extends RecyclerView.Adapter<AdapterBookAdmin.Hold
     private RowBookAdminBinding binding;
 
 
-    public AdapterBookAdmin(Context context, ArrayList<Book> books) {
-        this.context = context;
+    public AdapterBookAdmin(ArrayList<Book> books) {
         this.books = books;
     }
 
     @NonNull
     @Override
     public HolderBookAdmin onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        this.context = parent.getContext();
         binding = RowBookAdminBinding.inflate(LayoutInflater.from(context), parent, false);
-
         return new HolderBookAdmin(binding.getRoot());
     }
 
@@ -68,19 +67,7 @@ public class AdapterBookAdmin extends RecyclerView.Adapter<AdapterBookAdmin.Hold
         //
         holder.bookNameTv.setText(bookName);
         holder.introductionTv.setText(introduction);
-        userApi.getUsername(author).enqueue(new RetrofitCallBack<GetUsernameResponse>() {
-            @Override
-            public void onSuccess(GetUsernameResponse response) {
-                if (response.getCode() == 100){
-                    holder.authorTv.setText(response.getData());
-                }
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-
-            }
-        });
+        holder.authorTv.setText(author);
 
         holder.priceTv.setText(Integer.toString(price));
         holder.starTv.setText(Double.toString(star));
@@ -91,25 +78,12 @@ public class AdapterBookAdmin extends RecyclerView.Adapter<AdapterBookAdmin.Hold
         if (bookImage.isBlank()){
             holder.progressBar.setVisibility(View.GONE);
         } else {
-            unAuthApi.getThumbnail(bookImage).enqueue(new Callback<ImageResponse>() {
-                @Override
-                public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
-                    holder.progressBar.setVisibility(View.GONE);
-                    if (response.body().getCode() == 100){
-                        String path = Constant.IP_SERVER_IMAGE + response.body().getData();
-                        Glide.with(context)
-                                .load(path)
-                                .signature(new ObjectKey(path))
-                                .into(holder.imageView);
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<ImageResponse> call, Throwable t) {
-                    holder.progressBar.setVisibility(View.GONE);
-                }
-            });
+            String path = Constant.IP_SERVER_IMAGE + bookImage;
+            Glide.with(context)
+                    .load(path)
+                    .signature(new ObjectKey(path))
+                    .into(holder.imageView);
+            holder.progressBar.setVisibility(View.GONE);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

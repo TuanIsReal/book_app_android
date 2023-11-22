@@ -1,11 +1,11 @@
 package com.anhtuan.bookapp.config;
 
 public class Constant {
-    public static final String IP_SERVER = "http://13.236.116.219:8080/";   //release
-    public static final String IP_SERVER_IMAGE = "http://13.236.116.219:9000";  //release
+//    public static final String IP_SERVER = "http://13.236.116.219:8080/";   //release
+//    public static final String IP_SERVER_IMAGE = "http://13.236.116.219:9000";  //release
 
-//    public static final String IP_SERVER = "http://192.168.1.9:8080/";   //local
-//    public static final String IP_SERVER_IMAGE = "http://192.168.1.9";  //local
+    public static final String IP_SERVER = "http://192.168.1.9:8080/";   //local
+    public static final String IP_SERVER_IMAGE = "http://192.168.1.9";  //local
 
     public static final String JPG = ".jpg";
 
@@ -19,6 +19,11 @@ public class Constant {
     public class ReactUpBookRequest{
         public static final int REJECT = 0;
         public static final int ACCEPT = 1;
+    }
+
+    public class ReactWarning{
+        public static final int GOOD = 1;
+        public static final int NOT_GOOD = -1;
     }
 
     public class StatusBookRequestUp{

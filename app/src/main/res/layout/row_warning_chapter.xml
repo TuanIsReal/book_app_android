@@ -34,18 +34,6 @@
             android:layout_alignParentLeft="true"
             android:maxLines="1"/>
 
-
-        <TextView
-            android:id="@+id/categoryTv"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            style="@style/TextAppearance.MaterialComponents.Caption"
-            android:text="Loại sách"
-            android:textAlignment="textEnd"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:maxLines="1"/>
-
         <TextView
             android:id="@+id/authorTv"
             android:layout_width="wrap_content"

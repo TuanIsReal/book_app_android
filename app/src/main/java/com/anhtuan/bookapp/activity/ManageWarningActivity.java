@@ -3,12 +3,14 @@ package com.anhtuan.bookapp.activity;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 import static com.anhtuan.bookapp.api.WarningApi.warningApi;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import com.anhtuan.bookapp.adapter.AdapterManageWarning;
 import com.anhtuan.bookapp.api.RetrofitCallBack;
@@ -16,17 +18,19 @@ import com.anhtuan.bookapp.common.AccountManager;
 import com.anhtuan.bookapp.common.TokenManager;
 import com.anhtuan.bookapp.databinding.ActivityManageWarningBinding;
 import com.anhtuan.bookapp.domain.WarningChapter;
+import com.anhtuan.bookapp.response.GetWarningListData;
 import com.anhtuan.bookapp.response.GetWarningListResponse;
 import com.anhtuan.bookapp.response.NoDataResponse;
 
 import java.util.List;
 
 
-public class ManageWarningActivity extends AppCompatActivity {
+public class ManageWarningActivity extends AppCompatActivity implements AdapterManageWarning.ManageWarningListener {
 
     ActivityManageWarningBinding binding;
-    List<WarningChapter> warningChapterList;
+    List<GetWarningListData> warningChapterList;
     AdapterManageWarning adapterManageWarning;
+    private final static int REQUEST_CODE = 100017;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +110,7 @@ public class ManageWarningActivity extends AppCompatActivity {
 
     private void loadWarningChapterRecycleView() {
         adapterManageWarning = new AdapterManageWarning(ManageWarningActivity.this, warningChapterList);
+        adapterManageWarning.setManageWarningListener(ManageWarningActivity.this);
         binding.warningChapterRv.setAdapter(adapterManageWarning);
     }
 
@@ -125,5 +130,25 @@ public class ManageWarningActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK){
+            loadWarningChapter();
+        }
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Log.d("onItemClick", "true");
+        GetWarningListData warningChapter = warningChapterList.get(position);
+        Intent intent = new Intent(view.getContext(), WarningDetailActivity.class);
+        intent.putExtra("chapter", warningChapter.getChapter());
+        intent.putExtra("chapterReport", warningChapter.getChapterReport());
+        intent.putExtra("book", warningChapter.getBook());
+        intent.putExtra("bookReport", warningChapter.getBookReport());
+        startActivityForResult(intent, REQUEST_CODE);
     }
 }

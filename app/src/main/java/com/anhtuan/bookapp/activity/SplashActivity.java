@@ -60,7 +60,7 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(String errorMessage) {
-                Toast.makeText(SplashActivity.this, "Server hệ thống đang bảo trì!!! Xin bạn thông cảm và quay lại app sau", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SplashActivity.this, "Server hệ thống đang bảo trì!!! Xin bạn thông cảm và quay lại app sau", Toast.LENGTH_LONG).show();
             }
         });
 

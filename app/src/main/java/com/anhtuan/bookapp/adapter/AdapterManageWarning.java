@@ -20,17 +20,23 @@ import com.anhtuan.bookapp.domain.BookChapter;
 import com.anhtuan.bookapp.domain.WarningChapter;
 import com.anhtuan.bookapp.response.GetChapterResponse;
 import com.anhtuan.bookapp.response.GetUsernameResponse;
+import com.anhtuan.bookapp.response.GetWarningListData;
 import com.anhtuan.bookapp.response.ViewBookResponse;
 import java.util.List;
 
 public class AdapterManageWarning extends RecyclerView.Adapter<AdapterManageWarning.HolderManageWarning>{
     public Context context;
-    public List<WarningChapter> warningChapters;
+    public List<GetWarningListData> warningChapters;
     public RowWarningChapterBinding binding;
+    private ManageWarningListener manageWarningListener;
 
-    public AdapterManageWarning(Context context, List<WarningChapter> warningChapters) {
+    public AdapterManageWarning(Context context, List<GetWarningListData> warningChapters) {
         this.context = context;
         this.warningChapters = warningChapters;
+    }
+
+    public void setManageWarningListener(ManageWarningListener manageWarningListener) {
+        this.manageWarningListener = manageWarningListener;
     }
 
     @NonNull
@@ -42,47 +48,10 @@ public class AdapterManageWarning extends RecyclerView.Adapter<AdapterManageWarn
 
     @Override
     public void onBindViewHolder(@NonNull HolderManageWarning holder, int position) {
-        WarningChapter warningChapter = warningChapters.get(position);
-
-        bookChapterApi.getChapterInfo(warningChapter.getChapter()).enqueue(new RetrofitCallBack<GetChapterResponse>() {
-            @Override
-            public void onSuccess(GetChapterResponse response) {
-                if (response != null && response.getCode() == 100){
-                    BookChapter bookChapter = response.getData();
-                    holder.chapterTv.setText("Chương " + String.valueOf(bookChapter.getChapterNumber()) + ": " + bookChapter.getChapterName());
-
-                    bookApi.getBookById(bookChapter.getBookId()).enqueue(new RetrofitCallBack<ViewBookResponse>() {
-                        @Override
-                        public void onSuccess(ViewBookResponse response) {
-                            if (response != null && response.getCode() == 100){
-                                Book book = response.getData();
-                                holder.bookNameTv.setText(book.getBookName());
-                                holder.categoryTv.setText(Utils.toStringCategory(book.getBookCategory()));
-
-                                userApi.getUsername(book.getAuthor()).enqueue(new RetrofitCallBack<GetUsernameResponse>() {
-                                    @Override
-                                    public void onSuccess(GetUsernameResponse response) {
-                                        if (response.getCode() == 100){
-                                            holder.authorTv.setText(response.getData());
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(String errorMessage) {
-                                    }
-                                });
-                            }
-                        }
-                        @Override
-                        public void onFailure(String errorMessage) {
-                        }
-                    });
-                }
-            }
-            @Override
-            public void onFailure(String errorMessage) {
-            }
-        });
+        GetWarningListData warningData = warningChapters.get(position);
+        holder.bookNameTv.setText(warningData.getBook().getBookName());
+        holder.authorTv.setText(warningData.getBook().getAuthor());
+        holder.chapterTv.setText(warningData.getChapter().getChapterName());
     }
 
     @Override
@@ -91,15 +60,24 @@ public class AdapterManageWarning extends RecyclerView.Adapter<AdapterManageWarn
     }
 
 
-    class HolderManageWarning extends RecyclerView.ViewHolder {
-        TextView bookNameTv, authorTv, chapterTv, categoryTv;
+    class HolderManageWarning extends RecyclerView.ViewHolder implements View.OnClickListener{
+        TextView bookNameTv, authorTv, chapterTv;
 
         public HolderManageWarning(@NonNull View itemView) {
             super(itemView);
             bookNameTv = binding.bookNameTv;
             authorTv = binding.authorTv;
-            categoryTv = binding.categoryTv;
             chapterTv = binding.chapterTv;
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            manageWarningListener.onItemClick(v, getAdapterPosition());
+        }
+    }
+
+    public interface ManageWarningListener{
+        void onItemClick(View view,int position);
     }
 }
