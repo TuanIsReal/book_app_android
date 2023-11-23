@@ -18,6 +18,8 @@ public class User {
 
     private Boolean isLogged;
 
+    private Integer status;
+
     private int point;
 
     private Boolean isGoogleLogin;
@@ -115,5 +117,13 @@ public class User {
 
     public void setGoogleLogin(Boolean googleLogin) {
         isGoogleLogin = googleLogin;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

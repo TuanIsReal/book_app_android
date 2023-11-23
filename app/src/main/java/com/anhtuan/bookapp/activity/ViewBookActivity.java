@@ -159,12 +159,9 @@ public class ViewBookActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ImageResponse> call, Throwable t) {
-                    Log.d("err", "err--fail");
                 }
             });
         }
-
-
 
     }
 

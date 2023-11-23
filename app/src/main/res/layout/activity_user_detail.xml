@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back01"
+    tools:context=".activity.UserDetailActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbarRl"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/blue">
+
+        <ImageButton
+            android:id="@+id/returnBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_back_white"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="10dp"
+            android:padding="10dp"
+            android:background="@android:color/transparent"/>
+
+        <TextView
+            android:id="@+id/toolbarTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:text="Chi tiết người dùng"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textSize="20dp"
+            android:gravity="center|center"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbarRl">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatar"
+            android:src="@drawable/logo"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:civ_border_width="0dp"
+            android:layout_marginLeft="15dp"
+            />
+
+        <TextView
+            android:id="@+id/nameTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/avatar"
+            android:layout_marginLeft="5dp"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textSize="16dp"
+            android:text="Tên người dùng: "
+            android:maxLines="2"/>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textStyle="bold"
+            android:layout_below="@id/avatar"
+            android:textSize="16dp"
+            android:layout_toEndOf="@id/nameTv"
+            android:text=""
+            android:maxLines="2"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/userIdTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nameTv"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="5dp"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textSize="16dp"
+            android:text="UserId: "
+            android:maxLines="2"/>
+
+        <TextView
+            android:id="@+id/userId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_below="@id/nameTv"
+            android:layout_toEndOf="@id/userIdTv"
+            android:text=""
+            android:maxLines="1"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/emailTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@id/userIdTv"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textSize="16dp"
+            android:text="Email: "
+            android:maxLines="2"/>
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_below="@id/userIdTv"
+            android:layout_toEndOf="@id/emailTv"
+            android:text=""
+            android:maxLines="2"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/statusTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/emailTv"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="15dp"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textSize="16dp"
+            android:text="Tình trạng: "
+            android:maxLines="2"/>
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_below="@id/emailTv"
+            android:layout_toEndOf="@id/statusTv"
+            android:text=""
+            android:maxLines="1"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/totalPointTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/statusTv"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="15dp"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textSize="16dp"
+            android:text="Point hiện tại: "
+            android:maxLines="2"/>
+
+        <TextView
+            android:id="@+id/totalPoint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_below="@id/statusTv"
+            android:layout_toEndOf="@id/totalPointTv"
+            android:text=""
+            android:maxLines="1"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/totalBookTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/totalPointTv"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="15dp"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textSize="16dp"
+            android:text="Số truyện đăng: "
+            android:maxLines="2"/>
+
+        <TextView
+            android:id="@+id/totalBook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_below="@id/totalPointTv"
+            android:layout_toEndOf="@id/totalBookTv"
+            android:text=""
+            android:maxLines="1"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/totalPurchasedBookTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/totalBookTv"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="15dp"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textSize="16dp"
+            android:text="Số truyện đã mua: "
+            android:maxLines="2"/>
+
+        <TextView
+            android:id="@+id/totalPurchasedBook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_below="@id/totalBookTv"
+            android:layout_toEndOf="@id/totalPurchasedBookTv"
+            android:text=""
+            android:maxLines="1"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/purchasedPointTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/totalPurchasedBookTv"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="15dp"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textSize="16dp"
+            android:text="Point đã nạp: "
+            android:maxLines="2"/>
+
+        <TextView
+            android:id="@+id/purchasedPoint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_below="@id/totalPurchasedBookTv"
+            android:layout_toEndOf="@id/purchasedPointTv"
+            android:text=""
+            android:maxLines="1"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/earnedPointTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/purchasedPointTv"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="15dp"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textSize="16dp"
+            android:text="Point thu nhập: "
+            android:maxLines="2"/>
+
+        <TextView
+            android:id="@+id/earnedPoint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_below="@id/purchasedPointTv"
+            android:layout_toEndOf="@id/earnedPointTv"
+            android:text=""
+            android:maxLines="1"
+            android:textColor="@color/black"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/addPointTil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/earnedPointTv"
+            android:layout_marginTop="10dp"
+            app:hintEnabled="false">
+
+            <EditText
+                android:id="@+id/addPointEt"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_edittex01"
+                android:drawableStart="@drawable/ic_point_gold"
+                android:drawablePadding="10dp"
+                android:layout_marginLeft="10dp"
+                android:hint="Nhập số point thêm"
+                android:inputType="textEmailAddress"
+                android:padding="10dp"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray01"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/addPointBtn"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/earnedPointTv"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_button5"
+            android:layout_alignParentRight="true"
+            android:text="Thêm Point"
+            android:layout_marginRight="20dp"/>
+
+        <Button
+            android:id="@+id/blockBtn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/addPointTil"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/shape_button6"
+            android:layout_centerHorizontal="true"
+            android:text="Khóa tài khoản"
+            android:textColor="@color/white"
+            android:layout_marginRight="20dp"/>
+
+        <Button
+            android:id="@+id/unBlockBtn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/addPointTil"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/shape_button2"
+            android:layout_centerHorizontal="true"
+            android:text="Mở khóa tài khoản"
+            android:textColor="@color/black"
+            android:layout_marginRight="20dp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

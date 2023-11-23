@@ -10,9 +10,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 
 import com.anhtuan.bookapp.R;
+import com.anhtuan.bookapp.adapter.AdapterManageUser;
 import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.common.AccountManager;
 import com.anhtuan.bookapp.common.TokenManager;
@@ -27,6 +29,7 @@ public class ManageUserActivity extends AppCompatActivity {
 
     ActivityManageUserBinding binding;
     List<User> users;
+    AdapterManageUser adapterManageUser;
     String text = "";
 
     @Override
@@ -35,6 +38,7 @@ public class ManageUserActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         binding = ActivityManageUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        loadUsers(text);
 
         binding.searchEt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -105,6 +109,8 @@ public class ManageUserActivity extends AppCompatActivity {
                 if (response != null) {
                     if (response.getCode() == 100) {
                         users = response.getData();
+                        adapterManageUser = new AdapterManageUser(users);
+                        binding.usersRv.setAdapter(adapterManageUser);
                     }
                 }
             }
