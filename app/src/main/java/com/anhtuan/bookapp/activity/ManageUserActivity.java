@@ -99,6 +99,22 @@ public class ManageUserActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        binding.manageWarningTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ManageUserActivity.this, ManageWarningActivity.class));
+                finish();
+            }
+        });
+
+        binding.manageBookTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ManageUserActivity.this, ManageBookActivity.class));
+                finish();
+            }
+        });
     }
 
     private void loadUsers(String text) {

@@ -86,6 +86,14 @@ public class ManageWarningActivity extends AppCompatActivity implements AdapterM
                 startActivity(new Intent(ManageWarningActivity.this, ManageRequestBookActivity.class));
             }
         });
+
+        binding.manageUserTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(ManageWarningActivity.this, ManageUserActivity.class));
+            }
+        });
     }
 
     private void loadWarningChapter() {

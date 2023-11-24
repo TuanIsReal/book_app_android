@@ -1,6 +1,7 @@
 package com.anhtuan.bookapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anhtuan.bookapp.activity.UserDetailActivity;
+import com.anhtuan.bookapp.activity.ViewBookActivity;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.databinding.RowUserManagerBinding;
 import com.anhtuan.bookapp.domain.User;
@@ -67,6 +70,12 @@ public class AdapterManageUser extends RecyclerView.Adapter<AdapterManageUser.Ho
         } else {
             holder.statusTv.setText("Không hoạt động ");
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, UserDetailActivity.class);
+            intent.putExtra("userId", user.getId());
+            context.startActivity(intent);
+        });
     }
 
     @Override

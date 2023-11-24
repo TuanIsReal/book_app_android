@@ -78,6 +78,22 @@ public class ManageRequestBookActivity extends AppCompatActivity implements Adap
                 startActivity(new Intent(ManageRequestBookActivity.this, StatisticalActivity.class));
             }
         });
+
+        binding.manageUserTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(ManageRequestBookActivity.this, ManageUserActivity.class));
+            }
+        });
+
+        binding.manageWarningTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(ManageRequestBookActivity.this, ManageWarningActivity.class));
+            }
+        });
     }
 
     private void loadRequestUploadBook() {

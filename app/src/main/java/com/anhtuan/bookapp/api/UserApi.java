@@ -8,6 +8,7 @@ import com.anhtuan.bookapp.response.AuthenVerifyCodeResponse;
 import com.anhtuan.bookapp.response.CheckLoggedResponse;
 import com.anhtuan.bookapp.response.CheckUserInfoResponse;
 import com.anhtuan.bookapp.response.GetBalanceChangeResponse;
+import com.anhtuan.bookapp.response.GetUserDetailResponse;
 import com.anhtuan.bookapp.response.GetUserInfoResponse;
 import com.anhtuan.bookapp.response.GetUsernameResponse;
 import com.anhtuan.bookapp.response.LoginResponse;
@@ -43,11 +44,27 @@ public interface UserApi extends BaseApi{
     @GET("getUserInfo")
     Call<GetUserInfoResponse> getUserInfo(@Query("userId") String userId);
 
+    @GET("getUser")
+    Call<GetUserInfoResponse> getUser(@Query("userId") String userId);
+
+    @POST("addPointAdmin")
+    Call<NoDataResponse> addPointAdmin(@Query("userId") String userId,
+                                       @Query("point") int point);
+
     @GET("checkUserInfo")
     Call<CheckUserInfoResponse> checkUserInfo();
 
     @GET("getUsername")
     Call<GetUsernameResponse> getUsername(@Query("userId") String userId);
+
+    @GET("getUserDetail")
+    Call<GetUserDetailResponse> getUserDetail(@Query("userId") String userId);
+
+    @POST("blockUser")
+    Call<NoDataResponse> blockUser(@Query("userId") String userId);
+
+    @POST("unBlockUser")
+    Call<NoDataResponse> unBlockUser(@Query("userId") String userId);
 
     @PUT("logout")
     Call<NoDataResponse> logout();

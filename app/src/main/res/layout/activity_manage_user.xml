@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/subTitileTv"
-            android:layout_toEndOf="@id/manageBookTV"
+            android:layout_toEndOf="@id/manageBookTv"
             android:layout_marginEnd="15dp"
             android:layout_marginTop="5dp"
             android:text="Vi phạm"
@@ -69,7 +69,7 @@
             android:textColor="@color/white"/>
 
         <TextView
-            android:id="@+id/manageBookTV"
+            android:id="@+id/manageBookTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/subTitileTv"
             android:layout_marginTop="5dp"
-            android:layout_toStartOf="@id/manageBookTV"
+            android:layout_toStartOf="@id/manageBookTv"
             android:text="Thống kê"
             android:textColor="@color/white"
             android:textSize="14dp"

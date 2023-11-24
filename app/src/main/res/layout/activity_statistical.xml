@@ -42,44 +42,66 @@
             android:background="@android:color/transparent"/>
 
         <TextView
-            android:id="@+id/manageBookTv"
+            android:id="@+id/manageCategoryTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/subTitileTv"
-            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@id/manageWarningTv"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp"
-            android:text="Quản lý sách"
+            android:text="Loại sách"
             android:textStyle="bold"
             android:textSize="14dp"
             android:layout_marginBottom="10dp"
             android:textColor="@color/white"/>
 
         <TextView
-            android:id="@+id/manageCategoryTv"
+            android:id="@+id/manageWarningTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/subTitileTv"
-            android:layout_toStartOf="@id/manageBookTv"
+            android:layout_toEndOf="@id/manageBookTv"
+            android:layout_marginEnd="15dp"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="20dp"
-            android:text="Quản lý loại sách"
+            android:text="Vi phạm"
             android:textStyle="bold"
             android:textSize="14dp"
             android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/manageBookTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_below="@id/subTitileTv"
+            android:layout_centerHorizontal="true"
+            android:text="Sách"
+            android:textStyle="bold"
+            android:textSize="14dp"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/manageUserTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/subTitileTv"
+            android:layout_marginTop="5dp"
+            android:layout_toStartOf="@id/manageBookTv"
+            android:text="Người dùng"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/manageRequestTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/subTitileTv"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="20dp"
-            android:layout_toStartOf="@id/manageCategoryTv"
-            android:text="Quản lý yêu cầu"
+            android:layout_toStartOf="@id/manageUserTv"
+            android:text="Yêu cầu"
             android:textColor="@color/white"
             android:textSize="14dp"
             android:textStyle="bold" />

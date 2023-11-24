@@ -236,21 +236,21 @@ public class LoginActivity extends AppCompatActivity {
                         unAuthApi.loginGoogle(request).enqueue(new Callback<>() {
                             @Override
                             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-
-                                if (response.body() != null && response.code() == 122) {
-                                    Toast.makeText(LoginActivity.this, "Tài khoản của bạn đã bị khóa!!! Liên hệ admin để có thêm thông tin", Toast.LENGTH_SHORT).show();
+                                mGoogleSignInClient.signOut();
+                                if (response.body() != null && response.body().getCode() == 122) {
+                                    Toast.makeText(LoginActivity.this, "Tài khoản của bạn đã bị khóa!!! Liên hệ admin để có thêm thông tin", Toast.LENGTH_LONG).show();
                                 } else if (response.body() != null && response.body().getCode() == 100) {
                                     LoginData loginData = response.body().getData();
                                     AccountManager.getInstance().saveAccount(user.getEmail(), "");
                                     TokenManager.getInstance().saveToken(loginData.getToken(), loginData.getRefreshToken());
                                     int role = loginData.getRole();
-                                    mGoogleSignInClient.signOut();
+
                                     sendDeviceToken(role);
                                     }
                             }
                             @Override
                             public void onFailure(Call<LoginResponse> call, Throwable t) {
-
+                                mGoogleSignInClient.signOut();
                             }
                         });
                     } else {

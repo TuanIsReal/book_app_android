@@ -113,6 +113,22 @@ public class ManageBookActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        binding.manageUserTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ManageBookActivity.this, ManageUserActivity.class));
+                finish();
+            }
+        });
+
+        binding.manageWarningTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ManageBookActivity.this, ManageWarningActivity.class));
+                finish();
+            }
+        });
     }
 
     private void loadBooks(String text) {

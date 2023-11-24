@@ -98,6 +98,22 @@ public class StatisticalActivity extends AppCompatActivity {
                 startActivity(new Intent(StatisticalActivity.this, ManageRequestBookActivity.class));
             }
         });
+
+        binding.manageUserTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(StatisticalActivity.this, ManageUserActivity.class));
+            }
+        });
+
+        binding.manageWarningTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(StatisticalActivity.this, ManageWarningActivity.class));
+            }
+        });
     }
 
     private void logout(){
