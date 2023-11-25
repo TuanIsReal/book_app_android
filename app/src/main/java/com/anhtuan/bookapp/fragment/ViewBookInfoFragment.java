@@ -222,6 +222,9 @@ public class ViewBookInfoFragment extends Fragment {
             speed = totalChapter;
         } else {
             speed = (int) ((totalChapter * Constant.A_DAY * 7) / timeUpBook);
+            if (speed == 0 && totalChapter > 0){
+                speed = 1;
+            }
         }
 
         return String.valueOf(speed);

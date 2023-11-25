@@ -1,11 +1,11 @@
 package com.anhtuan.bookapp.config;
 
 public class Constant {
-//    public static final String IP_SERVER = "http://truyenat.fun:8080/";   //release
-//    public static final String IP_SERVER_IMAGE = "http://truyenat.fun";  //release
+    public static final String IP_SERVER = "http://truyenat.fun:8080/";   //release
+    public static final String IP_SERVER_IMAGE = "http://truyenat.fun";  //release
 
-    public static final String IP_SERVER = "http://192.168.1.9:8080/";   //local
-    public static final String IP_SERVER_IMAGE = "http://192.168.1.9";  //local
+//    public static final String IP_SERVER = "http://192.168.1.9:8080/";   //local
+//    public static final String IP_SERVER_IMAGE = "http://192.168.1.9";  //local
 
     public static final String JPG = ".jpg";
 
