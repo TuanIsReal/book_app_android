@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back01"
+    tools:context=".activity.ReportDetailActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbarRl"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/blue">
+
+        <ImageButton
+            android:id="@+id/returnBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_back_white"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="10dp"
+            android:padding="10dp"
+            android:background="@android:color/transparent"/>
+
+        <TextView
+            android:id="@+id/toolbarTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:text="Chi tiết báo lỗi"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textSize="20dp"
+            android:gravity="center|center"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/bookNamText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/toolbarRl"
+        style="@style/TextAppearance.MaterialComponents.Caption"
+        android:textSize="16dp"
+        android:text="Truyện: "
+        android:maxLines="2"/>
+
+    <TextView
+        android:id="@+id/bookName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:layout_below="@id/toolbarRl"
+        android:layout_toEndOf="@id/bookNamText"
+        android:text=""
+        android:maxLines="2"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/userNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bookNamText"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="5dp"
+        style="@style/TextAppearance.MaterialComponents.Caption"
+        android:textSize="16dp"
+        android:text="Người báo lỗi: "
+        android:maxLines="2"/>
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:layout_below="@id/bookNamText"
+        android:layout_toEndOf="@id/userNameText"
+        android:text=""
+        android:maxLines="1"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/typeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/userNameText"
+        style="@style/TextAppearance.MaterialComponents.Caption"
+        android:textSize="16dp"
+        android:text="Loại: "
+        android:maxLines="2"/>
+
+    <TextView
+        android:id="@+id/type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:layout_below="@id/userNameText"
+        android:layout_toEndOf="@id/typeText"
+        android:text=""
+        android:maxLines="1"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/contentText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/typeText"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="15dp"
+        style="@style/TextAppearance.MaterialComponents.Caption"
+        android:textSize="16dp"
+        android:text="Nội dung báo lỗi: "
+        android:maxLines="2"/>
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/contentText"
+        android:text=""
+        android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/checkBtn"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_button5"
+        android:layout_below="@id/content"
+        android:layout_marginTop="100dp"
+        android:layout_centerHorizontal="true"
+        android:text="Đã kiểm tra" />
+
+</RelativeLayout>
