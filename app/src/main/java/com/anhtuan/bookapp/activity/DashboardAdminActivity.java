@@ -116,6 +116,13 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
 
+        binding.settingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardAdminActivity.this, AdminSettingActivity.class));
+            }
+        });
+
     }
 
     private void loadTitle(){

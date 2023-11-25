@@ -80,6 +80,9 @@ public interface UnAuthApi {
     @GET("bookChapter/getBannedWord")
     Call<GetBannedWordResponse> getBannedWord(@Query("version") int version);
 
+    @GET("bookChapter/getBannedWordAdmin")
+    Call<GetBannedWordResponse> getBannedWordAdmin();
+
     @GET("user/ping")
     Call<PingResponse> ping();
 

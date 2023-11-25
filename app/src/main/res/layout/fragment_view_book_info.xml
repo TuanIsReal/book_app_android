@@ -107,7 +107,7 @@
             <RelativeLayout
                 android:id="@+id/sameAuthorRl"
                 android:layout_width="match_parent"
-                android:layout_height="550dp"
+                android:layout_height="450dp"
                 android:layout_below="@id/introductionTv"
                 android:layout_marginTop="40dp"
                 android:background="@color/gray03">
@@ -146,7 +146,7 @@
                     tools:listitem="@layout/column_same_author_book" />
 
                 <TextView
-                    android:id="@+id/errorReportTv"
+                    android:id="@+id/reportTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"

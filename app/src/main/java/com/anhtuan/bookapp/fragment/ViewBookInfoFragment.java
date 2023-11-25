@@ -1,23 +1,36 @@
 package com.anhtuan.bookapp.fragment;
 
 import static com.anhtuan.bookapp.api.BookApi.bookApi;
+import static com.anhtuan.bookapp.api.ReportApi.reportApi;
 import static com.anhtuan.bookapp.api.UserApi.userApi;
 
+import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.anhtuan.bookapp.R;
 import com.anhtuan.bookapp.adapter.AdapterViewBookInfo;
 import com.anhtuan.bookapp.api.RetrofitCallBack;
 import com.anhtuan.bookapp.config.Constant;
 import com.anhtuan.bookapp.domain.Book;
+import com.anhtuan.bookapp.request.AddReportRequest;
 import com.anhtuan.bookapp.response.GetUsernameResponse;
+import com.anhtuan.bookapp.response.NoDataResponse;
 import com.anhtuan.bookapp.response.SearchBookResponse;
 import com.anhtuan.bookapp.response.ViewBookResponse;
 
@@ -31,8 +44,11 @@ public class ViewBookInfoFragment extends Fragment {
     private ArrayList<Book> books;
     RecyclerView booksRv;
     Book book;
-    TextView introductionTv, sameAuthorTv, writeSpeedTv, totalChapterTv, totalPurchasedTv, totalChapterText;
+    TextView introductionTv, sameAuthorTv, writeSpeedTv, totalChapterTv, totalPurchasedTv, totalChapterText, reportTv;
     View view;
+    Button buttonSubmit;
+    EditText reportContentEt;
+    RadioGroup radioGroupPurpose;
 
     public ViewBookInfoFragment(String bookId) {
         this.bookId = bookId;
@@ -52,9 +68,86 @@ public class ViewBookInfoFragment extends Fragment {
         totalChapterTv = view.findViewById(R.id.totalChapterTv);
         totalPurchasedTv = view.findViewById(R.id.totalPurchasedTv);
         totalChapterText = view.findViewById(R.id.totalChapterText);
+        reportTv = view.findViewById(R.id.reportTv);
         loadBook(bookId);
 
+        reportTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openReportDialog();
+            }
+        });
+
         return view;
+    }
+
+    private void openReportDialog() {
+        final Dialog dialog = new Dialog(view.getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_warning);
+
+        Window window = dialog.getWindow();
+        if (window == null){
+            return;
+        }
+
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = Gravity.BOTTOM;
+        window.setAttributes(windowAttributes);
+
+        dialog.setCancelable(true);
+
+        radioGroupPurpose = dialog.findViewById(R.id.radioGroupPurpose);
+        reportContentEt = dialog.findViewById(R.id.reportContentEt);
+        buttonSubmit = dialog.findViewById(R.id.buttonSubmit);
+
+        buttonSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int purpose;
+
+                switch (radioGroupPurpose.getCheckedRadioButtonId()){
+                    case R.id.adultContent:
+                        purpose = 1;
+                        break;
+                    case R.id.hatred:
+                        purpose = 2;
+                        break;
+                    case R.id.personalAttack:
+                        purpose = 3;
+                        break;
+                    case R.id.spam:
+                        purpose = 4;
+                        break;
+                    case R.id.other:
+                        purpose = 5;
+                        break;
+                    default:
+                        purpose = 1;
+                        break;
+                }
+
+                reportApi.addReport(new AddReportRequest(bookId, purpose, reportContentEt.getText().toString())).enqueue(new RetrofitCallBack<NoDataResponse>() {
+                    @Override
+                    public void onSuccess(NoDataResponse response) {
+                        if (response != null && response.getCode() == 100){
+                            dialog.dismiss();
+                            Toast.makeText(view.getContext(), "Đã báo lỗi lên hệ thống", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String errorMessage) {
+
+                    }
+                });
+            }
+        });
+
+        dialog.show();
     }
 
     private void loadBook(String bookId) {

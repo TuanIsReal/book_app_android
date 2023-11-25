@@ -123,7 +123,6 @@ public class AdapterBookAdmin extends RecyclerView.Adapter<AdapterBookAdmin.Hold
             categoryTv = binding.categoryTv;
             dateTv = binding.dateTv;
             authorTv = binding.authorTv;
-            moreBtn = binding.moreBtn;
         }
     }
 

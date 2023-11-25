@@ -49,4 +49,10 @@ public interface BookChapterApi extends BaseApi{
 
     @GET("getBookChapterList")
     Call<GetBookChapterListResponse> getBookChapterList(@Query("bookId") String bookId);
+
+    @POST("addBannedWord")
+    Call<NoDataResponse> addBannedWord(@Query("word") String word);
+
+    @POST("removeBannedWord")
+    Call<NoDataResponse> removeBannedWord(@Query("word") String word);
 }
