@@ -115,6 +115,14 @@ public class ManageUserActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
+        binding.settingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ManageUserActivity.this, AdminSettingActivity.class));
+            }
+        });
     }
 
     private void loadUsers(String text) {

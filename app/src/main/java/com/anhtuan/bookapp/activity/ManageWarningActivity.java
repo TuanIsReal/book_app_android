@@ -94,6 +94,13 @@ public class ManageWarningActivity extends AppCompatActivity implements AdapterM
                 startActivity(new Intent(ManageWarningActivity.this, ManageUserActivity.class));
             }
         });
+
+        binding.settingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ManageWarningActivity.this, AdminSettingActivity.class));
+            }
+        });
     }
 
     private void loadWarningChapter() {
@@ -150,7 +157,6 @@ public class ManageWarningActivity extends AppCompatActivity implements AdapterM
 
     @Override
     public void onItemClick(View view, int position) {
-        Log.d("onItemClick", "true");
         GetWarningListData warningChapter = warningChapterList.get(position);
         Intent intent = new Intent(view.getContext(), WarningDetailActivity.class);
         intent.putExtra("chapter", warningChapter.getChapter());

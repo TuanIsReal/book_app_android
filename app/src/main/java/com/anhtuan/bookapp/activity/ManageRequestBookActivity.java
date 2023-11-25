@@ -94,6 +94,13 @@ public class ManageRequestBookActivity extends AppCompatActivity implements Adap
                 startActivity(new Intent(ManageRequestBookActivity.this, ManageWarningActivity.class));
             }
         });
+
+        binding.settingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ManageRequestBookActivity.this, AdminSettingActivity.class));
+            }
+        });
     }
 
     private void loadRequestUploadBook() {

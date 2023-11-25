@@ -36,5 +36,12 @@ public class AdminSettingActivity extends AppCompatActivity {
                 startActivity(new Intent(AdminSettingActivity.this, UpdatePasswordActivity.class));
             }
         });
+
+        binding.manageReportTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AdminSettingActivity.this, ManageReportActivity.class));
+            }
+        });
     }
 }

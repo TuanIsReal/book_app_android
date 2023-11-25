@@ -114,6 +114,13 @@ public class StatisticalActivity extends AppCompatActivity {
                 startActivity(new Intent(StatisticalActivity.this, ManageWarningActivity.class));
             }
         });
+
+        binding.settingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(StatisticalActivity.this, AdminSettingActivity.class));
+            }
+        });
     }
 
     private void logout(){

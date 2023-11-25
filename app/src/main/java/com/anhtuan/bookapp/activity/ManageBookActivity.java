@@ -129,6 +129,14 @@ public class ManageBookActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        binding.settingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ManageBookActivity.this, AdminSettingActivity.class));
+            }
+        });
+
     }
 
     private void loadBooks(String text) {

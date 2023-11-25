@@ -61,6 +61,26 @@
         android:layout_marginRight="25dp"
         android:drawableRight="@drawable/ic_right_black"/>
 
+    <TextView
+        android:id="@+id/manageReportTv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Báo lỗi người dùng"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_below="@id/line2"
+        android:gravity="left|center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:drawableRight="@drawable/ic_right_black"/>
+
+    <View
+        android:id="@+id/line3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/manageReportTv"/>
+
     <View
         android:id="@+id/line2"
         android:layout_width="match_parent"
@@ -81,6 +101,6 @@
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
         android:layout_below="@id/toolbatRl"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="50dp"/>
 
 </RelativeLayout>

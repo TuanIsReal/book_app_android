@@ -25,6 +25,12 @@
         android:windowFullscreen="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.ReportDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ManageReportActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.SettingBannedWordActivity"
             android:exported="false" />
         <activity
