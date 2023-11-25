@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:background="@color/gray04">
+
+    <TextView
+        android:id="@+id/titleTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thêm từ cấm"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/bannedWordEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_below="@id/titleTv"
+        android:layout_marginTop="16dp"
+        android:hint="Nhập từ cấm (1 từ)"/>
+
+    <Button
+        android:id="@+id/buttonSubmit"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bannedWordEt"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/shape_button03"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:text="Gửi"/>
+
+</RelativeLayout>

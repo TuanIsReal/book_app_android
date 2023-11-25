@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.AdminSettingActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbatRl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue">
+
+        <TextView
+            android:id="@+id/settingTv"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Cài đặt"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:layout_marginTop="40dp"
+            android:gravity="center" />
+
+        <ImageButton
+            android:id="@+id/returnBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_back_white"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="10dp"
+            android:padding="10dp"
+            android:background="@android:color/transparent"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/bannedWordTv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Từ cấm"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_below="@id/line0"
+        android:gravity="left|center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:drawableRight="@drawable/ic_right_black"/>
+
+    <TextView
+        android:id="@+id/changePasswordTv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Đổi mật khẩu"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_below="@id/line1"
+        android:gravity="left|center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:drawableRight="@drawable/ic_right_black"/>
+
+    <View
+        android:id="@+id/line2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/changePasswordTv"/>
+
+    <View
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/bannedWordTv" />
+
+    <View
+        android:id="@+id/line0"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/toolbatRl"
+        android:layout_marginTop="20dp"/>
+
+</RelativeLayout>
